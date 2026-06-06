@@ -1,0 +1,188 @@
+CULTURAL FRAMEWORKS, IT ADOPTION, AND RELATED TOPICS
+Course: IS 67-382 Digital Transformation, Strategy and Management
+Covers: Weeks 4–8 topics (Culture workshops, Technology Acceptance workshops)
+
+---
+SECTION 1: NATIONAL CULTURAL FRAMEWORKS
+
+The course covers four major national cultural frameworks used to analyze how culture influences technology adoption. Students are assessed on their ability to explain these frameworks, apply them to a country and technology context, and compare them to each other.
+
+---
+HOFSTEDE'S CULTURAL DIMENSIONS
+
+Hofstede defined culture as "the collective programming of the mind distinguishing the members of one group or category of people from others."
+
+Five dimensions:
+
+1. Power Distance (PDI): The degree to which less powerful members of a society accept and expect unequal distribution of power. High power distance: hierarchies accepted (e.g., Malaysia, Arab countries). Low power distance: equality expected (e.g., Denmark, Sweden).
+
+2. Uncertainty Avoidance (UAI): The extent to which members of a culture feel threatened by ambiguous situations and try to avoid them. High uncertainty avoidance: prefer rules, structure, predictability (e.g., Greece, Japan). Low uncertainty avoidance: comfortable with ambiguity (e.g., Singapore, Denmark). In the Social Media in China lecture: Chinese users show high uncertainty avoidance, which is why anonymous social media thrived in China while identified social media (like Facebook) struggled.
+
+3. Individualism vs. Collectivism (IDV): The degree to which individuals are integrated into groups. Individualistic cultures (e.g., USA, UK): personal goals prioritized, "I" identity. Collectivist cultures (e.g., China, Qatar): group goals prioritized, "we" identity. High collectivism in China contributed to WeChat's "do everything in one place" design — Chinese users prefer integrated platforms rather than multiple separate apps.
+
+4. Masculinity vs. Femininity (MAS): Masculine cultures value assertiveness, competition, and achievement. Feminine cultures value cooperation, modesty, and quality of life.
+
+5. Long-Term vs. Short-Term Orientation (LTO): Long-term oriented cultures value saving, persistence, and adaptation (e.g., China). Short-term oriented cultures value tradition and quick results (e.g., many Western countries). Long-term orientation and high uncertainty avoidance explain why Chinese users preferred WeChat Pay over Visa — concern about card scamming and a preference for saving money.
+
+Hofstede dimensions can be compared across countries at: https://www.hofstede-insights.com/product/compare-countries/
+
+---
+SCHWARTZ'S THEORY OF BASIC HUMAN VALUES
+
+Developed by social psychologist Shalom H. Schwartz. The theory studies what people believe is important and how this motivates their behavior and decision-making. It provides a framework for understanding the beliefs that drive human behavior across cultures.
+
+Schwartz identified 10 universal values organized in a circular structure showing conflicts and compatibilities:
+
+Self-Direction: Independent thought and action, freedom to choose one's own goals. High in US-based tech companies — Facebook's internal hackathons and Google's 20% personal project time both reflect high self-direction.
+
+Stimulation: Excitement, novelty, and challenge in life.
+
+Hedonism: Pleasure and sensuous gratification for oneself. Facebook and Tinder's success in the US is partly attributed to alignment with hedonistic cultural values — prioritizing personal freedom, self-expression, and pursuit of pleasure.
+
+Achievement: Personal success through demonstrating competence according to social standards.
+
+Power: Social status, prestige, control, and dominance over people and resources. Google demonstrates high power value through dominance in the tech industry and control over information. Facebook demonstrates medium power value through social comparison and influencer culture.
+
+Security: Safety, harmony, and stability of society, relationships, and self. Facebook demonstrates low security value due to data privacy concerns and breaches. Reddit demonstrates medium security value through more anonymous participation.
+
+Conformity: Restraint of actions and impulses likely to upset or harm others.
+
+Tradition: Respect, commitment, and acceptance of customs and ideas provided by culture or religion.
+
+Benevolence: Preserving and enhancing the welfare of those with whom one is in frequent personal contact.
+
+Universalism: Understanding, tolerance, and protection for the welfare of all people and nature. Facebook's promotion of community groups and social causes aligns with universalism. LinkedIn demonstrates medium universalism through professional inclusiveness.
+
+The four higher-order dimensions: Openness to Change vs. Conservation, and Self-Enhancement vs. Self-Transcendence.
+
+Comparison with Hofstede:
+Similarities: Both address individual vs. group orientation, unequal distribution of power, tolerance for uncertainty, and past/present/future orientation.
+Differences: Hofstede focuses on acceptance of unequal power; Schwartz focuses on the importance of hierarchy. Hofstede does not involve emotion; Schwartz heavily involves emotional values.
+
+---
+HALL'S CULTURAL DIMENSIONS (HIGH CONTEXT VS. LOW CONTEXT)
+
+Edward T. Hall introduced the concept of high-context and low-context communication:
+
+High-context cultures: Communication relies heavily on implicit understanding, non-verbal cues, relationships, and shared context. Much is left unsaid because it is assumed. Examples: Japan, China, Arab countries. Relevance to IS: In high-context cultures, ERP and IS systems may struggle because they are built on explicit, structured data — they do not accommodate the implicit ways business is actually conducted.
+
+Low-context cultures: Communication is explicit, direct, and relies on words. Information is stated clearly. Examples: USA, Germany, Scandinavia. Relevance to IS: Low-context cultures adapt more readily to explicit IS systems designed on Western logic.
+
+---
+TROMPENAARS' CULTURAL DIMENSIONS
+
+Fons Trompenaars identified seven dimensions of cultural variability:
+1. Universalism vs. Particularism: Rule-based vs. relationship-based decision making.
+2. Individualism vs. Communitarianism: Individual vs. collective interests.
+3. Specific vs. Diffuse: Separate work/private life vs. overlapping.
+4. Neutral vs. Affective: Rational vs. emotional expression.
+5. Achievement vs. Ascription: Status earned by achievement vs. assigned by birth/connection.
+6. Sequential vs. Synchronic time: Linear time vs. multiple things simultaneously.
+7. Internal vs. External control: Control over environment vs. harmony with environment.
+
+Comparison with Schwartz:
+Similarities: Both aim to understand values in shaping human behavior and attitudes.
+Differences: Schwartz categorizes 10 universal values; Trompenaars categorizes 7 dimensions of cultural variability. Schwartz focuses on cross-cultural relevance; Trompenaars emphasizes cultural differences in communication and values.
+
+---
+SECTION 2: GUANXI THEORY AND ERP ADOPTION IN CHINA (STUDENT EXAMPLE)
+
+A student research paper (Lena Li, 2019) in this course examined how Guanxi-based cultural factors affect ERP system adoption in Chinese manufacturing. This is a good example of the final project format and how to apply a cultural framework to a technology adoption context.
+
+Guanxi refers to personal relationships (interpersonal connections) which are fundamental to Chinese business culture. Guanxi is rooted in Confucianism, which emphasizes harmonious relationships (Kong Fu Zi, 551–479 BC).
+
+Three components of Guanxi:
+- Renqing: Exchange of favors and gifts among friends. Chinese consultants may take clients to expensive restaurants as a sign of renqing. This can influence ERP adoption — vendors build renqing with clients to encourage adoption.
+- Ganqing: The quality of relationships; emotional attachments and sentiment. As ganqing increases, interdependence increases, which can positively affect coordination improvement in ERP systems.
+- Mianzi: Social image and face — acting to safeguard one's social prestige and perceived status. Chinese firms may increase ERP performance as a way to build mianzi with foreign vendors.
+
+Research finding: Interdependence driven by ganqing and renqing has a significant positive effect on coordination improvement in ERP post-implementation. This is relevant for digital transformation because it shows that technology adoption in China cannot be analyzed using only Western critical success factors — cultural context fundamentally shapes adoption outcomes.
+
+ERP failure rate in China: Approximately 90% of ERP implementations in China were late or over budget since 2000 (Zhu & Ma, 1999). This is significantly worse than Western implementations, which researchers attribute partly to cultural misalignment between Western ERP system designs and Chinese business practices.
+
+---
+SECTION 3: SOCIAL MEDIA IN CHINA (GUEST LECTURE — XIN HUANG)
+
+This lecture covers how Chinese social media platforms developed and what drove their success, connecting to cultural dimensions and digital transformation strategy.
+
+Value Creation: Social media creates value by balancing what it delivers to users and what it captures for the company (Teece, 2010: "balance the provision of value to customers with the capture of value by the provider"). Types of value a social media platform can deliver: formal/informal, functional/emotional, private/public, text/image/video/voice. Culture and technology both shape what value a platform can capture and deliver.
+
+Key Chinese Platforms:
+- Renren: China's version of Facebook, started on university campuses. Failed because: Chinese users have high uncertainty avoidance and prefer anonymous social media; Renren was identified (like Facebook), which did not fit Chinese culture.
+- Sina/Weibo: China's equivalent of Twitter. Evolved from web portal to blog to microblog. Adjusted successfully to the mobile transition.
+- Baidu: China's equivalent of Google plus Reddit. Search engine combined with interest-based communities.
+- QQ and WeChat (Tencent): QQ was China's first major instant messaging service. WeChat was created because QQ could not run well on mobile phones and was difficult for new users. WeChat became a super-app: it incorporated mobile payment, life sharing (Moments), mini-programs, digital identification, and location services. Chinese culture (high uncertainty avoidance, high collectivism, high power distance) supports the preference for doing everything in one place.
+
+WeChat Pay vs. Visa: WeChat Pay succeeded over Visa because Visa entered China late (1985), POS machines were expensive, and credit card applications had high barriers. QR codes and mobile payment had zero entry barrier. Additionally, Chinese cultural values (risk avoidance, concern about scamming, long-term orientation toward saving) supported mobile payment over credit.
+
+TikTok/Douyin (ByteDance): Used a recommendation algorithm and community-building approach. Acquired Musical.ly and integrated its US user base. TikTok was specifically built for US teenagers, demonstrating market understanding as a key success factor.
+
+Live Streaming Industry in China: China had 15 million full-time live-streamers as of 2023 (1% of the population). Revenue sources include: product sales, virtual gifts, advertising, and third-party partnerships. Cultural factors enabling live streaming: low entry barrier technology, good distribution algorithms, high uncertainty avoidance (people prefer trusted/familiar personalities), high collectivism (community participation), high power distance (celebrity and gift culture).
+
+Ecosystem Strategies for Social Media:
+1. Release a new version of an existing platform.
+2. Develop a new application (e.g., Tencent created WeChat separately from QQ).
+3. Buy another application (e.g., Facebook bought Instagram, WhatsApp).
+4. Integrate another application (e.g., Tencent's mini-program ecosystem).
+
+---
+SECTION 4: VIRTUAL INFLUENCERS AND IT ADOPTION (GUEST LECTURE — XIN HUANG)
+
+Virtual Influencers (VIs) are non-human, digitally created characters that share social media content and engage in interactive communications with the aim of obtaining influential status among consumers.
+
+Definitions:
+- "Non-human digitally created characters sharing social media content and engaging in interactive communications" (Mouritzen et al., 2024).
+- "Digitized entities with anthropomorphized appearances that have human bodies, social roles, and their own identity" (Byun & Ahn, 2023).
+- "Digital personas created through computer-generated imagery and/or AI" (Audrezet et al., 2025).
+
+History of Virtual Influencers:
+- 1996: Kyoko Date — first virtual idol, created by Japanese talent agency Horipro.
+- 2003: Lu do Magalu — created by Brazilian retail company Magalu; became the world's biggest virtual influencer by 2022.
+- 2016: Lil Miquela — created by LA startup Brud; focused on AI and media businesses.
+- 2018: Laila Blue — Middle East's first AI influencer (anonymous creator).
+- 2023: Miss Lala — Dubai's first AI influencer, by IT consultant company LaLaVerse.
+- 2025: Danah — Kuwait's first AI influencer, by Abdulaziz Al-Rashed.
+
+Classical IT Adoption Models applied to Virtual Influencers:
+- Technology Acceptance Model (TAM): Perceived usefulness and perceived ease of use. But is a virtual influencer really a "technology"? This question drives alternative approaches.
+- UTAUT (Unified Theory of Acceptance and Use of Technology): Extends TAM with social influence and facilitating conditions.
+- HMSAM (Hedonic-Motivation System Adoption Model): Focuses on hedonic/pleasure motivations for adoption.
+- Task-Technology Fit (TTF): Fit between the task and the technology.
+- Social Cognitive Theory: Social learning, self-efficacy.
+
+Computers Are Social Actors (CASA Theory, Nass et al., 1994): People apply social rules and norms to computers. Individuals treat computer interactions as fundamentally social. This means social science theories (developed to study human behavior) can be applied to study human-computer interaction and virtual influencer adoption.
+
+Research on Virtual Influencers:
+- Female virtual influencers display more positive affect and disclose their virtual nature more; they receive more sexualized comments and more negative comments when displaying sexual cues (Lee & Yuan, 2023).
+- Female influencers are portrayed in sexualized ways emphasizing beauty; male influencers are linked to authority and emotional detachment (Sabie & Iancu, 2025).
+- Virtual influencers can reflect digital-orientalist commodification of race and gender (Miyake, 2023).
+
+Factors influencing adoption of virtual influencers (relevant to Assignment 2):
+Students are required to identify FIVE factors from an IT adoption framework that explain why people adopt or follow virtual influencers. Consider: social influence, entertainment value, perceived authenticity, cultural alignment, visual appeal, parasocial relationships, and platform context.
+
+---
+SECTION 5: COMPARING CULTURAL FRAMEWORKS (RELEVANT TO ASSIGNMENT 1)
+
+When comparing frameworks for Assignment 1:
+
+Hofstede vs. Schwartz:
+- Both address individual vs. group orientation, power inequality, and uncertainty tolerance.
+- Hofstede focuses on acceptance of unequal power; Schwartz focuses on the importance of hierarchy.
+- Hofstede dimensions do not involve emotion; Schwartz heavily involves emotional values.
+
+Schwartz vs. Triandis:
+- Both aim to understand values in shaping behavior.
+- Schwartz categorizes 10 universal values; Triandis categorizes 5 value domains.
+- Schwartz focuses on cross-cultural relevance; Triandis emphasizes cultural differences and their influence.
+
+Schwartz vs. Trompenaars:
+- Both are tools for understanding values in behavior.
+- Schwartz categorizes 10 universal values; Trompenaars uses 7 cultural variability dimensions.
+- Trompenaars places greater emphasis on cultural differences in communication.
+
+Schwartz vs. Hall:
+- Both consider cultural context in examining values.
+- Schwartz categorizes 10 universal values; Hall categorizes low-context vs. high-context values.
+- Hall focuses specifically on communication styles.
+
+Key reminder for Assignment 1: The comparison should be included in the written submission even if the team presents early. Use high-quality scholarly sources. Identify at least three case studies from the literature. Explain objectives, methodology, and findings of each case study.

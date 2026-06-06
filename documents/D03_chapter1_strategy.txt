@@ -1,0 +1,113 @@
+CHAPTER 1 — LINKING SYSTEMS TO STRATEGY AND THE ORGANIZATION
+Course: IS 67-382 Digital Transformation, Strategy and Management
+Textbook: Pearlson & Saunders, Managing and Using Information Systems, 5th Edition
+
+---
+THE ROLE OF THE GENERAL MANAGER IN IS DECISIONS
+
+General managers play a key role in IS decisions — they do not need deep technical knowledge, but they must understand the consequences of using technologies relevant to their business environment. They should ask questions when things are unclear and should not leave IS decisions solely to IS professionals.
+
+When IS is inappropriate for its operating environment, it can inhibit operations or even cause crises. A well-known example is the 2010 Deepwater Horizon oil spill, which involved a series of IT failures coupled with organizational misalignments. The crisis illustrates that business strategy, information systems, and organizational mechanisms must all be properly aligned.
+
+The IS department manages an infrastructure essential to the firm's functioning. It is not an island — it must be aligned with how the firm manages its employees and processes.
+
+---
+THE IS STRATEGY TRIANGLE
+
+The IS Strategy Triangle is a foundational framework for this course. It has three points:
+1. Business Strategy (at the top) — drives all other strategies.
+2. Organizational Strategy — dependent on business strategy.
+3. Information Strategy — dependent on business strategy.
+
+The key principle: business strategy always drives IS and organizational strategy. If any one strategy changes, the others must change to maintain balance. IS strategy always involves consequences.
+
+Think of it this way: every digital initiative has to connect back to business value. You cannot design an IS strategy in isolation from the business goals it is meant to serve.
+
+---
+WHAT IS A BUSINESS STRATEGY?
+
+A strategy is a coordinated set of actions to fulfill objectives, purposes, and goals. A business strategy is a plan articulating where a business seeks to go and how it expects to get there. Every strategy starts with a mission.
+
+Examples of mission statements:
+- Zappos: "To provide the best customer service possible."
+- Amazon: "To be Earth's most customer-centric company."
+- L.L. Bean: "Sell good merchandise at a reasonable profit, treat your customers like human beings and they will always come back for more."
+
+---
+PORTER'S GENERIC STRATEGIES FOR COMPETITIVE ADVANTAGE
+
+Michael Porter identified three primary strategies for achieving sustainable competitive advantage:
+
+1. Cost Leadership: The organization aims to be the lowest-cost producer in the marketplace. The goal is to produce goods or services more cheaply than competitors.
+
+2. Differentiation: The organization qualifies its product or service in a way that makes it appear unique in the marketplace. Uniqueness can be based on quality, features, brand image, or customer service.
+
+3. Focus: The organization limits its scope to a narrower segment of the market and tailors its offerings to that group. Focus has two variants: cost focus and differentiation focus.
+
+The overall business strategy drives all other strategies including IS decisions. Understanding which strategy a firm uses is critical for choosing IS that complements it.
+
+---
+DYNAMIC ENVIRONMENT STRATEGIES
+
+Porter's model was developed when industry change was slow. Newer models account for faster-moving environments.
+
+Hypercompetition: The speed and aggressiveness of moves and countermoves in a market create an environment where advantages are rapidly created and eroded. Hypercompetition models fit turbulent environments and require dynamic structures, instant response, and constant change.
+
+In rapidly changing markets, firms value agility itself as a competitive advantage. They use business intelligence, predictive capability, and strategic signaling that surprises competitors.
+
+Destroy Your Business (DYB): A strategy implemented by Jack Welch at GE where employees develop strategies to destroy GE's own competitive advantage before competitors do. Apple used a similar approach by introducing the iPhone while iPod sales were still strong, and the iPad while Mac sales were strong.
+
+---
+SOCIAL BUSINESS STRATEGY
+
+A social business strategy is a plan for how the firm will use social IT, aligned with organizational and IS strategy. It answers the same questions — what, how, and who — as any business strategy.
+
+Three types of social IT strategies:
+1. Collaboration: Using social IT to extend the reach of stakeholders and connect people to share ideas, information, and expertise.
+2. Engagement: Using social IT to involve stakeholders in the traditional business of the enterprise through communities, blogs, and conversations.
+3. Innovation: Using social IT to identify, describe, prioritize, and create new ideas, giving managers a new way to generate and evaluate products and services.
+
+---
+ORGANIZATIONAL STRATEGY
+
+Organizational strategy includes the organization's design and the managerial choices that define, set up, coordinate, and control its work processes. It answers the question: "How will the company organize to achieve its goals and implement its business strategy?"
+
+The Business Diamond (Harold Leavitt) identifies four crucial components of organizational design:
+1. People
+2. Structure
+3. Tasks
+4. Information/Control
+
+Any change to IS will affect each of these components.
+
+The Managerial Levers framework identifies three types of variables managers use to effect organizational change:
+- Organizational variables: decision rights, business processes, formal reporting relationships, informal networks.
+- Control variables: data availability, planning quality, performance measurement, incentives.
+- Cultural variables: values and beliefs of the organization.
+
+Decision rights: Who in the organization has the responsibility to initiate, supply information for, approve, implement, and control various types of decisions?
+
+---
+IS STRATEGY
+
+IS strategy is the plan an organization uses to provide information services. IS allows a company to implement its business strategy.
+
+Business strategy is a function of:
+- Competition: What does the customer want and what does the competition do?
+- Positioning: In what way does the firm want to compete?
+- Capabilities: What can the firm do? IS help determine capabilities.
+
+The IS Strategy Matrix describes IS by asking: What is it? Who uses/manages it? Where is it located? This applies to hardware, software, networking, and data.
+
+---
+KEY TERMS
+
+Business strategy: A plan articulating where a business seeks to go and how it expects to get there.
+IS Strategy Triangle: A framework relating business strategy with IS strategy and organizational strategy.
+Cost leadership: When the organization aims to be the lowest-cost producer.
+Differentiation: Qualifying a product or service to appear unique in the marketplace.
+Focus: Limiting scope to a narrower market segment.
+Hypercompetition: An environment where advantages are rapidly created and eroded.
+Managerial levers: Variables used by decision makers to effect changes in their organizations.
+Business diamond: Identifies the four key components of organizational design: people, structure, tasks, and information/control.
+Social business strategy: A plan for how the firm will use social IT, aligned with organizational and IS strategy.

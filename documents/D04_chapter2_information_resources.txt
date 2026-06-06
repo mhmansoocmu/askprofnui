@@ -1,0 +1,125 @@
+CHAPTER 2 — STRATEGIC USE OF INFORMATION RESOURCES IN A GLOBAL ECONOMY
+Course: IS 67-382 Digital Transformation, Strategy and Management
+Textbook: Pearlson & Saunders, Managing and Using Information Systems, 5th Edition
+
+---
+REAL WORLD EXAMPLE: ZARA
+
+Zara is the most frequently referenced example in this chapter because it shows exactly how information resources can be used strategically. Zara aligns its IS strategy directly with its business strategy. Its POS system sends daily updates to headquarters, managers report what sold and what customers wanted but couldn't find, and new designs can be ordered twice a week. The entire process is automated so new products go from idea to shelves in 15 days. Zara uses its information resources to sustain competitive advantage — not just to run operations, but to actually outpace competitors.
+
+---
+THE EVOLUTION OF INFORMATION RESOURCES (SIX ERAS)
+
+IT has evolved across six eras, each shifting the primary role of technology:
+
+Era I (1960s): Efficiency — automate existing paper-based processes. Technology: mainframe, centralized intelligence. Value based on scarcity.
+
+Era II (1970s): Effectiveness — solve problems and create opportunities. Technology: minicomputer. Value based on scarcity.
+
+Era III (1980s): Strategic — increase individual and group effectiveness. Technology: microcomputer, decentralized intelligence. Value based on scarcity.
+
+Era IV (1990s): Strategic — transform industry and organization. Technology: client-server, distributed intelligence. Value based on plentitude.
+
+Era V (2000s): Value creation — create collaborative partnerships. Technology: internet, ubiquitous intelligence. Value based on plentitude.
+
+Era VI (2010s onward): Value creation — community and social business. Technology: social platforms, mobile, cloud. Economics of relationships bundled with economics of information.
+
+The shift from Era III to Era IV is the shift from scarcity-based value to plentitude-based value. This is when network effects became important.
+
+---
+INFORMATION RESOURCES: ASSETS AND CAPABILITIES
+
+Information resources are the available data, technology, people, and processes used to perform business tasks. They can be either assets or capabilities.
+
+IT Assets — anything tangible or intangible that can be used by a firm in its processes:
+- IS Infrastructure: hardware, software, networks, data, proprietary technology, web-based services. The foundation for delivering products and services.
+- Information Repository: logically related data captured, organized, and retrievable for decision making. Contains critical customer information that can be used for strategic advantage.
+- Web 2.0 resources: resources used but not owned by the firm (e.g. Facebook, LinkedIn, eBay).
+
+IT Capabilities — something learned or developed over time:
+- Technical skills: designing, developing, and implementing information systems.
+- IT management skills: managing the IT function and IT projects, understanding business processes, evaluating technology options.
+- Relationship skills: externally focused (relationships with vendors) or spanning (relationships between IT and business managers).
+
+---
+WHAT MAKES AN INFORMATION RESOURCE VALUABLE?
+
+Value from scarcity (Eras I–III): Value was derived from the cost to produce the information. Rare resources created competitive advantage.
+
+Value from plentitude (Era IV onward): Network effects — the value of a network node increases when others join the network. Email is a classic example: the more people use it, the more valuable it becomes for everyone.
+
+Value from information asymmetry: The party that possesses information that others do not can use it for competitive advantage or sell it.
+
+Value sustainability — for a resource to sustain competitive advantage, it must be:
+- Valuable: enables the firm to be more efficient or effective.
+- Rare: other firms do not possess it.
+- Hard to imitate: technical knowledge, company culture, and managerial experience are hard to replicate.
+- Hard to substitute or transfer.
+
+Information resources become obsolete over time. Early adopters may gain advantage, but that advantage must be actively sustained through innovation and protection.
+
+---
+PORTER'S FIVE FORCES MODEL — APPLIED TO IS
+
+Porter's Five Forces model shows the major competitive forces that shape a firm's environment. IS can be used to influence each force:
+
+1. Threat of New Entrants: IS can raise barriers to entry. Zara's IT supports relationships built over years that new entrants cannot easily replicate, and its information repository about customers is hard to copy.
+
+2. Bargaining Power of Buyers: IS can reduce buyer power by increasing loyalty. Zara's constant new product infusion (11,000+ new designs per year) draws buyers into stores repeatedly.
+
+3. Bargaining Power of Suppliers: IS can reduce dependence on suppliers. Zara's computer-controlled cutting machine and in-house dyeing reduce dependency and increase flexibility.
+
+4. Threat of Substitutes: IS can reinforce unique positioning. Zara's IS enables extremely low inventory and rapid new product introduction — a model competitors cannot easily replicate.
+
+5. Industry Competitors: IS can create hard-to-match operational advantages. Zara delivers trendy, low-cost fashion with virtually no advertising and only 10% unsold stock.
+
+---
+PORTER'S VALUE CHAIN MODEL
+
+The value chain model addresses the activities that create, deliver, and support a company's product or service. There are two broad categories:
+
+Primary activities: relate directly to the value created in a product or service (inbound logistics, operations, outbound logistics, marketing/sales, service).
+
+Support activities: make it possible for primary activities to exist and stay coordinated (firm infrastructure, HR management, technology development, procurement).
+
+IS can be used to improve both primary and support activities. ERP systems automate operations activities. CRM systems optimize customer information. SCM systems manage supplier relationships. Every link in the value chain is a potential area where IS can create advantage.
+
+---
+STRATEGIC ALLIANCES
+
+A strategic alliance is an interorganizational relationship that gives one or more companies a strategic advantage. IS can be the platform on which a strategic alliance functions.
+
+Co-opetition: A strategy where companies cooperate and compete simultaneously. Companies in a value net include competitors, complementors, customers, and suppliers. A complementor is a company whose product is used alongside yours to create more value for the customer.
+
+Example: Zynga and Facebook formed an alliance where Zynga benefited from Facebook's community, and Facebook benefited from Zynga's games keeping users on the platform.
+
+---
+RISKS OF USING IS STRATEGICALLY
+
+Using IS to outpace competition carries risks:
+- Awakening a sleeping giant: A large competitor with deeper pockets may respond with a better system (e.g., FedEx vs UPS).
+- Demonstrating bad timing: Customers may not be ready to use the technology.
+- Poor implementation: Systems that fail due to poor execution (e.g., Virgin America, Hershey Foods).
+- Not delivering what users want: Systems that miss the target market.
+- Legal risks: Using IS strategically may invite litigation (e.g., American Airlines, Google).
+
+---
+CO-CREATING IS AND BUSINESS STRATEGY
+
+In today's environment, IT strategy and business strategy cannot be created separately. Information is increasingly a core component of the product itself. FedEx cannot function without IT even though they primarily deliver packages. Financial services companies' main product is information.
+
+---
+KEY TERMS
+
+Information resources: The available data, technology, people, and processes used to perform business tasks.
+IT asset: Anything tangible or intangible used by a firm in its processes.
+IT capability: Something learned or developed over time to create, produce, or offer products.
+Network effects: The value of a network node increases when others join.
+Strategic alliance: An interorganizational relationship that provides strategic advantage.
+Co-opetition: Cooperating and competing with companies simultaneously.
+Value chain: A model showing activities that create, deliver, and support a company's product.
+Five forces model: Porter's framework showing the major competitive forces shaping a firm's environment.
+Resource-based view (RBV): The idea that competitive advantage comes from the information and resources of the firm.
+CRM: Tool to optimize processing of customer information.
+ERP: Tool that automates functions across the value chain operations.
+SCM: An approach to how companies source materials for operations.

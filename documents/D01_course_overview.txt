@@ -1,0 +1,107 @@
+COURSE OVERVIEW — IS 67-382 Digital Transformation, Strategy and Management
+Instructor: Dr. Savanid (Nui) Vatanasakdakul
+Carnegie Mellon University in Qatar
+Class hours: Monday and Wednesday, 10:00–11:15am and 2:30–3:45pm
+Email: savanid@cmu.edu
+
+---
+COURSE DESCRIPTION
+
+This course prepares students to be effective digital transformation strategists. It adopts a global perspective, exploring multi-dimensional aspects of IS management including strategic leadership, cross-cultural management, and technology adoption and diffusion in different contexts.
+
+The course provides understanding of IS-enabled change in the business environment, the alignment between IS strategies and business objectives, and ways in which businesses can leverage IS to transform and create digital strategies for sustained competitive advantage. Students are also exposed to digital ecosystems in various industries and across cultural platforms.
+
+The course uses a flipped classroom model. Students pre-read each chapter before class, then contribute to discussions, activities, and assessments during class. Topics and schedules may be modified based on students' learning progress.
+
+Textbook: Keri E. Pearlson, Carol S. Saunders, Dennis F. Galletta, "Managing and Using Information Systems: A Strategic Approach," 7th Edition, Wiley (ISBN: 978-1-119-56115-6). The textbook supplements class materials — students are responsible for independent reading.
+
+---
+LEARNING OBJECTIVES
+
+By the end of this course, students will be able to:
+1. Evaluate the global drivers behind digital transformation and their effect on society and organizations.
+2. Identify the importance of aligning IS strategy with organizational objectives, and the importance of IS assets in supporting organizational success.
+3. Identify factors involved in technology adoption and diffusion in different social, cultural, and organizational environments.
+4. Analyze current and future technological trends and their implications on organizational direction for decision-making.
+5. Analyze the key strategic issues facing management in deploying digital and IS strategies.
+6. Formulate and recommend appropriate IS strategies to fit socio-cultural and socio-technical contexts and requirements.
+
+---
+WEEKLY SCHEDULE
+
+Week 1: Linking Systems to Strategy and the Organization (Chapter 1)
+Week 2: Strategic Use of Information Resources in a Global Economy (Chapter 2)
+Week 3: Organizational Strategies: Managerial Levers (Chapter 3)
+Week 4: Information Systems and Culture — Workshop 1
+Week 5: Information Systems and Culture — Workshop 2
+Week 6: Work Design: Enabling Global Collaboration (Chapter 4)
+Week 7: Technology Acceptance — Workshop 1
+Week 8: Technology Acceptance — Workshop 2
+Week 9: Digital Transformation Strategy — Workshop 1 (Project Formation)
+Week 10: Digital Transformation Strategy — Workshop 2 (Data Collection)
+Week 11: Digital Transformation Strategy — Workshop 3 (Analysis and Writing Up)
+Week 12: Final Project Presentation
+Week 13: Final Project Presentation
+Week 14: Revision
+
+---
+ASSESSMENTS AND GRADING
+
+Cultural and Technology Adoption Frameworks: 20% x 2 = 40%
+Final Project: 40%
+Self-Reflective Essay: 10%
+Class Participation: 10%
+Total: 100%
+
+GRADING SCALE
+A (90–100%): Excellent — exceeds average understanding, goes well beyond the basics.
+B (80–89%): Far above average — fully meets understanding, understands basics and concepts beyond.
+C (70–79%): Average — meets minimum expectations, satisfies course requirements.
+D (60–69%): Below average — meets many minimum expectations.
+R (0–59%): Fails to meet minimum expectations.
+
+The "wow factor" separates an A from a C. C is average — it meets requirements. An A demonstrates something that makes the professor say "wow." Students should always think: am I moving toward the wow factor or away from it?
+
+---
+CULTURAL AND TECHNOLOGY ADOPTION FRAMEWORKS ASSIGNMENTS
+
+Students develop understanding of national cultural theories and the interplay between culture and technology adoption. Students research and present on cultural frameworks and IT adoption frameworks with examples from various cultures. There are 2 collections, each worth 20%.
+
+---
+FINAL PROJECT
+
+Students complete a project on IT adoption in a technological and cultural context of their choice. The goal is to apply frameworks to analyze technology adoption, then recommend appropriate digital strategies to maximize benefits. Individual assignment, approximately 3,000 words.
+
+---
+SELF-REFLECTIVE ESSAY
+
+Each student writes a 500-word reflective essay on their experience in the course — lessons learned and how the course applies to future careers.
+
+---
+CLASS PARTICIPATION RUBRIC
+
+0%: Absent more than 4 classes (with or without reasons).
+1–25%: Present minimum 10 classes, not disruptive, rarely volunteers.
+25–50%: Knows basic facts, offers straightforward information, sporadic involvement.
+50–75%: Good preparation, offers analysis, responds to other students, consistent involvement.
+75–100%: Excellent preparation, synthesizes discussions, contributes very significantly, very active ongoing involvement.
+
+---
+LATE PENALTY
+
+Late tasks accepted up to 72 hours after deadline. 20% deduction per 24-hour period late (e.g., 25 hours late = 40% penalty). Does not apply if special consideration is approved.
+
+---
+ATTENDANCE POLICY
+
+Four absences result in loss of a final letter grade. Six absences result in course failure. Tardiness, leaving early, or leaving for prolonged periods counts as an absence. Failure to attend results in forfeiting any marks for that class activity.
+
+---
+PEER REVIEW
+
+For group projects, every team member submits a peer evaluation. Individual scores may be adjusted based on peer feedback.
+
+---
+ACADEMIC INTEGRITY
+
+Students must follow CMU's academic integrity policies. Plagiarism, copying without citation, submitting others' work, and using AI to generate work without acknowledgment are all violations. All submitted work must be the student's own. Sources must be cited using Harvard or APA style.

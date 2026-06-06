@@ -1,0 +1,120 @@
+CHAPTER 4 — WORK DESIGN: ENABLING GLOBAL COLLABORATION
+Course: IS 67-382 Digital Transformation, Strategy and Management
+Textbook: Pearlson & Saunders, Managing and Using Information Systems, 5th Edition
+
+---
+HOW IT HAS CHANGED THE NATURE OF WORK
+
+IT has changed work in three fundamental ways:
+1. Creating new types of work (new jobs that did not exist before).
+2. Enabling new ways to do traditional work (automating or digitizing existing tasks).
+3. Supporting new ways to manage talent (remote hiring, virtual supervision, electronic evaluation).
+
+New types of jobs created by IT include: knowledge managers, community managers, communications managers, systems analysts, database administrators, network administrators, and network security advisors. The Bureau of Labor Statistics estimates 4.1 million IT workers in the US.
+
+Real world example: Best Buy introduced Results-Only Work Environment (ROWE), allowing employees to choose when and where they work as long as project goals are met. Every meeting became optional. Productivity on ROWE teams soared 41% between 2005 and 2007, and voluntary turnover dropped 90%. This saved Best Buy $16 million per year. IBM and AT&T adopted similar strategies.
+
+---
+HOW IT SUPPORTS COMMUNICATION AND COLLABORATION
+
+Major communication technologies used in today's work environment include: email, intranets, instant messaging, VoIP (Voice over Internet Protocol), video teleconferencing, unified communications, RSS, virtual private networks, and file transfer.
+
+Collaboration tools include: social networking sites, virtual worlds, blogs (web logs), wikis, and groupware.
+
+Thomas Friedman argues that collaboration is the way small companies can "act big" and flourish in a flat world — by taking advantage of new collaborative tools to reach farther, faster, wider, and deeper.
+
+Groupware enables group members to work together on a project even from remote locations by supporting group decision making, information processing, and simultaneous file access.
+
+---
+TELECOMMUTING AND MOBILE WORK
+
+Telecommuting (also called teleworking) means working from home, a customer site, or another convenient location instead of the corporate office. Mobile workers work from wherever they are, using technology to access coworkers, company computers, and information sources.
+
+Factors driving telecommuting growth:
+- Shift to knowledge-based work: eliminates the need for work to be in a specific place.
+- Changing demographics and lifestyle preferences: provides geographic and time flexibility.
+- New technologies with enhanced bandwidth: makes remote work practical and cost-effective.
+- Reliance on web: enables 24/7 connection to coworkers and customers.
+- Energy concerns: reduces commuting costs and company real estate costs.
+
+Advantages for employees: reduced stress, higher productivity, geographic flexibility, ability for housebound individuals to join the workforce.
+
+Disadvantages for employees: harder to separate work from personal life, may end up working more hours, can feel disconnected from company culture, easier to replace with outsourced labor.
+
+Disadvantages for managers: harder to evaluate performance, must rely on employee self-discipline, may feel loss of control, some employees abuse the privilege.
+
+---
+VIRTUAL TEAMS
+
+A virtual team is two or more people who work together interdependently with mutual accountability for achieving common goals, do not work in the same place or at the same time, and use electronic communication technology to communicate, coordinate, and complete tasks.
+
+Factors driving use of virtual teams:
+- Same drivers as telecommuting.
+- Expand knowledge base by drawing members from anywhere globally.
+- Benefits from "following the sun" — teams in different time zones can work around the clock.
+
+Challenges of virtual teams compared to traditional teams:
+
+Communication: Multiple time zones create both efficiency opportunities and communication difficulties. Non-verbal cues are lost. Electronic communication changes the richness of interaction.
+
+Technology: All members must have the same or compatible technologies. Policies and norms must be established explicitly. Different cultures have different perceptions of time and task importance.
+
+Team diversity: Members often come from different organizations and cultures, making it harder to form group identity, build trust, and establish shared norms.
+
+Managing virtual teams requires different management styles. Performance must be based on outputs rather than observation. Frequent communication is essential. Face-to-face meetings, though less frequent, are the heartbeat of successful global virtual teams.
+
+---
+SECURITY IN REMOTE WORK
+
+BYOD (Bring Your Own Device): Remote workers use their own computers, creating security risks. Once an infected device connects to the network, perimeter security cannot protect everyone. Managers must assess areas of risk, establish policies, provide education, and deploy technology to mitigate threats.
+
+---
+GAINING ACCEPTANCE FOR IT-INDUCED CHANGE
+
+Employees may resist IT-induced changes if they view them as threatening. Resistance can take the form of:
+- Denying the system is up and running.
+- Sabotaging the system by distorting inputs.
+- Convincing others the new system will not change anything.
+- Refusing to use the system when usage is voluntary.
+
+To manage change effectively, John Kotter built on Lewin's change model (unfreeze → change → refreeze) and developed eight specific steps for bringing about change:
+1. Create urgency.
+2. Form a powerful coalition.
+3. Create a vision for change.
+4. Communicate the vision.
+5. Remove obstacles.
+6. Create short-term wins.
+7. Build on the change.
+8. Anchor the changes in corporate culture.
+
+Managers should inform workers why a change is being made before it happens, follow up with reinforcement behaviors, and reward employees who successfully adopt new behaviors.
+
+---
+TECHNOLOGY ACCEPTANCE MODEL (TAM)
+
+The Technology Acceptance Model was developed by Fred Davis. TAM suggests that managers cannot get employees to use a system until they want to use it.
+
+TAM has two core constructs:
+1. Perceived Usefulness (PU): The degree to which a person believes using the system will improve their performance — they believe it will allow them to do more or better work for the same effort.
+2. Perceived Ease of Use (PEOU): The degree to which a person believes using the system will be free of effort — they believe it is easy to use.
+
+Both perceived usefulness and perceived ease of use affect the user's attitude toward the system, which drives behavioral intention to use, which leads to actual system use.
+
+TAM has been extended into TAM2 and TAM3, incorporating additional factors such as social norms, experience, and individual characteristics. TAM3 provides a more detailed picture of what influences perceived usefulness and perceived ease of use.
+
+Important limitation of TAM: it was designed for traditional technology adoption. When applied to newer phenomena like virtual influencers, researchers must consider whether the technology acceptance framework fully captures the social and emotional dimensions of adoption. This is why researchers have also turned to social theories and models like UTAUT, HMSAM, and social cognitive theory.
+
+---
+KEY TERMS
+
+Telecommuting: Work arrangements allowing employees to work from home or other locations instead of the corporate office.
+Virtual team: Two or more people who work interdependently without being in the same place and/or at the same time, using electronic communication.
+ROWE (Results-Only Work Environment): An approach where employees can choose when and where they work as long as project goals are met.
+BYOD: Bring Your Own Device — remote workers using personal devices for work.
+Technology Acceptance Model (TAM): A framework suggesting that perceived usefulness and perceived ease of use are the key determinants of technology adoption.
+Perceived usefulness: The degree to which a user believes a system will improve their performance.
+Perceived ease of use: The degree to which a user believes a system will be free of effort.
+Groupware: Software enabling group members to work together on projects from remote locations.
+Wiki: Software allowing users to collaboratively create, edit, and link web pages.
+Blog: Online journal that links into a large network of information sharing.
+VoIP: Method for transmitting analog audio signals as digital data over the internet.

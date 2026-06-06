@@ -1,0 +1,125 @@
+ASSIGNMENTS — IS 67-382 Digital Transformation, Strategy and Management
+Instructor: Dr. Savanid (Nui) Vatanasakdakul
+
+---
+ASSIGNMENT 1: CULTURAL FRAMEWORK ASSIGNMENT (20%)
+
+Learning Objectives:
+- Review and critically evaluate key theories and frameworks on national culture.
+- Apply cultural theories to analyze technology adoption within a specific cultural context.
+
+Step 1 — Explain the Cultural Framework
+Select a cultural framework (or the one assigned) and explain its key concepts, background, main ideas, origins, and dimensions. Highlight its relevance for analyzing cultural influences on technology adoption.
+
+Step 2 — Apply the Framework to a Country
+Choose one country (other than Qatar). Identify at least three scholarly case studies that use the cultural framework to explain technology adoption in that country. You may refer to multiple technologies. Discuss how cultural dimensions influence acceptance, resistance, or adoption.
+
+Step 3 — Compare Your Framework to Others
+Compare your framework to those presented by other teams. If your team presents first, you are not required to include the comparison in the presentation, but must include it in the written submission.
+
+Deliverables:
+- 10-minute in-person presentation (7 minutes presentation + 3 minutes Q&A)
+- Submit slides to Canvas (.pptx or .pdf, not .doc)
+- No page limit
+- Harvard or APA referencing
+- Include full names and student IDs of all group members
+
+Grading (100 points total):
+Understanding of Cultural Context and Theories (40%): Clear explanation of the theory, its background and key concepts. Demonstrated understanding of the selected country's culture.
+Critical Analysis and Integration of Theory (40%): Use of high-quality scholarly literature. Ability to explain objectives, methodology, and findings of case studies. Strong alignment between cultural framework and analysis.
+Quality of Presentation and Materials (20%): Professional format, readability, clarity, effective oral delivery, engagement, grammar.
+
+---
+ASSIGNMENT 2: IT ADOPTION FRAMEWORK ASSIGNMENT (20%)
+
+Learning Objectives:
+- Review and critically evaluate key IT adoption frameworks.
+- Apply an IT adoption framework to analyze technology adoption in specific contexts.
+
+Step 1 — Explain the IT Adoption Framework
+Review and explain the key concepts and background of your assigned IT adoption framework. Summarize its main ideas, origins, and dimensions, and its relevance for analyzing technology adoption.
+
+Step 2 — Present Three Cases from Scholarly Articles
+Select three peer-reviewed journal articles that apply your framework. For each article:
+- Identify the technology studied.
+- Discuss the factors influencing its adoption through the framework.
+- Explain how the framework provides insights into the adoption process.
+
+Step 3 — Case Study Analysis: Virtual Influencers
+Using your IT adoption framework, analyze the adoption of virtual influencers. Identify and discuss five factors that influence why people adopt or follow virtual influencers. Answer: "What factors influence the adoption of virtual influencers?" and "Why do people follow virtual influencers?"
+
+Deliverables:
+- 10-minute in-person presentation (7 minutes + 3 minutes Q&A)
+- Submit slides to Canvas (.pptx or .pdf)
+- No page limit
+- Harvard or APA referencing
+- Include full names and student IDs
+
+Grading (100 points total):
+Understanding of IT Adoption Theories (40%): Clear background, detailed discussion of theories, high-quality scholarly articles, accurate summaries, strong alignment between theory and case study.
+Critical Analysis and Integration (40%): Identifies and thoroughly discusses 5 factors from an adoption framework that influence virtual influencer adoption. Strong evidence-based explanations.
+Quality of Presentation and Materials (20%): Professional format, clarity, effective oral delivery, grammar and spelling.
+
+---
+FINAL PROJECT (40%) — INDIVIDUAL ASSIGNMENT
+
+Learning Objectives:
+- Identify innovative technologies as case studies and conduct a scholarly literature review on existing technology adoption studies.
+- Identify and analyze success factors influencing technology adoption in specific country and industry contexts.
+- Demonstrate understanding of theoretical models by applying them to the case study.
+- Provide strategic recommendations for digital transformation.
+
+Step 1 — Choose a Study Context
+Select a specific context, for example: ERP adoption in the Chinese manufacturing industry, or social media adoption in the Qatari banking sector.
+
+Step 2 — Conduct a Literature Review
+Search for and summarize relevant academic literature. Focus on high-quality sources (top IS conferences and journals) published within the last 10 years.
+
+Step 3 — Define the Research Question
+Formulate clear research questions aligned with your chosen context.
+
+Step 4 — Select an Appropriate Model
+Identify a theoretical model or framework (IT adoption models, cultural theories) to address your research question.
+
+Step 5 — Conduct Fieldwork (Optional)
+Gather relevant data to support your study. This step is optional.
+
+Step 6 — Analyze Data
+Analyze findings from the literature and any fieldwork. Use the theoretical framework to structure the analysis. Identify 5 key factors influencing technology adoption with justification and citations.
+
+Step 7 — Recommendation
+Provide strategic recommendations in the form of a roadmap to guide successful digital transformation of your case study.
+
+Report Structure:
+Introduction: Background, motivation, one research question.
+Literature Review: Review and critical evaluation of academic literature.
+Theoretical Framework: Models used, justification, five key adoption factors with citations.
+Methodology: Research design, unit of analysis, data collection, analysis methods (assume future data collection).
+Results (if applicable): Present and analyze fieldwork results.
+Discussion and Recommendations: Interpret findings, provide a strategic recommendations roadmap.
+
+Submission Requirements:
+- Approximately 3,000 words (excluding references)
+- Times New Roman, size 12, 1.5 line spacing
+- Harvard referencing style
+- Submit to Canvas (.doc or .pdf)
+- Check Turnitin originality report before final submission
+
+Grading (100 points total):
+Selection of Case Study and Literature Analysis (30%): Good selection, in-depth understanding of case and literature.
+Critical Analysis and Quality of Report (30%): Excellent understanding of topic, research, data, analysis, and solutions.
+Theory Integration (30%): Advanced understanding of theoretical lens, appropriate recommendations.
+Professional Presentation (10%): Professional standard, minimal errors in formatting, spelling, grammar, referencing.
+
+---
+SELF-REFLECTIVE ESSAY (10%)
+
+Write a 500-word essay reflecting on your experiences in this course. Discuss your lessons learned, your journey, and how you can apply what you learned to your future career.
+
+---
+IMPORTANT POLICY FOR ALL ASSIGNMENTS
+
+Late tasks accepted up to 72 hours after deadline. 20% deduction per 24-hour period. Special consideration must be requested before the deadline.
+For group assignments, contact the instructor before the deadline if collaboration challenges arise.
+All sources must use Harvard or APA referencing style.
+Full names and student IDs must appear on all submissions.

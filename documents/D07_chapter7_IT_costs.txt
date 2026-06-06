@@ -1,0 +1,162 @@
+CHAPTER 7 — COST RECOVERY OF INFORMATION SYSTEMS
+Course: IS 67-382 Digital Transformation, Strategy and Management
+Textbook: Pearlson & Saunders, Managing and Using Information Systems, 5th Edition
+
+---
+THE BUSINESS OF IT
+
+IT is not just a technical function — it is a business. The CIO of Avon Products Inc. uses hard-dollar metrics like NPV and IRR to demonstrate business value in IT investments, because these are the language of business. Every digital initiative has to connect back to business value. IT investments must be justified and monitored just like any other capital investment.
+
+---
+THE BUSINESS-IT MATURITY MODEL
+
+There is often a misalignment between what the business side demands and what IT offers. The Maturity Model framework helps understand differences in capabilities between business and IT.
+
+When IT and the business are at the same level of maturity, they are in balance. When they are at different levels, misalignment and friction occur.
+
+Maturity levels of IT organizations:
+- Level 1: Functional view predominates. IT focuses on basic services — cost savings and operational information.
+- Level 2: Process view. IT adopts an integrated approach across the organization and supports managerial decision making. Enables business partnerships.
+- Level 3: Innovation focus. IT provides support for strategic initiatives and helps spur innovation.
+
+---
+WHAT THE IT ORGANIZATION DOES
+
+A manager can typically expect support in 14 core IT activities:
+- Developing and maintaining IS.
+- Managing supplier relationships.
+- Managing data, information, and knowledge.
+- Managing internet and network services.
+- Managing human resources.
+- Operating the data center.
+- Providing general support.
+- Planning for business discontinuities.
+- Innovating current processes.
+- Establishing architecture platforms and standards.
+- Promoting enterprise security.
+- Anticipating new technologies.
+- Participating in setting and implementing strategic goals.
+- Integrating social IT.
+
+The IT organization does NOT directly perform core business functions such as selling, manufacturing, or accounting. It does not design business processes alone or set business strategy. Partnership between general managers and IT professionals is essential.
+
+---
+THE CHIEF INFORMATION OFFICER (CIO)
+
+The CIO is the senior-most executive responsible for technology vision and leadership. The CIO is a business technology strategist who uses technology as the core tool in creating competitive advantage and aligning business and IT strategies. The CIO works with the executive team in strategy formulation.
+
+---
+BUILDING A BUSINESS CASE FOR IT INVESTMENT
+
+A business case is created to gain support and approval for an IT investment. It is similar to a legal case — a structured document laying out all relevant information needed to make a go/no-go decision.
+
+Key components of a business case:
+- Executive Summary: One or two page overview.
+- Overview and Introduction: Background, current situation, statement of the problem or opportunity, high-level recommended solution.
+- Assumptions and Rationale: Issues driving the proposal.
+- Program Summary: Description, scope, objectives, contacts, resource plan, key metrics, implementation plan.
+- Financial Discussion and Analysis: Projected costs, revenues, benefits, financial metrics, cash flow, Total Cost of Ownership (TCO) calculations.
+- Benefits and Business Impacts: All non-financial outcomes including new business, transformation, innovation, organizational impacts.
+- Schedule and Milestones: Full project schedule, milestones, go/no-go metrics at each stage.
+- Risk and Contingency Analysis: Risks, risk analysis, contingencies, sensitivity analysis.
+- Conclusion and Recommendation: Primary recommendation and conclusions.
+
+---
+IT PORTFOLIO MANAGEMENT
+
+IT portfolio management is the ongoing process of evaluating new and existing applications collectively to determine which provide business value. The goal is for the company to fund and invest in the most valuable initiatives that, taken together, generate maximum benefit.
+
+Four asset classes of IT investments (Peter Weill, MIT):
+1. Transactional Systems: Streamline or cut costs.
+2. Infrastructure Systems: Shared IT services used for multiple applications (servers, networks, databases, laptops).
+3. Informational Systems: Provide information for control, management, communication, analysis, or collaboration.
+4. Strategic Systems: Used to gain competitive advantage in the marketplace.
+
+Average company IT portfolio allocation:
+- 46% to infrastructure.
+- 25% to transactional systems.
+
+The IT portfolio must align with business strategy. A cost-focused strategy requires a different balance of IT investments than an agility-focused strategy.
+
+---
+VALUING IT INVESTMENTS
+
+Common valuation methods:
+
+ROI (Return on Investment): (Estimated lifetime benefits − Estimated lifetime costs) / Estimated lifetime costs. Use when detailed analysis is not required or when costs and benefits are clear.
+
+NPV (Net Present Value): Discounts costs and benefits for each year of the system's lifetime using present value. Use when the project lasts long enough that the time value of money becomes a factor.
+
+EVA (Economic Value Added): Net operating profit after taxes. Particularly appropriate for capital-intensive projects.
+
+Payback Analysis: Time that will lapse before accrued benefits overtake accrued and continuing costs.
+
+IRR (Internal Rate of Return): Return on the IT investment compared to the corporate policy on rate of return.
+
+Weighted Scoring Methods: Costs and revenues/savings weighted based on strategic importance.
+
+Prototyping: A scaled-down version of a system tested for its costs and benefits.
+
+Common pitfall: Analysis paralysis — analyzing too much or too long. Not every situation calls for in-depth analysis. Even when numbers say a project is not worthwhile, the investment may be necessary to remain competitive.
+
+---
+MONITORING IT INVESTMENTS
+
+Metrics must be created, monitored, and communicated to senior management. IT metrics include: logs of errors encountered by users, end-user surveys, user turnaround time, logs of uptime/downtime, system response time, and percentage of projects completed on time and within budget. Business metrics include: contacts with external customers, sales revenue from web channels, and new business leads generated.
+
+---
+THE BALANCED SCORECARD
+
+The Balanced Scorecard (Robert Kaplan and David Norton) focuses attention on the organization's value drivers beyond just financial performance. It assesses the full impact of corporate strategies from four perspectives:
+
+1. Customer: How do customers see us?
+2. Internal Business: What must we excel at?
+3. Innovation and Learning: Can we continue to improve and create value?
+4. Financial: How do we look to shareholders?
+
+The balanced scorecard helps IT managers manage and communicate the value of the IT department in a way that supports the organization's overall strategy.
+
+IT Dashboards: Summarize key metrics for senior managers, providing quick identification of the status of IT. Types include: portfolio dashboards, business-IT dashboards, service dashboards, and improvement dashboards.
+
+---
+FUNDING IT RESOURCES
+
+Three main IT funding methods:
+
+Chargeback: IT costs are recovered by charging individuals, departments, or business units based on actual usage. Most equitable but expensive to create and manage. Best when there is wide variation in usage among users.
+
+Allocation: Costs recovered based on something other than usage (e.g., revenues, number of employees). Simpler to implement. Predictable charges. Main concern: the free-rider problem — a large IT user pays the same as a small one.
+
+Corporate Budget: Costs fall to the corporate bottom line rather than being charged to specific users. Simple — no usage calculations needed. IT managers control the budget. Drawback: harder to control usage, and IT may become less customer-oriented.
+
+---
+TOTAL COST OF OWNERSHIP (TCO)
+
+TCO is a technique that calculates a more accurate picture of IT costs by including all associated costs beyond the initial capital investment. Introduced by the Gartner Group in the late 1980s.
+
+TCO includes:
+- Hardware and software purchase costs.
+- Technical support costs.
+- Administration costs.
+- Training costs.
+- System retirement costs.
+- Informal support costs (time employees spend helping each other with technology instead of doing their actual work).
+
+Labor costs associated with an IT infrastructure far outweigh the actual capital investment costs. TCO provides the fullest picture of where IT dollars are actually spent. TCO results can be evaluated over time against industry standards.
+
+Activity-Based Costing (ABC): Calculates costs by counting the actual activities that go into making a specific product or delivering a service, and allocating only those costs to that activity. Charges costs to profit centers rather than cost centers.
+
+---
+KEY TERMS
+
+Business case: A structured document laying out all relevant information needed to make an IT investment decision.
+IT portfolio management: Evaluating new and existing applications collectively on an ongoing basis to determine which provide business value.
+ROI: (Estimated lifetime benefits − Estimated lifetime costs) / Estimated lifetime costs.
+NPV: Net Present Value, calculated by discounting costs and benefits using present value.
+TCO: Total Cost of Ownership, includes all associated costs of an IT investment beyond initial capital.
+Chargeback: Charging departments based on actual IT usage.
+Allocation: Recovering IT costs based on a factor other than usage.
+Corporate budget: IT costs fall to the corporate bottom line.
+Balanced scorecard: Framework assessing organizational performance from customer, internal, innovation, and financial perspectives.
+Business-IT Maturity Model: A tool for understanding differences in capabilities between business and IT.
+CIO: Chief Information Officer — senior executive responsible for technology vision and leadership.

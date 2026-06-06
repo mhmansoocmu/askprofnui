@@ -1,0 +1,126 @@
+CHAPTER 3 — ORGANIZATIONAL STRATEGY: MANAGERIAL LEVERS
+Course: IS 67-382 Digital Transformation, Strategy and Management
+Textbook: Pearlson & Saunders, Managing and Using Information Systems, 5th Edition
+
+---
+WHAT IS ORGANIZATIONAL STRATEGY?
+
+Organizational strategy includes the organization's design and the managerial choices that define, set up, coordinate, and control its work processes. Optimized organizational design and management control systems support optimal business processes, which reflect the firm's values and culture.
+
+There are three types of managerial levers: organizational, control, and cultural.
+
+---
+THE MANAGERIAL LEVERS FRAMEWORK
+
+Organizational Variables:
+- Decision rights: Authority to initiate, approve, implement, and control various types of decisions. Ideally, the person with the most relevant information should hold decision rights. Zara moved decision rights to store managers, enabling quicker local responses.
+- Business processes: The set of ordered tasks needed to complete key business objectives.
+- Formal reporting relationships: The structure ensuring coordination among all units.
+- Informal networks: Ad hoc groups and relationships that coordinate and transfer information outside formal channels.
+
+Control Variables:
+- Data: The information collected, stored, and used by the organization.
+- Planning: The processes by which future direction is established, communicated, and implemented.
+- Performance measurement and evaluation: Measures used to assess success and improve quality of work.
+- Incentives: Monetary and non-monetary devices used to motivate behavior.
+
+Cultural Variables:
+- Values: The set of implicit and explicit beliefs that underlie decisions and actions taken.
+- Beliefs: Perceptions that people hold about how things are done in their community.
+- Assumptions: Unobservable values that have become so taken for granted they guide behavior without anyone thinking about them.
+- Observable artifacts: Physical manifestations such as symbols, awards, myths, rituals, and stories.
+
+IS plays a role in all of these: it defines information flow, facilitates management control, and is shaped by culture. Culture has layers — observable artifacts at the surface, values in the middle, and deeply held assumptions at the core.
+
+---
+ORGANIZATIONAL STRUCTURES
+
+Organizations can be structured in four main ways:
+
+Hierarchical Structure:
+Based on division of labor, specialization, spans of control, and unity of command. Key decisions are made at the top and filter down. Middle managers handle primary information processing. IS supports this hierarchy by storing and communicating information up and down the chain. Appropriate for stable environments where top-level executives control critical decisions. Example: Traditional large corporations with centralized reporting.
+
+Flat Structure:
+Less well-defined chain of command, fewer employees, everyone does what is needed. Responds quickly to dynamic, uncertain environments. Good for entrepreneurial and smaller organizations. Decision rights are often decentralized. IS offloads routine work and supports intra-firm communication.
+
+Matrix Structure:
+Workers assigned to two or more supervisors in an effort to integrate multiple business dimensions. Dual reporting based on function and purpose. Decision rights are shared between managers. Appropriate for complex decision-making in uncertain environments. IS reduces operating complexities and allows easy information sharing across functions.
+
+Networked Structure:
+Feels both flat and hierarchical. Highly decentralized decision rights. Appropriate for dynamic, unstable environments. Uses distributed information and communication systems in place of rigid hierarchical controls. Employees share knowledge and participate in key decisions. IS is fundamental to process design and process flexibility. Example: Large global organizations with distributed teams.
+
+---
+IS AND MANAGEMENT CONTROL
+
+Management control is concerned with how planning is performed and how people and processes are monitored, evaluated, and compensated. IS plays three important roles in management control:
+
+1. Data collection: IS makes it possible to collect data automatically — number of keystrokes, time spent on a task, who was contacted, what data passed through a process.
+
+2. Evaluation: IS enables comparison of actual performance against standard or historical data. Models and simulations help managers understand work progress. Quick feedback enables faster improvements. Many companies use 360-degree feedback, where supervisors, subordinates, and coworkers all provide input.
+
+3. Communication: IS communicates feedback and performance information throughout the organization. Workers can use the information to improve performance and determine rewards.
+
+Monitoring ethics: Employees must be informed about monitoring software. Monitoring should be balanced against employees' right to privacy, and rewards should recognize improvements driven by monitoring data.
+
+---
+IS AND PLANNING
+
+IT can play a role in planning in three ways:
+1. Providing data needed to develop the strategic plan, collecting data from organizational units.
+2. Providing scenario and sensitivity analysis through simulation and data modeling.
+3. Automating parts of the planning process.
+
+---
+INFORMATION SYSTEMS AND NATIONAL CULTURE
+
+Culture is defined as a shared set of values and beliefs that a group holds and that determines how the group perceives, thinks about, and reacts to its environments. Culture is the "collective programming of the mind" that distinguishes not only nations but also industries, professions, and organizations.
+
+Culture has layers:
+- Observable artifacts: visible elements like dress, symbols, awards, rituals.
+- Espoused values: explicitly stated preferred organizational values.
+- Enacted values: the values actually exhibited in employee behavior.
+- Assumptions: deeply held, unobservable beliefs that guide behavior without conscious thought.
+
+IS development and use can be impacted by culture at all levels. Differences in national culture may affect IS development, technology adoption and diffusion, system use and outcomes, and management strategy.
+
+---
+HOFSTEDE'S NATIONAL CULTURAL DIMENSIONS
+
+Hofstede originally identified four major dimensions of national culture:
+
+1. Power Distance: The degree to which members of an organization or society expect and agree that power should be unequally distributed. High power distance societies accept hierarchical structures; low power distance societies expect equality.
+
+2. Uncertainty Avoidance: The extent to which members strive to avoid uncertainty by relying on social norms, rituals, and bureaucratic practices. High uncertainty avoidance cultures prefer rules and predictability; low uncertainty avoidance cultures are more tolerant of ambiguity.
+
+3. Individualism vs. Collectivism: The degree to which people act as individuals or as members of groups. Individualistic cultures (e.g., USA) prioritize personal goals; collectivist cultures (e.g., China) prioritize group goals.
+
+4. Masculinity vs. Femininity: The extent to which a culture values assertiveness, achievement, and competition (masculine) versus cooperation, modesty, and quality of life (feminine).
+
+A fifth dimension was later added: Long-Term vs. Short-Term Orientation (Confucian Work Dynamism) — the degree to which a culture focuses on the past, present, or future.
+
+These dimensions matter for IS because culture predisposes people to act in certain ways. A system designed without awareness of cultural context is likely to fail in adoption.
+
+---
+THE GLOBE STUDY
+
+The GLOBE (Global Leadership and Organizational Behavior Effectiveness) program expanded Hofstede's work and identified nine cultural dimensions. Six have roots in Hofstede's work; three are additions:
+- Performance orientation: Encourages and rewards improvement and excellence.
+- Humane orientation: Rewards fair, altruistic, and kind behavior.
+- Future orientation: Degree of engagement in future-oriented behaviors like planning and investing.
+
+Some leadership traits are universally acceptable across cultures: being trustworthy, just and honest, forward-looking, positive and motivational, and communicative.
+
+---
+KEY TERMS
+
+Organizational strategy: The organization's design and the choices it makes to define, set up, coordinate, and control work processes.
+Decision rights: Who has responsibility to initiate, approve, implement, and control various types of decisions.
+Hierarchical organization structure: An organizational form based on division of labor, specialization, spans of control, and unity of command.
+Flat organization structure: Less well-defined chain of command, decisions pushed down.
+Matrix organization structure: Workers assigned to two or more supervisors.
+Networked organization structure: Feels flat and hierarchical simultaneously; highly decentralized.
+Culture: A set of shared values and beliefs that determines how a group perceives and reacts to its environment.
+Managerial levers: Organizational, control, and cultural variables managers use to effect change.
+Power distance: Degree to which members expect and accept unequal power distribution.
+Uncertainty avoidance: Extent to which members avoid uncertainty through norms and procedures.
+Individualism/collectivism: Degree to which people act as individuals vs. group members.
