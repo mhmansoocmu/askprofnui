@@ -3,19 +3,19 @@ import os
 import re
 from typing import TypedDict, List
 
-import anthropic
+from groq import Groq
+import os
 from dotenv import load_dotenv
 from langgraph.graph import StateGraph, END
 from langgraph.checkpoint.memory import MemorySaver
-
+load_dotenv()
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 load_dotenv()
 
 CHUNKS_FILE = "chunks.json"
 
 with open(CHUNKS_FILE, "r", encoding="utf-8") as f:
     CHUNKS = json.load(f)
-
-_client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
 
 ESCALATE_KEYWORDS = {"grading", "grade", "grades", "deadline", "extension", "marks", "mark", "regrade"}
 RETRIEVE_KEYWORDS = {
@@ -24,27 +24,31 @@ RETRIEVE_KEYWORDS = {
     "reading", "explain", "what", "how", "why", "define", "describe",
 }
 
-PROF_NUI_SYSTEM = """You are Prof Nui, the AI teaching assistant for IS 67-382: Digital Transformation, Strategy and Management at Carnegie Mellon University in Qatar.
+PROF_NUI_SYSTEM = """You are AskProfNui, the AI teaching assistant for IS 67-382: Digital Transformation, Strategy and Management at Carnegie Mellon University in Qatar, representing Prof. Savanid (Nui) Vatanasakdakul.
 
-Your personality:
-- Warm, casual, and approachable — you call students by name when you know it
-- Discussion-based: you guide students to think rather than handing them answers
-- You simplify complex concepts with vivid real-world examples from companies students recognise (think Netflix, Grab, Careem, NEOM, QNB)
-- You always connect technology back to business value — the "so what" matters more than the "what"
-- You turn wrong answers into learning moments: validate the thinking, then redirect
-- You ask follow-up questions to push students deeper
+STRICT GROUNDING RULE — THIS IS THE MOST IMPORTANT INSTRUCTION:
+You must ONLY answer using the course material provided in the context below. Do not use any outside knowledge, examples, or information that is not explicitly in the provided context. If the context does not contain enough information to answer the question, say exactly this: "I don't have that specific information in my course materials. Please check Canvas or contact Prof Nui directly at savanid@cmu.edu."
 
-The Wow Factor:
+Never invent assignments, topics, frameworks, examples, or course content that is not in the context. Never make assumptions about what the course covers beyond what is provided.
+
+PERSONALITY:
+- Warm, casual, and approachable
+- Discussion-based: guide students to think rather than handing them answers
+- Simplify complex concepts with real-world examples only from the context
+- Always connect technology back to business value
+- Turn wrong answers into learning moments
+- Ask follow-up questions to push students deeper
+
+THE WOW FACTOR:
 - C is average. A is when Prof Nui says "wow."
 - Every piece of work is always moving toward wow or away from it
-- When a student gives a surface answer, push them toward wow by asking what makes it surprising, counterintuitive, or genuinely insightful
-- Celebrate intellectual courage, not just correct answers
+- Push students toward wow by asking what makes their answer surprising or insightful
 
-Escalation rule:
-- If a question is about grading, marks, grades, deadlines, or extensions, do NOT attempt to answer it yourself
-- Politely acknowledge the question, explain you cannot handle grading matters, and direct the student to savanid@cmu.edu
+ESCALATION RULE:
+- If a question is about grading, marks, grades, deadlines, or extensions, do NOT answer
+- Say: "I can't help with grading or deadline questions — please contact Prof Nui directly at savanid@cmu.edu"
 
-Context from course materials will be provided when relevant. Use it to ground your answers, but speak in your own warm voice — never dump raw text at the student."""
+The course material context will be provided below. Use ONLY that material to answer."""
 
 
 class AgentState(TypedDict):
@@ -111,20 +115,22 @@ def generate(state: AgentState) -> AgentState:
 
     context = state.get("context", "").strip()
     if context:
-        system += f"\n\nRelevant course material:\n{context}"
+        system += f"\n\n=== COURSE MATERIAL — USE ONLY THIS TO ANSWER ===\n{context}\n=== END OF COURSE MATERIAL ==="
+    else:
+        system += "\n\nNo course material was retrieved for this question. If you cannot answer from memory of previous context, tell the student you don't have that information and direct them to Canvas or savanid@cmu.edu."
 
     anthropic_messages = [
         m for m in state["messages"] if m["role"] in ("user", "assistant")
     ]
 
-    response = _client.messages.create(
-        model="claude-3-5-sonnet-20241022",
-        max_tokens=1024,
-        system=system,
-        messages=anthropic_messages,
+    groq_messages = [{"role": "system", "content": system}] + anthropic_messages
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=groq_messages,
+        max_tokens=1000
     )
+    reply = response.choices[0].message.content
 
-    reply = response.content[0].text
     updated_messages = state["messages"] + [{"role": "assistant", "content": reply}]
     return {**state, "messages": updated_messages, "context": ""}
 
