@@ -3,6 +3,10 @@ import os
 import re
 from typing import TypedDict, List
 
+import numpy as np
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
 from groq import Groq
 import os
 from dotenv import load_dotenv
@@ -17,7 +21,11 @@ CHUNKS_FILE = "chunks.json"
 with open(CHUNKS_FILE, "r", encoding="utf-8") as f:
     CHUNKS = json.load(f)
 
-ESCALATE_KEYWORDS = {"grading", "grade", "grades", "deadline", "extension", "marks", "mark", "regrade"}
+_corpus = [chunk["text"] for chunk in CHUNKS]
+_vectorizer = TfidfVectorizer(stop_words="english")
+_tfidf_matrix = _vectorizer.fit_transform(_corpus)
+
+ESCALATE_KEYWORDS = {"grading", "grade", "grades", "extension", "marks", "mark", "regrade"}
 RETRIEVE_KEYWORDS = {
     "assignment", "course", "framework", "concept", "digital", "transformation",
     "strategy", "management", "technology", "business", "model", "lecture",
@@ -64,15 +72,11 @@ def _tokenise(text: str) -> set:
     return set(re.findall(r"[a-z]+", text.lower()))
 
 
-def keyword_search(query: str, top_k: int = 5) -> List[dict]:
-    query_tokens = _tokenise(query)
-    scored = []
-    for chunk in CHUNKS:
-        chunk_tokens = _tokenise(chunk["text"])
-        score = len(query_tokens & chunk_tokens)
-        scored.append((score, chunk))
-    scored.sort(key=lambda x: x[0], reverse=True)
-    return [c for _, c in scored[:top_k]]
+def keyword_search(query: str, top_k: int = 8) -> list:
+    query_vec = _vectorizer.transform([query])
+    scores = cosine_similarity(query_vec, _tfidf_matrix).flatten()
+    top_indices = np.argsort(scores)[::-1][:top_k]
+    return [CHUNKS[i] for i in top_indices if scores[i] > 0]
 
 
 def classify_intent(state: AgentState) -> AgentState:
