@@ -3,9 +3,9 @@ import os
 import re
 from typing import TypedDict, List
 
-import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
 
 from groq import Groq
 import os
@@ -22,14 +22,29 @@ with open(CHUNKS_FILE, "r", encoding="utf-8") as f:
     CHUNKS = json.load(f)
 
 _corpus = [chunk["text"] for chunk in CHUNKS]
-_vectorizer = TfidfVectorizer(stop_words="english")
-_tfidf_matrix = _vectorizer.fit_transform(_corpus)
 
-ESCALATE_KEYWORDS = {"grading", "grade", "grades", "extension", "marks", "mark", "regrade"}
+_word_vectorizer = TfidfVectorizer(
+    stop_words="english",
+    ngram_range=(1, 2),
+    min_df=1
+)
+_word_matrix = _word_vectorizer.fit_transform(_corpus)
+
+_char_vectorizer = TfidfVectorizer(
+    analyzer="char_wb",
+    ngram_range=(3, 5),
+    min_df=1
+)
+_char_matrix = _char_vectorizer.fit_transform(_corpus)
+
+ESCALATE_KEYWORDS = {"deadline", "extension", "regrade", "appeal"}
 RETRIEVE_KEYWORDS = {
     "assignment", "course", "framework", "concept", "digital", "transformation",
     "strategy", "management", "technology", "business", "model", "lecture",
     "reading", "explain", "what", "how", "why", "define", "describe",
+    "grade", "grades", "a", "score", "improve", "better", "perform", "wow",
+    "late", "policy", "penalty", "submission", "submitting", "first", "second",
+    "project", "essay", "rubric", "deliverable", "presentation", "cultural"
 }
 
 PROF_NUI_SYSTEM = """You are AskProfNui, the AI teaching assistant for IS 67-382: Digital Transformation, Strategy and Management at Carnegie Mellon University in Qatar, representing Prof. Savanid (Nui) Vatanasakdakul.
@@ -53,8 +68,9 @@ THE WOW FACTOR:
 - Push students toward wow by asking what makes their answer surprising or insightful
 
 ESCALATION RULE:
-- If a question is about grading, marks, grades, deadlines, or extensions, do NOT answer
-- Say: "I can't help with grading or deadline questions — please contact Prof Nui directly at savanid@cmu.edu"
+- ONLY escalate if the student is asking you to change a grade, grant an extension, or appeal a decision
+- Questions like "how do I get an A" or "how can I improve my grade" are about performance and the wow factor — answer those normally using the course material
+- Only say "contact Prof Nui" if the student wants you to actually change or dispute something
 
 The course material context will be provided below. Use ONLY that material to answer."""
 
@@ -73,10 +89,13 @@ def _tokenise(text: str) -> set:
 
 
 def keyword_search(query: str, top_k: int = 8) -> list:
-    query_vec = _vectorizer.transform([query])
-    scores = cosine_similarity(query_vec, _tfidf_matrix).flatten()
-    top_indices = np.argsort(scores)[::-1][:top_k]
-    return [CHUNKS[i] for i in top_indices if scores[i] > 0]
+    word_vec = _word_vectorizer.transform([query])
+    char_vec = _char_vectorizer.transform([query])
+    word_scores = cosine_similarity(word_vec, _word_matrix).flatten()
+    char_scores = cosine_similarity(char_vec, _char_matrix).flatten()
+    combined_scores = 0.7 * word_scores + 0.3 * char_scores
+    top_indices = np.argsort(combined_scores)[::-1][:top_k]
+    return [CHUNKS[i] for i in top_indices if combined_scores[i] > 0]
 
 
 def classify_intent(state: AgentState) -> AgentState:
