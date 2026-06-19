@@ -14,28 +14,38 @@ from langgraph.graph import StateGraph, END
 from langgraph.checkpoint.memory import MemorySaver
 load_dotenv()
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
-load_dotenv()
 
 CHUNKS_FILE = "chunks.json"
+CHUNKS: list = []
+_corpus: list = []
+_word_vectorizer = None
+_word_matrix = None
+_char_vectorizer = None
+_char_matrix = None
 
-with open(CHUNKS_FILE, "r", encoding="utf-8") as f:
-    CHUNKS = json.load(f)
 
-_corpus = [chunk["text"] for chunk in CHUNKS]
-
-_word_vectorizer = TfidfVectorizer(
-    stop_words="english",
-    ngram_range=(1, 2),
-    min_df=1
-)
-_word_matrix = _word_vectorizer.fit_transform(_corpus)
-
-_char_vectorizer = TfidfVectorizer(
-    analyzer="char_wb",
-    ngram_range=(3, 5),
-    min_df=1
-)
-_char_matrix = _char_vectorizer.fit_transform(_corpus)
+def _ensure_chunks_loaded() -> None:
+    global CHUNKS, _corpus, _word_vectorizer, _word_matrix, _char_vectorizer, _char_matrix
+    if CHUNKS:
+        return
+    if not os.path.exists(CHUNKS_FILE):
+        from ingest import main as ingest_main
+        ingest_main()
+    with open(CHUNKS_FILE, "r", encoding="utf-8") as f:
+        CHUNKS = json.load(f)
+    _corpus = [chunk["text"] for chunk in CHUNKS]
+    _word_vectorizer = TfidfVectorizer(
+        stop_words="english",
+        ngram_range=(1, 2),
+        min_df=1,
+    )
+    _word_matrix = _word_vectorizer.fit_transform(_corpus)
+    _char_vectorizer = TfidfVectorizer(
+        analyzer="char_wb",
+        ngram_range=(3, 5),
+        min_df=1,
+    )
+    _char_matrix = _char_vectorizer.fit_transform(_corpus)
 
 ESCALATE_KEYWORDS = {"deadline", "extension", "regrade", "appeal"}
 RETRIEVE_KEYWORDS = {
@@ -89,6 +99,7 @@ def _tokenise(text: str) -> set:
 
 
 def keyword_search(query: str, top_k: int = 8) -> list:
+    _ensure_chunks_loaded()
     word_vec = _word_vectorizer.transform([query])
     char_vec = _char_vectorizer.transform([query])
     word_scores = cosine_similarity(word_vec, _word_matrix).flatten()

@@ -1,9 +1,11 @@
 .env
+.streamlit/secrets.toml
 __pycache__/
 *.pyc
 *.pyo
 .DS_Store
 chunks.json
+elevenlabs_knowledge_manifest.json
 *.egg-info/
 .venv/
 venv/

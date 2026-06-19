@@ -1,134 +1,230 @@
 import os
-import time
 import uuid
-import requests
+
 import streamlit as st
 import streamlit.components.v1 as components
+from dotenv import load_dotenv
+
 from agent import graph
+from liveavatar_client import (
+    LiveAvatarError,
+    config_is_complete,
+    create_elevenlabs_session_token,
+    get_liveavatar_config,
+    list_elevenlabs_voices,
+    render_liveavatar_widget,
+)
 
-st.set_page_config(page_title="AskProfNui", page_icon="🎓", layout="centered")
+load_dotenv()
+
+st.set_page_config(
+    page_title="AskProfNui",
+    page_icon="🎓",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
+
+st.markdown(
+    """
+    <style>
+    .block-container { padding-top: 1.5rem; max-width: 960px; }
+    .stTabs [data-baseweb="tab-list"] { gap: 8px; }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
 
-def speak_with_avatar(text: str) -> str:
-    api_key = os.getenv("HEYGEN_API_KEY")
-    avatar_id = os.getenv("HEYGEN_AVATAR_ID")
+@st.cache_data(ttl=300, show_spinner=False)
+def _cached_elevenlabs_voices(api_key: str) -> list[dict[str, str]]:
+    return list_elevenlabs_voices(api_key)
 
-    url = "https://api.heygen.com/v2/video/generate"
-    headers = {
-        "X-Api-Key": api_key,
-        "Content-Type": "application/json"
-    }
-    payload = {
-        "video_inputs": [{
-            "character": {
-                "type": "avatar",
-                "avatar_id": avatar_id,
-                "avatar_style": "normal"
-            },
-            "voice": {
-                "type": "text",
-                "input_text": text,
-                "voice_id": "en-US-JennyNeural"
-            }
+
+def _student_dynamic_variables(name: str, major: str, year: str) -> dict[str, str]:
+    variables = {}
+    if name.strip():
+        variables["student_name"] = name.strip()
+    if major.strip():
+        variables["student_major"] = major.strip()
+    if year.strip():
+        variables["student_year"] = year.strip()
+    return variables
+
+
+def _init_session_state() -> None:
+    defaults = {
+        "thread_id": str(uuid.uuid4()),
+        "messages": [{
+            "role": "assistant",
+            "content": (
+                "Hey! Welcome to AskProfNui — your space for everything IS 67-382. "
+                "Ask me about digital transformation, strategy, assignments, or the wow factor.\n\n"
+                "Use the **Live Avatar** tab to talk to Prof Nui with your voice, "
+                "or **Text Chat** to type your question."
+            ),
         }],
-        "dimension": {"width": 1280, "height": 720}
+        "liveavatar_token": "",
+        "liveavatar_widget_id": "",
+        "liveavatar_voice_id": "",
+        "student_name": "",
+        "student_major": "",
+        "student_year": "",
     }
+    for key, value in defaults.items():
+        if key not in st.session_state:
+            st.session_state[key] = value
 
-    response = requests.post(url, json=payload, headers=headers)
-    data = response.json()
-    return data.get("data", {}).get("video_id", "")
 
-
-def get_video_url(video_id: str) -> str:
-    api_key = os.getenv("HEYGEN_API_KEY")
-    url = f"https://api.heygen.com/v1/video_status.get?video_id={video_id}"
-    headers = {"X-Api-Key": api_key}
-
-    for _ in range(30):
-        response = requests.get(url, headers=headers)
-        data = response.json()
-        status = data.get("data", {}).get("status", "")
-        if status == "completed":
-            return data.get("data", {}).get("video_url", "")
-        time.sleep(3)
-    return ""
-
+_init_session_state()
+config = get_liveavatar_config()
 
 # ── Sidebar ───────────────────────────────────────────────────────────────────
 with st.sidebar:
     st.markdown("## Prof Nui")
-    st.markdown("**IS 67-382**  \nDigital Transformation, Strategy and Management  \n**CMU-Q**")
-    st.divider()
-    st.markdown("#### About you (optional)")
-    student_name = st.text_input("Your name", placeholder="e.g. Fatima")
-    student_major = st.text_input("Your major", placeholder="e.g. Information Systems")
-    student_year = st.text_input("Your year", placeholder="e.g. Junior")
-    st.divider()
-    use_avatar = st.toggle("Show Prof Nui Avatar", value=False)
-    st.session_state["use_avatar"] = use_avatar
-    st.divider()
-    st.caption("For grading or deadline questions, contact [savanid@cmu.edu](mailto:savanid@cmu.edu) directly.")
-
-# ── Session state ─────────────────────────────────────────────────────────────
-if "thread_id" not in st.session_state:
-    st.session_state.thread_id = str(uuid.uuid4())
-
-if "messages" not in st.session_state:
-    welcome = (
-        "Hey! Welcome to AskProfNui — your go-to space for everything IS 67-382. "
-        "I'm here to help you think through digital transformation, strategy, and "
-        "the real business impact of technology.\n\n"
-        "One thing to keep in mind as we work together: **C is average. "
-        "A is when I say wow.** Every idea you bring here is either moving "
-        "toward wow or away from it — and I'm here to help you get there.\n\n"
-        "What's on your mind?"
+    st.markdown(
+        "**IS 67-382**  \nDigital Transformation, Strategy & Management  \n**CMU-Q**"
     )
-    st.session_state.messages = [{"role": "assistant", "content": welcome}]
+    st.divider()
+    st.markdown("### How to use")
+    st.markdown(
+        """
+1. Open **Live Avatar**
+2. Fill in your details (optional)
+3. Click **Start live session**
+4. Allow microphone access
+5. Speak your question clearly
+        """
+    )
+    st.divider()
+    st.caption(
+        "Grading or deadline questions → [savanid@cmu.edu](mailto:savanid@cmu.edu)"
+    )
 
-# ── Title ─────────────────────────────────────────────────────────────────────
-st.title("AskProfNui — Digital Transformation Assistant")
+# ── Header ────────────────────────────────────────────────────────────────────
+st.title("AskProfNui")
+st.caption("AI teaching assistant for Digital Transformation — CMU-Q")
 
-components.iframe(
-    src="https://app.heygen.com/embeds/1bc5999500d4413fa4386ea0793a7749",
-    width=560,
-    height=315,
-    scrolling=False
-)
+tab_live, tab_text = st.tabs(["Live Avatar", "Text Chat"])
 
-# ── Chat history ──────────────────────────────────────────────────────────────
-for msg in st.session_state.messages:
-    with st.chat_message(msg["role"]):
-        st.markdown(msg["content"])
 
-# ── Input ─────────────────────────────────────────────────────────────────────
-if prompt := st.chat_input("Ask Prof Nui anything about the course…"):
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    with st.chat_message("user"):
-        st.markdown(prompt)
+@st.fragment
+def live_avatar_panel() -> None:
+    st.subheader("Talk to Prof Nui")
+    st.markdown(
+        "Voice conversation powered by your course materials on **digital transformation**, "
+        "strategy, culture, and assignments."
+    )
 
-    state_input = {
-        "messages": st.session_state.messages,
-        "student_name": student_name,
-        "student_major": student_major,
-        "student_year": student_year,
-        "context": "",
-        "intent": "",
-    }
-    config = {"configurable": {"thread_id": st.session_state.thread_id}}
+    if not config_is_complete(config):
+        st.warning("Live avatar is not configured on this server.")
+        st.code("python setup_liveavatar.py\npython sync_elevenlabs_knowledge.py", language="bash")
+        return
 
-    with st.chat_message("assistant"):
-        with st.spinner("Prof Nui is thinking…"):
-            result = graph.invoke(state_input, config=config)
+    elevenlabs_key = os.getenv("ELEVENLABS_API_KEY", "").strip()
+    voices = _cached_elevenlabs_voices(elevenlabs_key)
+    if not voices:
+        st.error("No ElevenLabs voices found.")
+        return
 
-    reply = result["messages"][-1]["content"]
-    st.session_state.messages = result["messages"]
+    voice_labels = {v["name"]: v["id"] for v in voices}
+    default_voice = str(config.get("voice_id") or "").strip()
+    default_index = 0
+    if default_voice:
+        for i, voice in enumerate(voices):
+            if voice["id"] == default_voice:
+                default_index = i
+                break
 
-    with st.chat_message("assistant"):
-        st.markdown(reply)
-        if st.session_state.get("use_avatar", False):
-            with st.spinner("Prof Nui is responding..."):
-                video_id = speak_with_avatar(reply)
-                if video_id:
-                    video_url = get_video_url(video_id)
-                    if video_url:
-                        st.video(video_url)
+    with st.form("live_session_form", clear_on_submit=False):
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            name = st.text_input("Your name", value=st.session_state.student_name)
+        with col2:
+            major = st.text_input("Major", value=st.session_state.student_major)
+        with col3:
+            year = st.text_input("Year", value=st.session_state.student_year)
+
+        voice_name = st.selectbox(
+            "Voice",
+            options=list(voice_labels.keys()),
+            index=default_index,
+        )
+        submitted = st.form_submit_button("Start live session", type="primary")
+
+    selected_voice_id = voice_labels[voice_name]
+
+    if submitted:
+        st.session_state.student_name = name
+        st.session_state.student_major = major
+        st.session_state.student_year = year
+        try:
+            token_data = create_elevenlabs_session_token(
+                str(config["api_key"]),
+                str(config["avatar_id"]),
+                str(config["agent_id"]),
+                str(config["secret_id"]),
+                voice_id=selected_voice_id,
+                dynamic_variables=_student_dynamic_variables(name, major, year),
+                is_sandbox=bool(config["is_sandbox"]),
+            )
+            st.session_state.liveavatar_token = token_data["session_token"]
+            st.session_state.liveavatar_widget_id = token_data["session_id"]
+            st.session_state.liveavatar_voice_id = selected_voice_id
+            st.success("Session ready — click **Start session** in the player below.")
+        except LiveAvatarError as exc:
+            st.error(str(exc))
+
+    if st.session_state.liveavatar_token:
+        components.html(
+            render_liveavatar_widget(
+                st.session_state.liveavatar_token,
+                st.session_state.liveavatar_widget_id,
+            ),
+            height=460,
+            scrolling=False,
+        )
+    else:
+        st.info("Fill in your details and click **Start live session** above.")
+
+
+@st.fragment
+def text_chat_panel() -> None:
+    st.subheader("Text chat with Prof Nui")
+    st.caption("Grounded in IS 67-382 course materials via Groq.")
+
+    for msg in st.session_state.messages:
+        with st.chat_message(msg["role"]):
+            st.markdown(msg["content"])
+
+    if prompt := st.chat_input("Ask about digital transformation, assignments, frameworks…"):
+        st.session_state.messages.append({"role": "user", "content": prompt})
+        with st.chat_message("user"):
+            st.markdown(prompt)
+
+        state_input = {
+            "messages": st.session_state.messages,
+            "student_name": st.session_state.student_name,
+            "student_major": st.session_state.student_major,
+            "student_year": st.session_state.student_year,
+            "context": "",
+            "intent": "",
+        }
+        chat_config = {"configurable": {"thread_id": st.session_state.thread_id}}
+
+        with st.chat_message("assistant"):
+            with st.spinner("Prof Nui is thinking…"):
+                try:
+                    result = graph.invoke(state_input, config=chat_config)
+                    reply = result["messages"][-1]["content"]
+                    st.session_state.messages = result["messages"]
+                    st.markdown(reply)
+                except Exception as exc:
+                    st.error(f"Text chat error: {exc}")
+                    st.info("Check that GROQ_API_KEY is set in your environment.")
+
+
+with tab_live:
+    live_avatar_panel()
+
+with tab_text:
+    text_chat_panel()
