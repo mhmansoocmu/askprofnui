@@ -5,6 +5,7 @@ import uuid
 import streamlit as st
 import streamlit.components.v1 as components
 
+from env_config import missing_keys
 from agent import graph
 from liveavatar_client import (
     LiveAvatarError,
@@ -93,6 +94,18 @@ with st.sidebar:
 5. Speak your question clearly
         """
     )
+    st.divider()
+    missing = missing_keys()
+    if missing:
+        st.error("Missing server keys")
+        for key in missing:
+            st.code(key, language=None)
+        st.caption(
+            "Render → askprofnui → Environment → add `SECRETS_TOML` "
+            "with your full secrets.toml contents, then Save & redeploy."
+        )
+    else:
+        st.success("Server keys loaded")
     st.divider()
     st.caption(
         "Grading or deadline questions → [savanid@cmu.edu](mailto:savanid@cmu.edu)"

@@ -24,3 +24,5 @@ services:
         sync: false
       - key: GROQ_API_KEY
         sync: false
+      - key: SECRETS_TOML
+        sync: false
