@@ -1,9 +1,9 @@
+import env_config  # noqa: F401 — load secrets before other imports
 import os
 import uuid
 
 import streamlit as st
 import streamlit.components.v1 as components
-from dotenv import load_dotenv
 
 from agent import graph
 from liveavatar_client import (
@@ -14,8 +14,6 @@ from liveavatar_client import (
     list_elevenlabs_voices,
     render_liveavatar_widget,
 )
-
-load_dotenv()
 
 st.set_page_config(
     page_title="AskProfNui",

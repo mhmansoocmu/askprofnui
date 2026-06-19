@@ -3,17 +3,23 @@ import os
 import re
 from typing import TypedDict, List
 
+import env_config  # noqa: F401
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 
 from groq import Groq
-import os
-from dotenv import load_dotenv
 from langgraph.graph import StateGraph, END
 from langgraph.checkpoint.memory import MemorySaver
-load_dotenv()
-client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+
+_groq_client: Groq | None = None
+
+
+def _get_groq_client() -> Groq:
+    global _groq_client
+    if _groq_client is None:
+        _groq_client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+    return _groq_client
 
 CHUNKS_FILE = "chunks.json"
 CHUNKS: list = []
@@ -158,7 +164,7 @@ def generate(state: AgentState) -> AgentState:
     ]
 
     groq_messages = [{"role": "system", "content": system}] + anthropic_messages
-    response = client.chat.completions.create(
+    response = _get_groq_client().chat.completions.create(
         model="llama-3.3-70b-versatile",
         messages=groq_messages,
         max_tokens=1000
