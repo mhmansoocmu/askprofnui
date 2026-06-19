@@ -9,8 +9,6 @@ from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 
 from groq import Groq
-from langgraph.graph import StateGraph, END
-from langgraph.checkpoint.memory import MemorySaver
 
 _groq_client: Groq | None = None
 
@@ -175,26 +173,16 @@ def generate(state: AgentState) -> AgentState:
     return {**state, "messages": updated_messages, "context": ""}
 
 
-def route_intent(state: AgentState) -> str:
-    return state["intent"]
+def run_agent(state: AgentState) -> AgentState:
+    state = classify_intent(state)
+    if state["intent"] == "retrieve":
+        state = retrieve(state)
+    return generate(state)
 
 
-builder = StateGraph(AgentState)
-builder.add_node("classify_intent", classify_intent)
-builder.add_node("retrieve", retrieve)
-builder.add_node("generate", generate)
+class _AgentGraph:
+    def invoke(self, state: AgentState, config=None) -> AgentState:
+        return run_agent(state)
 
-builder.set_entry_point("classify_intent")
-builder.add_conditional_edges(
-    "classify_intent",
-    route_intent,
-    {
-        "escalate": "generate",
-        "retrieve": "retrieve",
-        "direct": "generate",
-    },
-)
-builder.add_edge("retrieve", "generate")
-builder.add_edge("generate", END)
 
-graph = builder.compile(checkpointer=MemorySaver())
+graph = _AgentGraph()
