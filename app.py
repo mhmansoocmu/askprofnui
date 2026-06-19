@@ -115,7 +115,12 @@ def live_avatar_panel() -> None:
 
     if not config_is_complete(config):
         st.warning("Live avatar is not configured on this server.")
-        st.code("python setup_liveavatar.py\npython sync_elevenlabs_knowledge.py", language="bash")
+        st.info(
+            "Add these in **Render → askprofnui → Environment**: "
+            "`LIVEAVATAR_API_KEY`, `LIVEAVATAR_AVATAR_ID`, "
+            "`ELEVENLABS_AGENT_ID`, `ELEVENLABS_SECRET_ID`, `ELEVENLABS_API_KEY`. "
+            "Then click **Save Changes** and redeploy."
+        )
         return
 
     elevenlabs_key = os.getenv("ELEVENLABS_API_KEY", "").strip()
@@ -218,7 +223,13 @@ def text_chat_panel() -> None:
                     st.markdown(reply)
                 except Exception as exc:
                     st.error(f"Text chat error: {exc}")
-                    st.info("Check that GROQ_API_KEY is set in your environment.")
+                    if not os.getenv("GROQ_API_KEY", "").strip():
+                        st.info(
+                            "Add `GROQ_API_KEY` in **Render → askprofnui → Environment**, "
+                            "save, then redeploy."
+                        )
+                    else:
+                        st.info("Check that GROQ_API_KEY is set in your environment.")
 
 
 with tab_live:

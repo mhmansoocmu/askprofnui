@@ -8,3 +8,19 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.9
+      - key: LIVEAVATAR_API_KEY
+        sync: false
+      - key: LIVEAVATAR_AVATAR_ID
+        sync: false
+      - key: LIVEAVATAR_SANDBOX
+        value: "false"
+      - key: ELEVENLABS_API_KEY
+        sync: false
+      - key: ELEVENLABS_VOICE_ID
+        sync: false
+      - key: ELEVENLABS_AGENT_ID
+        sync: false
+      - key: ELEVENLABS_SECRET_ID
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
