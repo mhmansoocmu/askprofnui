@@ -204,17 +204,12 @@ def render_liveavatar_widget(session_token: str, widget_id: str) -> str:
       LiveAvatarSession,
       SessionEvent,
       SessionState,
-      SessionInteractivityMode,
       VoiceChatEvent,
       AgentEventsEnum,
     }} from "https://esm.sh/@heygen/liveavatar-web-sdk";
 
     const widgetId = {widget_id_json};
     const sessionToken = {token_json};
-    const mountKey = "askProfNui:" + widgetId;
-
-    if (window.__askProfNuiMount !== mountKey) {{
-    window.__askProfNuiMount = mountKey;
 
     const statusEl = document.getElementById("status");
     const startBtn = document.getElementById("start-btn");
@@ -224,12 +219,8 @@ def render_liveavatar_widget(session_token: str, widget_id: str) -> str:
     const videoEl = document.getElementById("avatar-video");
 
     const session = new LiveAvatarSession(sessionToken, {{
-      voiceChat: {{
-        defaultMuted: false,
-        mode: SessionInteractivityMode.CONVERSATIONAL,
-      }},
+      voiceChat: {{ defaultMuted: false }},
     }});
-    window.__askProfNuiSession = session;
 
     let isMuted = false;
     let started = false;
@@ -331,8 +322,6 @@ def render_liveavatar_widget(session_token: str, widget_id: str) -> str:
     stopBtn.addEventListener("click", async () => {{
       try {{
         await session.stop();
-        window.__askProfNuiMount = null;
-        window.__askProfNuiSession = null;
       }} catch (error) {{
         setStatus("Failed to stop: " + (error?.message || error));
       }}
@@ -350,7 +339,6 @@ def render_liveavatar_widget(session_token: str, widget_id: str) -> str:
         setStatus("Mic error: " + (error?.message || error));
       }}
     }});
-    }} // end single-mount guard
   </script>
 </body>
 </html>"""

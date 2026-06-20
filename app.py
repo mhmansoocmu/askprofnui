@@ -39,6 +39,23 @@ def _cached_elevenlabs_voices(api_key: str) -> list[dict[str, str]]:
     return list_elevenlabs_voices(api_key)
 
 
+DEFAULT_VOICE_NAME = "Thai Professor Nui"
+
+
+def _default_voice_index(voices: list[dict[str, str]], preferred_id: str) -> int:
+    for i, voice in enumerate(voices):
+        if voice["name"] == DEFAULT_VOICE_NAME:
+            return i
+    if preferred_id:
+        for i, voice in enumerate(voices):
+            if voice["id"] == preferred_id:
+                return i
+    for i, voice in enumerate(voices):
+        if "professor nui" in voice["name"].lower():
+            return i
+    return 0
+
+
 def _student_dynamic_variables(name: str, major: str, year: str) -> dict[str, str]:
     variables = {}
     if name.strip():
@@ -137,66 +154,72 @@ def live_avatar_panel() -> None:
         return
 
     elevenlabs_key = os.getenv("ELEVENLABS_API_KEY", "").strip()
-    voices = _cached_elevenlabs_voices(elevenlabs_key)
+    if not elevenlabs_key:
+        st.error("ELEVENLABS_API_KEY is missing on this server.")
+        return
+
+    try:
+        voices = _cached_elevenlabs_voices(elevenlabs_key)
+    except LiveAvatarError as exc:
+        st.error(f"Could not load voices: {exc}")
+        return
+
     if not voices:
-        st.error("No ElevenLabs voices found.")
+        st.error("No ElevenLabs voices found. Check your API key permissions.")
         return
 
     voice_labels = {v["name"]: v["id"] for v in voices}
-    default_voice = str(config.get("voice_id") or "").strip()
-    default_index = 0
-    if default_voice:
-        for i, voice in enumerate(voices):
-            if voice["id"] == default_voice:
-                default_index = i
-                break
+    voice_names = list(voice_labels.keys())
+    default_index = _default_voice_index(voices, str(config.get("voice_id") or "").strip())
 
-    with st.form("live_session_form", clear_on_submit=False):
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            name = st.text_input("Your name", value=st.session_state.student_name)
-        with col2:
-            major = st.text_input("Major", value=st.session_state.student_major)
-        with col3:
-            year = st.text_input("Year", value=st.session_state.student_year)
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        name = st.text_input("Your name", value=st.session_state.student_name, key="live_name")
+    with col2:
+        major = st.text_input("Major", value=st.session_state.student_major, key="live_major")
+    with col3:
+        year = st.text_input("Year", value=st.session_state.student_year, key="live_year")
 
-        voice_name = st.selectbox(
-            "Voice",
-            options=list(voice_labels.keys()),
-            index=default_index,
-        )
-        submitted = st.form_submit_button("Start live session", type="primary")
-
+    voice_name = st.selectbox(
+        "Voice",
+        options=voice_names,
+        index=default_index,
+        key="live_voice",
+    )
     selected_voice_id = voice_labels[voice_name]
 
-    if submitted:
+    if st.button("Start live session", type="primary", key="start_live_session_btn"):
         st.session_state.student_name = name
         st.session_state.student_major = major
         st.session_state.student_year = year
-        try:
-            token_data = create_elevenlabs_session_token(
-                str(config["api_key"]),
-                str(config["avatar_id"]),
-                str(config["agent_id"]),
-                str(config["secret_id"]),
-                voice_id=selected_voice_id,
-                dynamic_variables=_student_dynamic_variables(name, major, year),
-                is_sandbox=bool(config["is_sandbox"]),
-            )
-            st.session_state.liveavatar_token = token_data["session_token"]
-            st.session_state.liveavatar_widget_id = token_data["session_id"]
-            st.session_state.liveavatar_voice_id = selected_voice_id
-            st.success("Session ready — click **Start session** in the player below.")
-        except LiveAvatarError as exc:
-            st.error(str(exc))
+        with st.spinner("Connecting to Prof Nui…"):
+            try:
+                token_data = create_elevenlabs_session_token(
+                    str(config["api_key"]),
+                    str(config["avatar_id"]),
+                    str(config["agent_id"]),
+                    str(config["secret_id"]),
+                    voice_id=selected_voice_id,
+                    dynamic_variables=_student_dynamic_variables(name, major, year),
+                    is_sandbox=bool(config["is_sandbox"]),
+                )
+                st.session_state.liveavatar_token = token_data["session_token"]
+                st.session_state.liveavatar_widget_id = token_data["session_id"]
+                st.session_state.liveavatar_voice_id = selected_voice_id
+            except LiveAvatarError as exc:
+                st.error(str(exc))
+                return
+        st.success("Session ready — click **Start session** in the player below.")
+        st.rerun()
 
     if st.session_state.liveavatar_token:
+        st.caption(f"Voice: **{voice_name}**")
         components.html(
             render_liveavatar_widget(
                 st.session_state.liveavatar_token,
                 st.session_state.liveavatar_widget_id,
             ),
-            height=500,
+            height=520,
             scrolling=False,
         )
     else:
