@@ -169,6 +169,8 @@ def render_liveavatar_widget(session_token: str, widget_id: str) -> str:
     }}
     #start-btn {{ background: #7c3aed; color: white; }}
     #stop-btn {{ background: #374151; color: white; }}
+    #interrupt-btn {{ background: #dc2626; color: white; }}
+    #interrupt-btn:disabled {{ background: #4b5563; opacity: 0.6; cursor: not-allowed; }}
     #mute-btn {{ background: #1f2937; color: white; }}
     #status {{
       margin-top: 12px; font-size: 14px; color: #d1d5db;
@@ -190,50 +192,73 @@ def render_liveavatar_widget(session_token: str, widget_id: str) -> str:
     <video id="avatar-video" autoplay playsinline></video>
     <div class="controls">
       <button id="start-btn">Start session</button>
+      <button id="interrupt-btn" disabled>Stop speaking</button>
       <button id="mute-btn" disabled>Mute mic</button>
       <button id="stop-btn" disabled>End session</button>
     </div>
-    <div id="status">Click <strong>Start session</strong>, allow microphone access, then ask your question.</div>
-    <div class="hint">Tip: wait for the avatar to finish speaking before you ask the next question.</div>
+    <div id="status">Click <strong>Start session</strong>, allow microphone access, then talk.</div>
+    <div class="hint">You can interrupt anytime — just start talking, or click <strong>Stop speaking</strong>.</div>
   </div>
   <script type="module">
     import {{
       LiveAvatarSession,
       SessionEvent,
       SessionState,
+      SessionInteractivityMode,
       VoiceChatEvent,
       AgentEventsEnum,
     }} from "https://esm.sh/@heygen/liveavatar-web-sdk";
 
     const widgetId = {widget_id_json};
     const sessionToken = {token_json};
+    const mountKey = "askProfNui:" + widgetId;
 
-    if (window.__askProfNuiAvatarId === widgetId) {{
-      // Streamlit rerun guard — do not create a second session in the same iframe.
-    }} else {{
-      window.__askProfNuiAvatarId = widgetId;
-    }}
+    if (window.__askProfNuiMount !== mountKey) {{
+    window.__askProfNuiMount = mountKey;
 
     const statusEl = document.getElementById("status");
     const startBtn = document.getElementById("start-btn");
     const stopBtn = document.getElementById("stop-btn");
     const muteBtn = document.getElementById("mute-btn");
+    const interruptBtn = document.getElementById("interrupt-btn");
     const videoEl = document.getElementById("avatar-video");
 
     const session = new LiveAvatarSession(sessionToken, {{
-      voiceChat: {{ defaultMuted: false }},
+      voiceChat: {{
+        defaultMuted: false,
+        mode: SessionInteractivityMode.CONVERSATIONAL,
+      }},
     }});
+    window.__askProfNuiSession = session;
 
     let isMuted = false;
     let started = false;
+    let avatarSpeaking = false;
+    let streamAttached = false;
 
     function setStatus(message) {{
       statusEl.innerHTML = message;
     }}
 
+    function updateInterruptButton() {{
+      interruptBtn.disabled = !started || !avatarSpeaking;
+    }}
+
+    function interruptAvatar() {{
+      if (!started || !avatarSpeaking) return;
+      try {{
+        session.interrupt();
+        avatarSpeaking = false;
+        updateInterruptButton();
+        setStatus("Interrupted — go ahead, I'm listening.");
+      }} catch (error) {{
+        setStatus("Interrupt failed: " + (error?.message || error));
+      }}
+    }}
+
     session.on(SessionEvent.SESSION_STATE_CHANGED, (state) => {{
       if (state === SessionState.CONNECTED) {{
-        setStatus("Connected <span class='badge live'>LIVE</span> — ask Prof Nui anything about the course.");
+        setStatus("Connected <span class='badge live'>LIVE</span> — talk anytime, even if I'm mid-sentence.");
         stopBtn.disabled = false;
         muteBtn.disabled = false;
         startBtn.disabled = true;
@@ -241,14 +266,20 @@ def render_liveavatar_widget(session_token: str, widget_id: str) -> str:
         setStatus("Session ended. Click <strong>Start session</strong> to talk again.");
         stopBtn.disabled = true;
         muteBtn.disabled = true;
+        interruptBtn.disabled = true;
         startBtn.disabled = false;
         started = false;
+        avatarSpeaking = false;
+        streamAttached = false;
       }}
     }});
 
     session.on(SessionEvent.SESSION_STREAM_READY, () => {{
-      session.attach(videoEl);
-      setStatus("Video ready — your microphone is on. Ask your question!");
+      if (!streamAttached) {{
+        session.attach(videoEl);
+        streamAttached = true;
+      }}
+      setStatus("Video ready — your mic is on. Talk anytime.");
     }});
 
     session.voiceChat.on(VoiceChatEvent.MUTED, () => {{
@@ -262,6 +293,9 @@ def render_liveavatar_widget(session_token: str, widget_id: str) -> str:
     }});
 
     session.on(AgentEventsEnum.USER_SPEAK_STARTED, () => {{
+      if (avatarSpeaking) {{
+        interruptAvatar();
+      }}
       setStatus("Listening to you… <span class='badge live'>MIC ON</span>");
     }});
 
@@ -270,10 +304,14 @@ def render_liveavatar_widget(session_token: str, widget_id: str) -> str:
     }});
 
     session.on(AgentEventsEnum.AVATAR_SPEAK_STARTED, () => {{
-      setStatus("Prof Nui is answering…");
+      avatarSpeaking = true;
+      updateInterruptButton();
+      setStatus("Prof Nui is answering… <em>(talk or click Stop speaking to interrupt)</em>");
     }});
 
     session.on(AgentEventsEnum.AVATAR_SPEAK_ENDED, () => {{
+      avatarSpeaking = false;
+      updateInterruptButton();
       setStatus("Your turn — ask another question.");
     }});
 
@@ -293,9 +331,15 @@ def render_liveavatar_widget(session_token: str, widget_id: str) -> str:
     stopBtn.addEventListener("click", async () => {{
       try {{
         await session.stop();
+        window.__askProfNuiMount = null;
+        window.__askProfNuiSession = null;
       }} catch (error) {{
         setStatus("Failed to stop: " + (error?.message || error));
       }}
+    }});
+
+    interruptBtn.addEventListener("click", () => {{
+      interruptAvatar();
     }});
 
     muteBtn.addEventListener("click", async () => {{
@@ -306,6 +350,7 @@ def render_liveavatar_widget(session_token: str, widget_id: str) -> str:
         setStatus("Mic error: " + (error?.message || error));
       }}
     }});
+    }} // end single-mount guard
   </script>
 </body>
 </html>"""

@@ -23,6 +23,17 @@ def main() -> int:
         "conversation_config": {
             "tts": {"agent_output_audio_format": "pcm_24000"},
             "asr": {"user_input_audio_format": "pcm_24000"},
+            "turn": {"turn_eagerness": "normal"},
+            "conversation": {
+                "client_events": [
+                    "audio",
+                    "interruption",
+                    "user_transcript",
+                    "agent_response",
+                    "vad_score",
+                ],
+            },
+            "agent": {"disable_first_message_interruptions": False},
         },
         "platform_settings": {
             "overrides": {

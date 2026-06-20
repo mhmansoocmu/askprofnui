@@ -76,6 +76,7 @@ def update_agent(api_key: str, agent_id: str, knowledge_entries: list[dict]) -> 
             "agent": {
                 "first_message": _load_first_message(),
                 "language": "en",
+                "disable_first_message_interruptions": False,
                 "prompt": {
                     "prompt": _load_system_prompt(),
                     "llm": "gemini-2.0-flash",
@@ -93,7 +94,19 @@ def update_agent(api_key: str, agent_id: str, knowledge_entries: list[dict]) -> 
             },
             "turn": {
                 "turn_timeout": 12,
+                "turn_eagerness": "normal",
                 "silence_end_call_timeout": 120,
+            },
+            "conversation": {
+                "client_events": [
+                    "audio",
+                    "interruption",
+                    "user_transcript",
+                    "agent_response",
+                    "agent_response_correction",
+                    "vad_score",
+                    "agent_chat_response_part",
+                ],
             },
         },
         "name": "AskProfNui — Digital Transformation",

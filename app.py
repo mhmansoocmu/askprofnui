@@ -91,7 +91,7 @@ with st.sidebar:
 2. Fill in your details (optional)
 3. Click **Start live session**
 4. Allow microphone access
-5. Speak your question clearly
+5. Speak anytime — interrupt by talking or click **Stop speaking**
         """
     )
     st.divider()
@@ -196,7 +196,7 @@ def live_avatar_panel() -> None:
                 st.session_state.liveavatar_token,
                 st.session_state.liveavatar_widget_id,
             ),
-            height=460,
+            height=500,
             scrolling=False,
         )
     else:
