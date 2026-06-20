@@ -18,10 +18,12 @@ FAST_MODEL = "llama-3.1-8b-instant"
 
 PROF_NUI_BASE = """You are Prof Nui — AskProfNui — the warm, casual AI teaching assistant for IS 67-382 Digital Transformation at CMU-Q.
 
-HOW TO TALK:
-- Use contractions. Sound human and warm, not robotic.
-- If you know the student's name, use their first name sometimes.
-- For greetings only: reply briefly and warmly — no course-material disclaimers.
+HOW TO TALK (sound like a real person in an ongoing chat):
+- Use contractions. Be warm and natural — never robotic.
+- This is a continuing conversation. Do NOT start replies with "Hey [name]", "Hi [name]", or re-greet the student unless they just said hello.
+- Use the student's first name sparingly — at most once every 4–5 exchanges, only when it feels natural mid-sentence.
+- Jump straight into the answer. No filler openers every time.
+- For greetings only (when the student says hi/hello): one brief warm reply — then stop greeting.
 
 STRICT GROUNDING RULE (for all course, assignment, policy, and grading questions):
 - Answer ONLY using the COURSE MATERIAL and AUTHORITATIVE FACTS provided below.
@@ -30,7 +32,11 @@ STRICT GROUNDING RULE (for all course, assignment, policy, and grading questions
 - Do NOT use general university knowledge or guess.
 - If the materials do not cover something, say: "That's not in the course materials I have — email Prof Nui at savanid@cmu.edu."
 
-ESCALATION: Direct to savanid@cmu.edu only for personal grade disputes, extensions, or appeals — not for explaining course policies that are in the materials."""
+OFF-TOPIC (not course-related):
+- Playful topics (weather, jokes, food, sports): respond with light humor, then steer back to the course. Example vibe: "What does the weather have to do with digital transformation?" — warm, not rude.
+- Other off-topic questions: answer briefly and professionally, then redirect: "I'm here for IS 67-382 — let's focus on digital transformation, assignments, or course content."
+
+ESCALATION: Direct to savanid@cmu.edu only for personal grade disputes, extensions, or appeals."""
 
 
 def _get_groq_client() -> Groq:
@@ -77,7 +83,23 @@ def _ensure_chunks_loaded() -> None:
 ESCALATE_KEYWORDS = {"regrade", "appeal", "my grade", "extension for me", "special consideration for me"}
 SOCIAL_PATTERNS = re.compile(
     r"^(hi|hello|hey|yo|sup|hiya|good morning|good afternoon|good evening|"
-    r"how are you|how're you|what's up|whats up|thanks|thank you|ok|okay)[!.?\s]*$",
+    r"how are you|how're you|what's up|whats up|thanks|thank you|ok|okay|bye|goodbye)[!.?\s]*$",
+    re.I,
+)
+HUMOR_OFFTOPIC_PATTERNS = re.compile(
+    r"weather|wether|rain|raining|sunny|cloudy|hot outside|cold outside|"
+    r"temperature|forecast|humid|"
+    r"tell me a joke|make me laugh|something funny|"
+    r"what should i eat|lunch|dinner|breakfast|pizza|burger|"
+    r"football|soccer|basketball|nba|world cup|who won|game last night|"
+    r"netflix|movie tonight|party tonight|weekend plans",
+    re.I,
+)
+OFFTOPIC_REDIRECT_PATTERNS = re.compile(
+    r"capital of|president of|prime minister|celebrity|"
+    r"recipe|cook me|translate|homework help for math|solve this equation|"
+    r"stock price|crypto|bitcoin|relationship advice|dating|"
+    r"what time is it|what day is it|random question",
     re.I,
 )
 RETRIEVE_KEYWORDS = {
@@ -175,6 +197,37 @@ def _merge_chunks(*result_lists: list) -> str:
     return "\n\n---\n\n".join(parts)
 
 
+def _user_message_count(messages: list) -> int:
+    return sum(1 for m in messages if m.get("role") == "user")
+
+
+def _is_course_related(lower: str, tokens: set) -> bool:
+    if tokens & RETRIEVE_KEYWORDS:
+        return True
+    course_markers = (
+        "prof nui", "savanid", "cmu", "67-382", "67 382", "is 382",
+        "digital transform", "hofstede", "tam", "utaut", "canvas",
+        "assignment", "wow factor", "late penalt", "cultural framework",
+    )
+    return any(marker in lower for marker in course_markers)
+
+
+def _conversation_style_block(messages: list) -> str:
+    user_count = _user_message_count(messages)
+    if user_count <= 1:
+        return (
+            "\n\nFirst reply in this chat: you may greet briefly if they greeted you. "
+            "Do not overuse their name."
+        )
+    return (
+        "\n\nONGOING CONVERSATION — critical:\n"
+        "- Do NOT say 'Hey [name]', 'Hi [name]', or any greeting opener.\n"
+        "- Do NOT re-introduce yourself.\n"
+        "- Start directly with the answer.\n"
+        "- Skip their name unless it truly fits mid-sentence."
+    )
+
+
 def classify_intent(state: AgentState) -> AgentState:
     last_message = state["messages"][-1]["content"].strip()
     lower = last_message.lower()
@@ -182,10 +235,18 @@ def classify_intent(state: AgentState) -> AgentState:
 
     if SOCIAL_PATTERNS.match(lower):
         intent = "social"
+    elif HUMOR_OFFTOPIC_PATTERNS.search(lower):
+        intent = "offtopic_humor"
+    elif OFFTOPIC_REDIRECT_PATTERNS.search(lower):
+        intent = "offtopic_redirect"
     elif any(kw in lower for kw in ESCALATE_KEYWORDS):
         intent = "escalate"
-    elif tokens & RETRIEVE_KEYWORDS or len(tokens) >= 3:
+    elif _is_course_related(lower, tokens):
         intent = "retrieve"
+    elif tokens & RETRIEVE_KEYWORDS or len(tokens) >= 4:
+        intent = "retrieve"
+    elif len(tokens) >= 2 and not SOCIAL_PATTERNS.match(lower):
+        intent = "offtopic_redirect"
     else:
         intent = "social"
 
@@ -218,15 +279,39 @@ def generate(state: AgentState) -> AgentState:
     intent = state.get("intent", "retrieve")
     system = PROF_NUI_BASE
 
+    messages = [m for m in state["messages"] if m["role"] in ("user", "assistant")]
+    system += _conversation_style_block(messages)
+
     student_block = _student_context_block(state)
     if student_block:
         system += f"\n\n{student_block}"
 
     if intent == "social":
         system += (
-            "\n\nThis is casual conversation (greeting, thanks, small talk). "
-            "Reply warmly and briefly like a human. Use their name if you have it. "
+            "\n\nCasual conversation (greeting, thanks, goodbye). "
+            "Reply warmly and briefly like a human. "
+            "Only use their name if they just greeted you — not on every message. "
             "Do NOT mention course materials or say you lack information."
+        )
+    elif intent == "offtopic_humor":
+        system += (
+            "\n\nThe student asked something playful and NOT about the course "
+            "(e.g. weather, jokes, food, sports).\n"
+            "Reply with warm, witty humor — Prof Nui personality. Examples of the vibe:\n"
+            "- Weather: \"What do you want with the weather? What does that have to do with "
+            "digital transformation?\" (light, smiling tone — not mean)\n"
+            "- Jokes/food/sports: playful one-liner, then gently steer back to the course.\n"
+            "Keep it to 2–3 sentences. No course-material dump. No greeting opener."
+        )
+    elif intent == "offtopic_redirect":
+        system += (
+            "\n\nThe student asked something off-topic and not about IS 67-382.\n"
+            "Reply professionally and kindly in 2–3 sentences:\n"
+            "- Briefly acknowledge their question without fully answering unrelated trivia.\n"
+            "- Redirect: you're here for digital transformation, assignments, frameworks, "
+            "and course content.\n"
+            "- Invite a course-related question.\n"
+            "No greeting opener. No 'Hey [name]'."
         )
     elif intent == "escalate":
         system += (
@@ -254,18 +339,28 @@ def generate(state: AgentState) -> AgentState:
             "- How to get an A / wow factor: explain C is average, A needs the wow factor.\n"
             "- Grade distribution: list all four assessment weights (40%, 40%, 10%, 10%).\n"
             "- Explain assignments using the exact steps and deliverables from the material.\n"
-            "- Do NOT say you don't know if the answer is in the material above."
+            "- Do NOT say you don't know if the answer is in the material above.\n"
+            "- Do NOT open with 'Hey [name]' — answer directly."
         )
 
-    messages = [m for m in state["messages"] if m["role"] in ("user", "assistant")]
-    model = FAST_MODEL if intent == "social" else CHAT_MODEL
-    max_tokens = 220 if intent == "social" else 550
+    model = CHAT_MODEL
+    max_tokens = 550
+    temperature = 0.4
+
+    if intent == "social":
+        model = FAST_MODEL
+        max_tokens = 180
+        temperature = 0.75
+    elif intent in ("offtopic_humor", "offtopic_redirect"):
+        model = FAST_MODEL
+        max_tokens = 200
+        temperature = 0.85
 
     response = _get_groq_client().chat.completions.create(
         model=model,
         messages=[{"role": "system", "content": system}] + messages,
         max_tokens=max_tokens,
-        temperature=0.4 if intent == "retrieve" else 0.75,
+        temperature=temperature,
     )
     reply = response.choices[0].message.content or ""
 
