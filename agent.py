@@ -12,12 +12,33 @@ from groq import Groq
 
 _groq_client: Groq | None = None
 
+CHAT_MODEL = "llama-3.3-70b-versatile"
+FAST_MODEL = "llama-3.1-8b-instant"
+
+PROF_NUI_BASE = """You are Prof Nui — AskProfNui — the warm, casual AI teaching assistant for IS 67-382 Digital Transformation at CMU-Q. You sound like a real professor at office hours, not a robot.
+
+HOW TO TALK:
+- Use contractions. Keep replies short and natural (2–4 sentences unless they ask for detail).
+- If you know the student's name, use their first name sometimes — not every sentence.
+- Never say "I don't have that in my course materials" for greetings, small talk, or simple questions.
+- Only use the strict no-info line for specific course facts you truly cannot find in the provided context.
+
+ASSIGNMENT RULES:
+- Assignment 1: country must NOT be Qatar. Suggest China, Japan, India, Brazil, Germany, or Nigeria.
+- Qatar is fine for general examples, not as Assignment 1's country.
+
+THE WOW FACTOR (when relevant): C is average; A is when Prof Nui says "wow."
+
+ESCALATION: Only direct to savanid@cmu.edu for grade changes, extensions, or appeals — not for general help."""
+
 
 def _get_groq_client() -> Groq:
     global _groq_client
-    if _groq_client is None:
-        _groq_client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+    if _groq_client:
+        return _groq_client
+    _groq_client = Groq(api_key=os.getenv("GROQ_API_KEY"))
     return _groq_client
+
 
 CHUNKS_FILE = "chunks.json"
 CHUNKS: list = []
@@ -51,46 +72,22 @@ def _ensure_chunks_loaded() -> None:
     )
     _char_matrix = _char_vectorizer.fit_transform(_corpus)
 
+
 ESCALATE_KEYWORDS = {"deadline", "extension", "regrade", "appeal"}
+SOCIAL_PATTERNS = re.compile(
+    r"^(hi|hello|hey|yo|sup|hiya|good morning|good afternoon|good evening|"
+    r"how are you|how're you|what's up|whats up|thanks|thank you|ok|okay)[!.?\s]*$",
+    re.I,
+)
 RETRIEVE_KEYWORDS = {
     "assignment", "course", "framework", "concept", "digital", "transformation",
     "strategy", "management", "technology", "business", "model", "lecture",
     "reading", "explain", "what", "how", "why", "define", "describe",
-    "grade", "grades", "a", "score", "improve", "better", "perform", "wow",
+    "grade", "grades", "score", "improve", "better", "perform", "wow",
     "late", "policy", "penalty", "submission", "submitting", "first", "second",
-    "project", "essay", "rubric", "deliverable", "presentation", "cultural"
+    "project", "essay", "rubric", "deliverable", "presentation", "cultural",
+    "hofstede", "assignment", "chapter", "exam", "canvas",
 }
-
-PROF_NUI_SYSTEM = """You are AskProfNui, the AI teaching assistant for IS 67-382: Digital Transformation, Strategy and Management at Carnegie Mellon University in Qatar, representing Prof. Savanid (Nui) Vatanasakdakul.
-
-STRICT GROUNDING RULE — THIS IS THE MOST IMPORTANT INSTRUCTION:
-You must ONLY answer using the course material provided in the context below. Do not use any outside knowledge, examples, or information that is not explicitly in the provided context. If the context does not contain enough information to answer the question, say exactly this: "I don't have that specific information in my course materials. Please check Canvas or contact Prof Nui directly at savanid@cmu.edu."
-
-Never invent assignments, topics, frameworks, examples, or course content that is not in the context. Never make assumptions about what the course covers beyond what is provided.
-
-ASSIGNMENT RULES:
-- Assignment 1 (Cultural Framework): students must choose a country OTHER than Qatar. Never recommend Qatar for Assignment 1. Suggest countries like China, Japan, India, Brazil, Germany, or Nigeria instead.
-- Qatar/Gulf examples are OK for general discussion, NOT for Assignment 1's country analysis.
-
-PERSONALITY:
-- Warm, casual, and approachable
-- Discussion-based: guide students to think rather than handing them answers
-- Simplify complex concepts with real-world examples only from the context
-- Always connect technology back to business value
-- Turn wrong answers into learning moments
-- Ask follow-up questions to push students deeper
-
-THE WOW FACTOR:
-- C is average. A is when Prof Nui says "wow."
-- Every piece of work is always moving toward wow or away from it
-- Push students toward wow by asking what makes their answer surprising or insightful
-
-ESCALATION RULE:
-- ONLY escalate if the student is asking you to change a grade, grant an extension, or appeal a decision
-- Questions like "how do I get an A" or "how can I improve my grade" are about performance and the wow factor — answer those normally using the course material
-- Only say "contact Prof Nui" if the student wants you to actually change or dispute something
-
-The course material context will be provided below. Use ONLY that material to answer."""
 
 
 class AgentState(TypedDict):
@@ -106,7 +103,28 @@ def _tokenise(text: str) -> set:
     return set(re.findall(r"[a-z]+", text.lower()))
 
 
-def keyword_search(query: str, top_k: int = 8) -> list:
+def _first_name(full_name: str) -> str:
+    name = full_name.strip()
+    return name.split()[0] if name else ""
+
+
+def _student_context_block(state: AgentState) -> str:
+    parts = []
+    name = state.get("student_name", "").strip()
+    major = state.get("student_major", "").strip()
+    year = state.get("student_year", "").strip()
+    if name:
+        parts.append(f"Student name: {name} (call them {_first_name(name)})")
+    if major:
+        parts.append(f"Major: {major}")
+    if year:
+        parts.append(f"Year: {year}")
+    if not parts:
+        return ""
+    return "STUDENT YOU ARE TALKING TO:\n" + "\n".join(parts)
+
+
+def keyword_search(query: str, top_k: int = 5) -> list:
     _ensure_chunks_loaded()
     word_vec = _word_vectorizer.transform([query])
     char_vec = _char_vectorizer.transform([query])
@@ -118,15 +136,18 @@ def keyword_search(query: str, top_k: int = 8) -> list:
 
 
 def classify_intent(state: AgentState) -> AgentState:
-    last_message = state["messages"][-1]["content"].lower()
-    tokens = _tokenise(last_message)
+    last_message = state["messages"][-1]["content"].strip()
+    lower = last_message.lower()
+    tokens = _tokenise(lower)
 
-    if tokens & ESCALATE_KEYWORDS:
+    if SOCIAL_PATTERNS.match(lower) or (len(tokens) <= 4 and tokens & {"hi", "hello", "hey", "thanks", "thank"}):
+        intent = "social"
+    elif tokens & ESCALATE_KEYWORDS:
         intent = "escalate"
-    elif tokens & RETRIEVE_KEYWORDS:
+    elif tokens & RETRIEVE_KEYWORDS or len(tokens) >= 4:
         intent = "retrieve"
     else:
-        intent = "direct"
+        intent = "social"
 
     return {**state, "intent": intent}
 
@@ -139,39 +160,51 @@ def retrieve(state: AgentState) -> AgentState:
 
 
 def generate(state: AgentState) -> AgentState:
-    name = state.get("student_name", "").strip()
-    major = state.get("student_major", "").strip()
-    year = state.get("student_year", "").strip()
+    intent = state.get("intent", "retrieve")
+    system = PROF_NUI_BASE
 
-    student_info_parts = []
-    if name:
-        student_info_parts.append(f"Student name: {name}")
-    if major:
-        student_info_parts.append(f"Major: {major}")
-    if year:
-        student_info_parts.append(f"Year: {year}")
+    student_block = _student_context_block(state)
+    if student_block:
+        system += f"\n\n{student_block}"
 
-    system = PROF_NUI_SYSTEM
-    if student_info_parts:
-        system += "\n\nStudent info:\n" + "\n".join(student_info_parts)
-
-    context = state.get("context", "").strip()
-    if context:
-        system += f"\n\n=== COURSE MATERIAL — USE ONLY THIS TO ANSWER ===\n{context}\n=== END OF COURSE MATERIAL ==="
+    if intent == "social":
+        system += (
+            "\n\nThis is casual conversation (greeting, thanks, small talk). "
+            "Reply warmly and briefly like a human. Use their name if you have it. "
+            "Do NOT mention course materials or say you lack information."
+        )
+    elif intent == "escalate":
+        system += (
+            "\n\nThe student may be asking about grades, extensions, or appeals. "
+            "Be empathetic and direct them to email Prof Nui at savanid@cmu.edu for official requests."
+        )
     else:
-        system += "\n\nNo course material was retrieved for this question. If you cannot answer from memory of previous context, tell the student you don't have that information and direct them to Canvas or savanid@cmu.edu."
+        context = state.get("context", "").strip()
+        if context:
+            system += (
+                f"\n\n=== COURSE MATERIAL (use this to answer) ===\n{context}\n"
+                "=== END ===\n"
+                "Answer from the material above when possible. If the material doesn't cover "
+                "their specific question, say you're not sure on that detail and suggest Canvas or "
+                "savanid@cmu.edu — don't be robotic about it."
+            )
+        else:
+            system += (
+                "\n\nNo specific course excerpts were retrieved. Still answer helpfully in Prof Nui's "
+                "voice using general digital transformation knowledge. Don't refuse casual or broad questions."
+            )
 
-    anthropic_messages = [
-        m for m in state["messages"] if m["role"] in ("user", "assistant")
-    ]
+    messages = [m for m in state["messages"] if m["role"] in ("user", "assistant")]
+    model = FAST_MODEL if intent == "social" else CHAT_MODEL
+    max_tokens = 220 if intent == "social" else 450
 
-    groq_messages = [{"role": "system", "content": system}] + anthropic_messages
     response = _get_groq_client().chat.completions.create(
-        model="llama-3.3-70b-versatile",
-        messages=groq_messages,
-        max_tokens=1000
+        model=model,
+        messages=[{"role": "system", "content": system}] + messages,
+        max_tokens=max_tokens,
+        temperature=0.75,
     )
-    reply = response.choices[0].message.content
+    reply = response.choices[0].message.content or ""
 
     updated_messages = state["messages"] + [{"role": "assistant", "content": reply}]
     return {**state, "messages": updated_messages, "context": ""}

@@ -1,0 +1,49 @@
+{
+  "documents": {
+    "D01_course_overview.txt": {
+      "id": "awII1xbevTLco94xATop",
+      "sha256": "ab8011f9620d2f48137f8e10ccb1f170d3bcc67c58a25f7ca6b26c373424945e",
+      "name": "D01 course overview"
+    },
+    "D02_assignments.txt": {
+      "id": "X7sq4TuWsM3JhGGjSY6e",
+      "sha256": "c3668fe1b607b6ea95dff8adeed4d5ac2f141a1d0636f33185755ad84a5e7276",
+      "name": "D02 assignments"
+    },
+    "D03_chapter1_strategy.txt": {
+      "id": "FAGlvXtHxnkIk5iCwfV1",
+      "sha256": "b496ea1a98d63158ee108a190abcf47e75378741fb9a153a44ecbe264546af3b",
+      "name": "D03 chapter1 strategy"
+    },
+    "D04_chapter2_information_resources.txt": {
+      "id": "kY0TbjnxUryAQxRgKWzR",
+      "sha256": "da31f8f5cef573daaa0f6c781c1b3b0ddb06ffec853329e559ad1e0b8816eabc",
+      "name": "D04 chapter2 information resources"
+    },
+    "D05_chapter3_organizational_strategy.txt": {
+      "id": "McK74BcqnLg9KwvOV1XK",
+      "sha256": "bc26478de53f5e10bf1265049f37777a8fcd36148c1e0316339f15d32d3fe275",
+      "name": "D05 chapter3 organizational strategy"
+    },
+    "D06_chapter4_work_design.txt": {
+      "id": "aCuTrtd1V7p6xiiRaZgF",
+      "sha256": "81fdafb7de3180b826efa1c25d5bcf0a131b9c6cab6d8f1f030c2bc1d4b0798d",
+      "name": "D06 chapter4 work design"
+    },
+    "D07_chapter7_IT_costs.txt": {
+      "id": "q7q9vX10S9SCDWSI0kgQ",
+      "sha256": "c9caff95ff88ca520ca6ffe842b59fc135d8847edf742de7b5f53b02f6ce2eaa",
+      "name": "D07 chapter7 IT costs"
+    },
+    "D08_cultural_IT_topics.txt": {
+      "id": "w9ldFaVJ3vip2TRykGGB",
+      "sha256": "d66f11c822cc1773fada96431c376696711f4d9ced4e96048d5dce4a6bbdcfa1",
+      "name": "D08 cultural IT topics"
+    },
+    "D09_prof_nui_persona.txt": {
+      "id": "ICus2hrvUBGTpO52GncY",
+      "sha256": "7101fdbef89cb29a23e845ab20fb32527efa4fb614c27e803109d26cdb108eb0",
+      "name": "D09 prof nui persona"
+    }
+  }
+}

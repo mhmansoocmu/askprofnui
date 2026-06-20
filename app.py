@@ -56,29 +56,45 @@ def _default_voice_index(voices: list[dict[str, str]], preferred_id: str) -> int
     return 0
 
 
+def _first_name(full_name: str) -> str:
+    name = full_name.strip()
+    return name.split()[0] if name else ""
+
+
 def _student_dynamic_variables(name: str, major: str, year: str) -> dict[str, str]:
-    variables = {}
-    if name.strip():
-        variables["student_name"] = name.strip()
+    return {
+        "student_name": name.strip() or "there",
+        "student_major": major.strip() or "your major",
+        "student_year": year.strip() or "your year",
+    }
+
+
+def _welcome_message(name: str = "", major: str = "", year: str = "") -> str:
+    first = _first_name(name)
+    if first:
+        greeting = f"Hey {first}! I'm Prof Nui — good to see you."
+    else:
+        greeting = "Hey! I'm Prof Nui — welcome to AskProfNui."
+    details = []
     if major.strip():
-        variables["student_major"] = major.strip()
+        details.append(f"I see you're studying **{major.strip()}**")
     if year.strip():
-        variables["student_year"] = year.strip()
-    return variables
+        details.append(f"**{year.strip()}** year")
+    intro = " ".join(details)
+    if intro:
+        intro = intro + ". "
+    return (
+        f"{greeting} {intro}"
+        "Ask me anything about digital transformation, strategy, assignments, or the wow factor.\n\n"
+        "Use **Live Avatar** to talk with your voice, or **Text Chat** to type."
+    )
 
 
 def _init_session_state() -> None:
     defaults = {
         "thread_id": str(uuid.uuid4()),
-        "messages": [{
-            "role": "assistant",
-            "content": (
-                "Hey! Welcome to AskProfNui — your space for everything IS 67-382. "
-                "Ask me about digital transformation, strategy, assignments, or the wow factor.\n\n"
-                "Use the **Live Avatar** tab to talk to Prof Nui with your voice, "
-                "or **Text Chat** to type your question."
-            ),
-        }],
+        "messages": [{"role": "assistant", "content": _welcome_message()}],
+        "profile_saved": False,
         "liveavatar_token": "",
         "liveavatar_widget_id": "",
         "liveavatar_voice_id": "",
@@ -101,14 +117,66 @@ with st.sidebar:
         "**IS 67-382**  \nDigital Transformation, Strategy & Management  \n**CMU-Q**"
     )
     st.divider()
+    st.markdown("### Your profile")
+    profile_name = st.text_input(
+        "Your name",
+        value=st.session_state.student_name,
+        key="sidebar_name",
+        placeholder="e.g. Yaman",
+    )
+    profile_major = st.text_input(
+        "Major",
+        value=st.session_state.student_major,
+        key="sidebar_major",
+        placeholder="e.g. Information Systems",
+    )
+    profile_year = st.text_input(
+        "Year",
+        value=st.session_state.student_year,
+        key="sidebar_year",
+        placeholder="e.g. Junior",
+    )
+    if st.button("Save profile", type="primary", use_container_width=True):
+        prev = (
+            st.session_state.student_name,
+            st.session_state.student_major,
+            st.session_state.student_year,
+        )
+        st.session_state.student_name = profile_name.strip()
+        st.session_state.student_major = profile_major.strip()
+        st.session_state.student_year = profile_year.strip()
+        st.session_state.profile_saved = bool(st.session_state.student_name)
+        st.session_state.messages = [{
+            "role": "assistant",
+            "content": _welcome_message(
+                st.session_state.student_name,
+                st.session_state.student_major,
+                st.session_state.student_year,
+            ),
+        }]
+        if prev != (
+            st.session_state.student_name,
+            st.session_state.student_major,
+            st.session_state.student_year,
+        ):
+            st.session_state.liveavatar_token = ""
+            st.session_state.liveavatar_widget_id = ""
+        first = _first_name(st.session_state.student_name)
+        if first:
+            st.success(f"Saved! I'll call you {first}.")
+        else:
+            st.success("Profile saved.")
+        st.rerun()
+    elif st.session_state.profile_saved and st.session_state.student_name:
+        st.caption(f"Talking to **{_first_name(st.session_state.student_name)}**")
+    st.divider()
     st.markdown("### How to use")
     st.markdown(
         """
-1. Open **Live Avatar**
-2. Fill in your details (optional)
-3. Click **Start live session**
-4. Allow microphone access
-5. Speak anytime — interrupt by talking or click **Stop speaking**
+1. Save your profile above (optional)
+2. Open **Live Avatar** → **Start live session**
+3. Allow microphone access
+4. Speak anytime — interrupt by talking or **Stop speaking**
         """
     )
     st.divider()
@@ -172,13 +240,15 @@ def live_avatar_panel() -> None:
     voice_names = list(voice_labels.keys())
     default_index = _default_voice_index(voices, str(config.get("voice_id") or "").strip())
 
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        name = st.text_input("Your name", value=st.session_state.student_name, key="live_name")
-    with col2:
-        major = st.text_input("Major", value=st.session_state.student_major, key="live_major")
-    with col3:
-        year = st.text_input("Year", value=st.session_state.student_year, key="live_year")
+    if st.session_state.student_name:
+        st.info(
+            f"Session for **{_first_name(st.session_state.student_name)}** "
+            f"({st.session_state.student_major or 'major not set'}, "
+            f"{st.session_state.student_year or 'year not set'}). "
+            "Update your profile in the sidebar if needed."
+        )
+    else:
+        st.info("Add your name in the **sidebar** so Prof Nui can greet you by name.")
 
     voice_name = st.selectbox(
         "Voice",
@@ -189,9 +259,6 @@ def live_avatar_panel() -> None:
     selected_voice_id = voice_labels[voice_name]
 
     if st.button("Start live session", type="primary", key="start_live_session_btn"):
-        st.session_state.student_name = name
-        st.session_state.student_major = major
-        st.session_state.student_year = year
         with st.spinner("Connecting to Prof Nui…"):
             try:
                 token_data = create_elevenlabs_session_token(
@@ -200,7 +267,11 @@ def live_avatar_panel() -> None:
                     str(config["agent_id"]),
                     str(config["secret_id"]),
                     voice_id=selected_voice_id,
-                    dynamic_variables=_student_dynamic_variables(name, major, year),
+                    dynamic_variables=_student_dynamic_variables(
+                        st.session_state.student_name,
+                        st.session_state.student_major,
+                        st.session_state.student_year,
+                    ),
                     is_sandbox=bool(config["is_sandbox"]),
                 )
                 st.session_state.liveavatar_token = token_data["session_token"]
@@ -223,13 +294,19 @@ def live_avatar_panel() -> None:
             scrolling=False,
         )
     else:
-        st.info("Fill in your details and click **Start live session** above.")
+        st.info("Click **Start live session** above to connect.")
 
 
 @st.fragment
 def text_chat_panel() -> None:
     st.subheader("Text chat with Prof Nui")
-    st.caption("Grounded in IS 67-382 course materials via Groq.")
+    if st.session_state.student_name:
+        st.caption(
+            f"Chatting as {_first_name(st.session_state.student_name)} · "
+            "IS 67-382 course materials via Groq"
+        )
+    else:
+        st.caption("IS 67-382 course materials via Groq · save your profile in the sidebar")
 
     for msg in st.session_state.messages:
         with st.chat_message(msg["role"]):
@@ -251,7 +328,7 @@ def text_chat_panel() -> None:
         chat_config = {"configurable": {"thread_id": st.session_state.thread_id}}
 
         with st.chat_message("assistant"):
-            with st.spinner("Prof Nui is thinking…"):
+            with st.spinner("…"):
                 try:
                     result = graph.invoke(state_input, config=chat_config)
                     reply = result["messages"][-1]["content"]

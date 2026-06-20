@@ -19,10 +19,17 @@ COURSE_KB_FOLDER_NAME = "IS 67-382 Digital Transformation"
 
 def _load_first_message() -> str:
     return (
-        "Hey! I'm Prof Nui. Good to see you. "
-        "What questions do you have about the course? "
-        "Could be digital transformation, an assignment, a framework — whatever's on your mind."
+        "Hey {{student_name}}! I'm Prof Nui. Good to see you. "
+        "What's on your mind — an assignment, a framework, or anything about digital transformation?"
     )
+
+
+def _dynamic_variable_placeholders() -> dict[str, str]:
+    return {
+        "student_name": "there",
+        "student_major": "your major",
+        "student_year": "your year",
+    }
 
 
 def _load_system_prompt() -> str:
@@ -77,24 +84,27 @@ def update_agent(api_key: str, agent_id: str, knowledge_entries: list[dict]) -> 
                 "first_message": _load_first_message(),
                 "language": "en",
                 "disable_first_message_interruptions": False,
+                "dynamic_variables": {
+                    "dynamic_variable_placeholders": _dynamic_variable_placeholders(),
+                },
                 "prompt": {
                     "prompt": _load_system_prompt(),
                     "llm": "gemini-2.0-flash",
                     "temperature": 0.85,
-                    "max_tokens": 300,
+                    "max_tokens": 250,
                     "knowledge_base": knowledge_entries,
                     "rag": {
                         "enabled": True,
                         "embedding_model": "e5_mistral_7b_instruct",
                         "max_documents_length": 50000,
-                        "max_retrieved_rag_chunks_count": 20,
+                        "max_retrieved_rag_chunks_count": 8,
                         "max_vector_distance": 0.78,
                     },
                 },
             },
             "turn": {
-                "turn_timeout": 12,
-                "turn_eagerness": "normal",
+                "turn_timeout": 10,
+                "turn_eagerness": "eager",
                 "silence_end_call_timeout": 120,
             },
             "conversation": {
