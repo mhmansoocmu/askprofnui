@@ -1,31 +1,56 @@
-import os
 import json
+import os
+import re
 
 DOCUMENTS_DIR = "documents"
 OUTPUT_FILE = "chunks.json"
-CHUNK_SIZE = 500
-OVERLAP = 50
+CHUNK_SIZE = 800
+OVERLAP = 100
 
 
-def chunk_text(text, source):
+def _split_long_section(text: str, source: str, base_index: int) -> list[dict]:
     chunks = []
     start = 0
-    index = 0
+    sub_index = 0
     while start < len(text):
         end = start + CHUNK_SIZE
-        chunk = text[start:end]
-        chunks.append({
-            "text": chunk,
-            "source": source,
-            "chunk_index": index,
-        })
-        index += 1
+        chunk = text[start:end].strip()
+        if chunk:
+            chunks.append({
+                "text": chunk,
+                "source": source,
+                "chunk_index": base_index + sub_index,
+            })
+            sub_index += 1
         start += CHUNK_SIZE - OVERLAP
     return chunks
 
 
-def main():
-    all_chunks = []
+def chunk_text(text: str, source: str) -> list[dict]:
+    """Chunk by document sections (---) first, then by size for long sections."""
+    chunks: list[dict] = []
+    sections = re.split(r"\n---\n", text)
+    index = 0
+    for section in sections:
+        section = section.strip()
+        if not section:
+            continue
+        if len(section) <= CHUNK_SIZE:
+            chunks.append({
+                "text": section,
+                "source": source,
+                "chunk_index": index,
+            })
+            index += 1
+        else:
+            sub_chunks = _split_long_section(section, source, index)
+            chunks.extend(sub_chunks)
+            index += len(sub_chunks)
+    return chunks
+
+
+def main() -> None:
+    all_chunks: list[dict] = []
     txt_files = [f for f in os.listdir(DOCUMENTS_DIR) if f.endswith(".txt")]
 
     if not txt_files:
