@@ -64,7 +64,7 @@ ELEVENLABS_SECRET_ID = "your-secret-uuid"
 GROQ_API_KEY = "your-key"
 ```
 
-5. Deploy — you'll get a public URL like `https://askprofnui.streamlit.app`
+5. Deploy — you'll get a public URL like `https://profnui-cmuq.onrender.com`
 
 Run the three admin scripts **once** from your machine (with the same keys) before students use the live link.
 

@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 API = "https://api.render.com/v1"
-SERVICE_NAME = "askprofnui"
+SERVICE_NAME = os.getenv("RENDER_SERVICE_NAME", "profnui-cmuq")
 KEYS = (
     "LIVEAVATAR_API_KEY",
     "LIVEAVATAR_AVATAR_ID",
