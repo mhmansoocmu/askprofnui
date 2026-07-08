@@ -26,9 +26,8 @@ def _dynamic_variable_placeholders() -> dict[str, str]:
 
     return {
         "student_name": "there",
-        "student_major": "",
-        "student_year": "",
-        "student_intro_line": "Good to see you.",
+        "student_major": "your major",
+        "student_year": "your year",
         "session_opening": session_opening("", "", ""),
     }
 
@@ -90,9 +89,9 @@ def update_agent(api_key: str, agent_id: str, knowledge_entries: list[dict]) -> 
                 },
                 "prompt": {
                     "prompt": _load_system_prompt(),
-                    "llm": "gemini-2.0-flash",
-                    "temperature": 0.85,
-                    "max_tokens": 250,
+                    "llm": "gpt-4o-mini",
+                    "temperature": 0.7,
+                    "max_tokens": 120,
                     "knowledge_base": knowledge_entries,
                     "built_in_tools": {
                         "end_call": {
