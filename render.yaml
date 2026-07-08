@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: profnui-cmuq
+    name: askprofnui
     runtime: python
     plan: free
     buildCommand: pip install -r requirements.txt && python ingest.py
