@@ -18,17 +18,18 @@ COURSE_KB_FOLDER_NAME = "IS 67-382 Digital Transformation"
 
 
 def _load_first_message() -> str:
-    return (
-        "Hey {{student_name}}! I'm Prof Nui. Good to see you. "
-        "What's on your mind — an assignment, a framework, or anything about digital transformation?"
-    )
+    return "{{session_opening}}"
 
 
 def _dynamic_variable_placeholders() -> dict[str, str]:
+    from student_profile import session_opening
+
     return {
         "student_name": "there",
-        "student_major": "your major",
-        "student_year": "your year",
+        "student_major": "",
+        "student_year": "",
+        "student_intro_line": "Good to see you.",
+        "session_opening": session_opening("", "", ""),
     }
 
 
@@ -93,6 +94,19 @@ def update_agent(api_key: str, agent_id: str, knowledge_entries: list[dict]) -> 
                     "temperature": 0.85,
                     "max_tokens": 250,
                     "knowledge_base": knowledge_entries,
+                    "built_in_tools": {
+                        "end_call": {
+                            "name": "end_call",
+                            "description": (
+                                "End the voice session. Use when: (1) the student asks to change, "
+                                "regrade, or bump THEIR grade for the FOURTH time after your last "
+                                "warning — say 'Alright, we're done. Have a nice day.' then call this; "
+                                "(2) the student says goodbye and the conversation is naturally over."
+                            ),
+                            "type": "system",
+                            "params": {"system_tool_type": "end_call"},
+                        }
+                    },
                     "rag": {
                         "enabled": True,
                         "embedding_model": "e5_mistral_7b_instruct",
@@ -105,7 +119,7 @@ def update_agent(api_key: str, agent_id: str, knowledge_entries: list[dict]) -> 
             "turn": {
                 "turn_timeout": 10,
                 "turn_eagerness": "eager",
-                "silence_end_call_timeout": 120,
+                "silence_end_call_timeout": 600,
             },
             "conversation": {
                 "client_events": [

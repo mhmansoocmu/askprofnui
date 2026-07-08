@@ -1,0 +1,137 @@
+SCHOLARLY IT ADOPTION THEORIES — ASSIGNMENT 2 REFERENCE
+Course: IS 67-382 Digital Transformation, Strategy and Management
+Use: Assignment 2 (IT Adoption Framework, 20%) — explain framework, three peer-reviewed cases, virtual influencer analysis
+Sources: Davis, Venkatesh, Lowry & Gaskin, peer-reviewed IS journals
+
+---
+ASSIGNMENT 2 SCHOLARLY REQUIREMENTS
+
+Students must:
+1. Explain assigned IT adoption framework — origins, constructs, relevance.
+2. Present THREE peer-reviewed journal articles applying the framework (technology, factors, insights per article).
+3. Analyze virtual influencers — identify FIVE factors influencing adoption/following.
+
+Deliverables: 10-minute presentation, slides on Canvas, Harvard or APA referencing.
+
+Scholarly search: MIS Quarterly, ISR, JMIS, Computers in Human Behavior, Telematics and Informatics, and top IS conference proceedings.
+
+---
+TECHNOLOGY ACCEPTANCE MODEL — TAM (Fred Davis, 1989)
+
+Core idea: Managers cannot get employees to use a system until they want to use it.
+
+Two core constructs:
+- Perceived Usefulness (PU): Belief that using the system improves job performance.
+- Perceived Ease of Use (PEOU): Belief that using the system is effortless.
+
+Extensions: TAM2 (social influence, cognitive instrumental processes), TAM3 (experience, anchoring).
+
+Limitation for new phenomena: Designed for traditional workplace technology adoption. Virtual influencers may require social/hedonic models (UTAUT, HMSAM, CASA).
+
+Key citations: Davis (1989); Davis, Bagozzi & Warshaw (1989); Venkatesh & Davis (2000) TAM2.
+
+Scholarly search: "TAM" AND "technology adoption" AND [your technology/country].
+
+---
+UNIFIED THEORY OF ACCEPTANCE AND USE OF TECHNOLOGY — UTAUT (Venkatesh et al., 2003)
+
+Integrates TAM, TPB, MPCU, IDT, and others into four core constructs:
+1. Performance Expectancy (similar to perceived usefulness)
+2. Effort Expectancy (similar to PEOU)
+3. Social Influence (subjective norm, image)
+4. Facilitating Conditions (organizational/technical support)
+
+Moderators: age, gender, experience, voluntariness of use.
+
+UTAUT2 (2012) adds hedonic motivation, price value, habit — relevant for consumer/social media contexts.
+
+Scholarly use for virtual influencers: Social influence and hedonic motivation are especially relevant to why people follow VIs.
+
+Key citation: Venkatesh, Morris, Davis & Davis (2003) MIS Quarterly.
+
+---
+HEDONIC-MOTIVATION SYSTEM ADOPTION MODEL — HMSAM (Lowry & Gaskin)
+
+Focuses on hedonic (pleasure/fun) motivations for adopting information systems — beyond utilitarian TAM constructs.
+
+Relevant for: social media, games, entertainment tech, virtual influencers where enjoyment and parasocial engagement drive adoption.
+
+Scholarly search: "HMSAM" hedonic adoption; "hedonic motivation" virtual influencer.
+
+---
+TASK-TECHNOLOGY FIT — TTF (Goodhue & Thompson, 1995)
+
+Adoption depends on fit between technology capabilities and task requirements. High fit → higher utilization and performance.
+
+Use when analyzing whether a platform/technology matches what users need to accomplish (e.g., WeChat as super-app fit for Chinese collectivist, integrated lifestyle).
+
+---
+SOCIAL COGNITIVE THEORY (Bandura)
+
+Key concepts: observational learning, self-efficacy, reciprocal determinism.
+
+Applied to IT: Users adopt when they see others succeed and believe they can use the technology (self-efficacy). Relevant for influencer-driven adoption — users model behavior of influencers they follow.
+
+---
+DIFFUSION OF INNOVATIONS (Rogers, 2003)
+
+Classic adoption curve: innovators, early adopters, early majority, late majority, laggards.
+
+Five attributes affecting adoption rate: relative advantage, compatibility, complexity, trialability, observability.
+
+Useful for country/industry case studies in final project and for comparing adoption speed across cultures.
+
+---
+COMPUTERS ARE SOCIAL ACTORS — CASA (Nass, Steuer & Tauber, 1994)
+
+People apply social rules to computers and mediated agents. Human-computer interaction is fundamentally social.
+
+Implication for virtual influencers: Social science theories (parasocial relationships, source credibility, social influence) apply to VI adoption — VIs are not "just technology" but social entities.
+
+Key citation: Nass, Steuer & Tauber (1994) "Computers are social actors."
+
+Scholarly search: "CASA" virtual agent; "computers are social actors" influencer.
+
+---
+APPLYING MODELS TO VIRTUAL INFLUENCERS (Assignment 2 Step 3)
+
+Virtual Influencers (VIs): Non-human, digitally created characters sharing social media content to gain influential status among consumers.
+
+Definitions (cite in assignments):
+- Mouritzen et al. (2024): non-human digitally created characters engaging in interactive communications.
+- Byun & Ahn (2023): digitized entities with anthropomorphized appearances, social roles, identity.
+- Audrezet et al. (2025): digital personas via CGI and/or AI.
+
+FIVE FACTORS students must identify from their framework — consider:
+- Social influence / subjective norm
+- Entertainment / hedonic value
+- Perceived authenticity / anthropomorphism
+- Visual appeal / parasocial interaction
+- Platform context / facilitating conditions
+- Cultural alignment
+- Trust and credibility
+
+Research findings (scholarly):
+- Lee & Yuan (2023): female VIs, affect, disclosure, comment patterns.
+- Sabie & Iancu (2025): gender portrayal differences in VIs.
+- Miyake (2023): digital-orientalist commodification in VI representation.
+
+---
+THREE PEER-REVIEWED ARTICLES — HOW TO PRESENT (Step 2)
+
+For each article report:
+1. Technology studied
+2. Factors influencing adoption (through your framework's lens)
+3. How the framework explains the adoption process
+4. Objectives, methodology, findings (brief, accurate)
+
+---
+ADD SCHOLARLY PDF SUMMARIES HERE
+
+Format per article:
+- Authors (Year). Title. Journal.
+- Framework:
+- Technology:
+- Methodology:
+- Adoption factors identified:
+- Relevance to Assignment 2 / virtual influencers:

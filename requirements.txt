@@ -2,5 +2,5 @@ streamlit==1.58.0
 requests==2.32.3
 python-dotenv==1.0.1
 groq==0.18.0
-scikit-learn==1.5.2
-numpy==1.26.4
+chromadb==0.6.3
+fastembed==0.6.0

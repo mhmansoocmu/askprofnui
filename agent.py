@@ -1,22 +1,25 @@
-import json
 import os
 import re
 from typing import TypedDict, List
 
 import env_config  # noqa: F401
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
-import numpy as np
 
 from groq import Groq
-from course_facts import get_facts_for_query, get_core_facts_block
+from course_facts import get_facts_for_query, get_core_facts_block, ATTENDANCE_POLICY, GRADE_CHANGE_ESCALATION
+from student_profile import first_name as _first_name
+from vector_store import vector_search
 
 _groq_client: Groq | None = None
 
 CHAT_MODEL = "llama-3.3-70b-versatile"
 FAST_MODEL = "llama-3.1-8b-instant"
 
-PROF_NUI_BASE = """You are Prof Nui — AskProfNui — the warm, casual AI teaching assistant for IS 67-382 Digital Transformation at CMU-Q.
+PROF_NUI_BASE = """You are Prof Nui — AskProfNui — the warm, casual AI teaching assistant for Dr. Savanid Vatanasakdakul's digital transformation class at CMU-Q.
+
+HOW TO REFER TO THE COURSE (important):
+- Say "digital transformation" or "our digital transformation class" — natural, like a real professor.
+- Do NOT say course codes aloud (no "IS 67-382", "67-382", "IS 67382", etc.) unless the student explicitly asks for the catalog number.
+- CMU-Q is fine when relevant.
 
 HOW TO TALK (sound like a real person in an ongoing chat):
 - Use contractions. Be warm and natural — never robotic.
@@ -34,7 +37,7 @@ STRICT GROUNDING RULE (for all course, assignment, policy, and grading questions
 
 OFF-TOPIC (not course-related):
 - Playful topics (weather, jokes, food, sports): respond with light humor, then steer back to the course. Example vibe: "What does the weather have to do with digital transformation?" — warm, not rude.
-- Other off-topic questions: answer briefly and professionally, then redirect: "I'm here for IS 67-382 — let's focus on digital transformation, assignments, or course content."
+- Other off-topic questions: answer briefly and professionally, then redirect: "I'm here for digital transformation — assignments, frameworks, and course content. What can I help with?"
 
 ESCALATION: Direct to savanid@cmu.edu only for personal grade disputes, extensions, or appeals."""
 
@@ -47,40 +50,27 @@ def _get_groq_client() -> Groq:
     return _groq_client
 
 
-CHUNKS_FILE = "chunks.json"
-CHUNKS: list = []
-_corpus: list = []
-_word_vectorizer = None
-_word_matrix = None
-_char_vectorizer = None
-_char_matrix = None
+CHUNKS_FILE = "chunks.json"  # legacy export from ingest.py; search uses chroma_db/
 
-
-def _ensure_chunks_loaded() -> None:
-    global CHUNKS, _corpus, _word_vectorizer, _word_matrix, _char_vectorizer, _char_matrix
-    if CHUNKS:
-        return
-    if not os.path.exists(CHUNKS_FILE):
-        from ingest import main as ingest_main
-        ingest_main()
-    with open(CHUNKS_FILE, "r", encoding="utf-8") as f:
-        CHUNKS = json.load(f)
-    _corpus = [chunk["text"] for chunk in CHUNKS]
-    _word_vectorizer = TfidfVectorizer(
-        stop_words="english",
-        ngram_range=(1, 2),
-        min_df=1,
-    )
-    _word_matrix = _word_vectorizer.fit_transform(_corpus)
-    _char_vectorizer = TfidfVectorizer(
-        analyzer="char_wb",
-        ngram_range=(3, 5),
-        min_df=1,
-    )
-    _char_matrix = _char_vectorizer.fit_transform(_corpus)
+PRIORITY_SOURCES = {
+    "D01_course_overview.txt",
+    "D02_assignments.txt",
+    "D09_prof_nui_persona.txt",
+    "D10_cultural_theories_scholarly.txt",
+    "D11_it_adoption_theories_scholarly.txt",
+    "D12_virtual_influencer_scholarly.txt",
+}
 
 
 ESCALATE_KEYWORDS = {"regrade", "appeal", "my grade", "extension for me", "special consideration for me"}
+GRADE_CHANGE_PATTERNS = re.compile(
+    r"change\s+(my|the|your)\s+grade|bump\s+my\s+grade|raise\s+my\s+grade|"
+    r"give\s+me\s+(a\s+)?(better|higher)\s+grade|regrade|re-grade|"
+    r"appeal\s+(my|the)\s+grade|can\s+you\s+change|will\s+you\s+change|"
+    r"increase\s+my\s+grade|fix\s+my\s+grade|update\s+my\s+grade|"
+    r"but\s+prof(essor|\s+nui)?[\s,!.?]|professor\s+please|prof\s+please",
+    re.I,
+)
 SOCIAL_PATTERNS = re.compile(
     r"^(hi|hello|hey|yo|sup|hiya|good morning|good afternoon|good evening|"
     r"how are you|how're you|what's up|whats up|thanks|thank you|ok|okay|bye|goodbye)[!.?\s]*$",
@@ -112,6 +102,9 @@ RETRIEVE_KEYWORDS = {
     "hofstede", "chapter", "exam", "canvas", "country", "qatar", "dance",
     "distribution", "percent", "participation", "deduction", "deadline",
     "reflective", "virtual", "influencer", "deliverables", "grading",
+    "attendance", "ninja", "coffee bean", "talabat", "word count",
+    "utaut", "hmsam", "schwartz", "trompenaars", "guanxi", "casa", "tam3",
+    "scholarly", "peer-reviewed", "journal",
 }
 
 QUERY_EXPANSIONS: list[tuple[re.Pattern[str], str]] = [
@@ -127,6 +120,10 @@ QUERY_EXPANSIONS: list[tuple[re.Pattern[str], str]] = [
      "grade distribution 40% 40% 10% 10% assessments grading"),
     (re.compile(r"wow|get\s+an?\s+a|how\s+to\s+get", re.I),
      "wow factor A grade C average professor says wow"),
+    (re.compile(r"attend|ninja|coffee\s+bean|talabat|race.*class", re.I),
+     "attendance race arrive before professor ninja Coffee Bean Talabat"),
+    (re.compile(r"word\s+count|10\s*percent|10%", re.I),
+     "word count 10 percent less more 2700 3300 450 550"),
 ]
 
 
@@ -143,11 +140,6 @@ def _tokenise(text: str) -> set:
     return set(re.findall(r"[a-z]+", text.lower()))
 
 
-def _first_name(full_name: str) -> str:
-    name = full_name.strip()
-    return name.split()[0] if name else ""
-
-
 def _student_context_block(state: AgentState) -> str:
     parts = []
     name = state.get("student_name", "").strip()
@@ -161,6 +153,7 @@ def _student_context_block(state: AgentState) -> str:
         parts.append(f"Year: {year}")
     if not parts:
         return ""
+    parts.append("Say 'digital transformation' for the course — not the course code.")
     return "STUDENT YOU ARE TALKING TO:\n" + "\n".join(parts)
 
 
@@ -174,15 +167,8 @@ def _expand_query(query: str) -> str:
     return query
 
 
-def keyword_search(query: str, top_k: int = 8) -> list:
-    _ensure_chunks_loaded()
-    word_vec = _word_vectorizer.transform([query])
-    char_vec = _char_vectorizer.transform([query])
-    word_scores = cosine_similarity(word_vec, _word_matrix).flatten()
-    char_scores = cosine_similarity(char_vec, _char_matrix).flatten()
-    combined_scores = 0.7 * word_scores + 0.3 * char_scores
-    top_indices = np.argsort(combined_scores)[::-1][:top_k]
-    return [CHUNKS[i] for i in top_indices if combined_scores[i] > 0]
+def semantic_search(query: str, top_k: int = 12) -> list:
+    return vector_search(query, top_k=top_k)
 
 
 def _merge_chunks(*result_lists: list) -> str:
@@ -199,6 +185,56 @@ def _merge_chunks(*result_lists: list) -> str:
 
 def _user_message_count(messages: list) -> int:
     return sum(1 for m in messages if m.get("role") == "user")
+
+
+def _grade_change_attempt_count(messages: list) -> int:
+    count = 0
+    for message in messages:
+        if message.get("role") != "user":
+            continue
+        content = message.get("content", "")
+        if GRADE_CHANGE_PATTERNS.search(content):
+            count += 1
+    return count
+
+
+def _grade_change_level(attempt: int) -> str:
+    if attempt <= 1:
+        return "first"
+    if attempt == 2:
+        return "annoyed"
+    if attempt == 3:
+        return "warning"
+    return "end"
+
+
+def _grade_change_instructions(level: str, first_name: str) -> str:
+    name = first_name or "there"
+    if level == "first":
+        return (
+            "\n\nThe student is asking to change THEIR personal grade. "
+            "Firm no — you cannot change grades here. Official disputes: savanid@cmu.edu. "
+            "One dry Prof Nui joke is fine. Stay professional, not angry yet."
+        )
+    if level == "annoyed":
+        return (
+            f"\n\nGRADE BEGGING — ATTEMPT 2. You are ANNOYED. They keep asking to change their grade. "
+            f"Say you already covered this. No grade changes. "
+            f"If they say 'but professor', cut in: 'But what, {name}?' — "
+            f"push back: instead of doing the ninja to Coffee Bean or racing Talabat, "
+            f"they could've been in class and worked harder. Sound human — sigh, impatience."
+        )
+    if level == "warning":
+        return (
+            f"\n\nGRADE BEGGING — ATTEMPT 3. INTERRUPT them. Last warning. "
+            f"Say clearly: if they ask about changing their grade ONE more time, you are ending this conversation. "
+            f"If they say 'but professor': 'But what, {name}?' — frustrated, not cruel."
+        )
+    return (
+        f"\n\nGRADE BEGGING — ATTEMPT 4+. END THE CONVERSATION. "
+        f"Say a firm goodbye: 'Alright, we're done. Have a nice day.' "
+        f"Do NOT answer further questions. Do NOT negotiate. Conversation is over."
+    )
 
 
 def _is_course_related(lower: str, tokens: set) -> bool:
@@ -241,6 +277,8 @@ def classify_intent(state: AgentState) -> AgentState:
         intent = "offtopic_redirect"
     elif any(kw in lower for kw in ESCALATE_KEYWORDS):
         intent = "escalate"
+    elif GRADE_CHANGE_PATTERNS.search(last_message):
+        intent = "grade_change"
     elif _is_course_related(lower, tokens):
         intent = "retrieve"
     elif tokens & RETRIEVE_KEYWORDS or len(tokens) >= 4:
@@ -256,11 +294,10 @@ def classify_intent(state: AgentState) -> AgentState:
 def retrieve(state: AgentState) -> AgentState:
     query = state["messages"][-1]["content"]
     expanded = _expand_query(query)
-    rag_chunks = keyword_search(expanded, top_k=10)
+    rag_chunks = semantic_search(expanded, top_k=12)
 
-    priority_sources = {"D01_course_overview.txt", "D02_assignments.txt", "D09_prof_nui_persona.txt"}
-    boosted = [c for c in rag_chunks if c["source"] in priority_sources]
-    other = [c for c in rag_chunks if c["source"] not in priority_sources]
+    boosted = [c for c in rag_chunks if c["source"] in PRIORITY_SOURCES]
+    other = [c for c in rag_chunks if c["source"] not in PRIORITY_SOURCES]
     rag_context = _merge_chunks(boosted, other)
 
     topic_facts = get_facts_for_query(query)
@@ -305,7 +342,7 @@ def generate(state: AgentState) -> AgentState:
         )
     elif intent == "offtopic_redirect":
         system += (
-            "\n\nThe student asked something off-topic and not about IS 67-382.\n"
+            "\n\nThe student asked something off-topic and not about digital transformation.\n"
             "Reply professionally and kindly in 2–3 sentences:\n"
             "- Briefly acknowledge their question without fully answering unrelated trivia.\n"
             "- Redirect: you're here for digital transformation, assignments, frameworks, "
@@ -326,6 +363,20 @@ def generate(state: AgentState) -> AgentState:
             f"\n\n=== COURSE MATERIAL ===\n{context}\n=== END ===\n"
             "Use ONLY the material above."
         )
+    elif intent == "grade_change":
+        attempt = _grade_change_attempt_count(messages)
+        level = _grade_change_level(attempt)
+        first_name = _first_name(state.get("student_name", ""))
+        system += _grade_change_instructions(level, first_name)
+        context = state.get("context", "").strip()
+        if not context:
+            context = f"{ATTENDANCE_POLICY}\n\n{GRADE_CHANGE_ESCALATION}"
+        system += f"\n\n=== REFERENCE ===\n{context}\n=== END ==="
+        if level == "end":
+            system += (
+                "\n\nYour reply MUST be a short goodbye only. "
+                "Do not invite more questions. The chat is closed after this message."
+            )
     else:
         context = state.get("context", "").strip()
         if not context:
@@ -351,6 +402,10 @@ def generate(state: AgentState) -> AgentState:
         model = FAST_MODEL
         max_tokens = 180
         temperature = 0.75
+    elif intent == "grade_change":
+        model = CHAT_MODEL
+        max_tokens = 220 if _grade_change_level(_grade_change_attempt_count(messages)) != "end" else 80
+        temperature = 0.92
     elif intent in ("offtopic_humor", "offtopic_redirect"):
         model = FAST_MODEL
         max_tokens = 200
@@ -370,7 +425,7 @@ def generate(state: AgentState) -> AgentState:
 
 def run_agent(state: AgentState) -> AgentState:
     state = classify_intent(state)
-    if state["intent"] in ("retrieve", "escalate"):
+    if state["intent"] in ("retrieve", "escalate", "grade_change"):
         state = retrieve(state)
     return generate(state)
 

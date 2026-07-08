@@ -7,8 +7,8 @@ Students can talk to a live Prof Nui avatar (voice) or use text chat. Answers ar
 ## Features
 
 - **Live Avatar** — real-time voice conversation via LiveAvatar + ElevenLabs Agent
-- **Text Chat** — Groq/LangGraph backup with course-material retrieval
-- **Course knowledge** — 9 document files synced to the ElevenLabs agent (RAG)
+- **Text Chat** — Groq with **Chroma vector search** (semantic RAG over `documents/`)
+- **Course knowledge** — 12 document files synced to the ElevenLabs agent (RAG)
 
 ## Run locally
 
@@ -17,6 +17,7 @@ python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env   # fill in API keys
+python ingest.py       # build Chroma vector index
 python setup_liveavatar.py
 python sync_elevenlabs_knowledge.py
 python fix_elevenlabs_audio.py
@@ -29,9 +30,21 @@ Open http://localhost:8501
 
 | Step | Command |
 |------|---------|
+| Build vector index (text chat) | `python ingest.py` |
 | Link ElevenLabs → LiveAvatar | `python setup_liveavatar.py` |
 | Upload course docs to agent | `python sync_elevenlabs_knowledge.py` |
 | Fix audio format (PCM 24k) | `python fix_elevenlabs_audio.py` |
+
+After editing files in `documents/`, run `python ingest.py` and `python sync_elevenlabs_knowledge.py`.
+
+## Scholarly theory documents
+
+Assignment-relevant theories live in:
+- `D10_cultural_theories_scholarly.txt` — Hofstede, Schwartz, Hall, Trompenaars, GLOBE, Guanxi
+- `D11_it_adoption_theories_scholarly.txt` — TAM, UTAUT, HMSAM, TTF, CASA
+- `D12_virtual_influencer_scholarly.txt` — VI definitions, research, five-factor guidance
+
+Paste downloaded journal summaries into the **ADD SCHOLARLY PDF SUMMARIES** sections at the bottom of each file, then re-ingest and sync.
 
 ## Deploy for other users (Streamlit Community Cloud)
 
@@ -70,7 +83,9 @@ See `.env.example` for all required keys.
 
 ```
 app.py                    # Streamlit app (public-facing)
-agent.py                  # Groq text chat + RAG
+agent.py                  # Groq text chat + vector RAG
+vector_store.py           # Chroma + FastEmbed semantic search
+ingest.py                 # Chunk documents + build chroma_db/
 liveavatar_client.py      # LiveAvatar session + player widget
 sync_elevenlabs_knowledge.py  # Admin: upload documents/ to agent
 documents/                # Course material source files
@@ -79,5 +94,5 @@ documents/                # Course material source files
 ## Notes
 
 - Live avatar uses **ElevenLabs Agent** (not Groq) for voice conversations
-- Text chat uses **Groq** with local TF-IDF retrieval over `documents/`
+- Text chat uses **Groq** with **Chroma** semantic retrieval over `documents/`
 - HeyGen/LiveAvatar and ElevenLabs are billed separately per usage

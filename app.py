@@ -56,44 +56,17 @@ def _default_voice_index(voices: list[dict[str, str]], preferred_id: str) -> int
     return 0
 
 
-def _first_name(full_name: str) -> str:
-    name = full_name.strip()
-    return name.split()[0] if name else ""
-
-
-def _student_dynamic_variables(name: str, major: str, year: str) -> dict[str, str]:
-    return {
-        "student_name": name.strip() or "there",
-        "student_major": major.strip() or "your major",
-        "student_year": year.strip() or "your year",
-    }
-
-
-def _welcome_message(name: str = "", major: str = "", year: str = "") -> str:
-    first = _first_name(name)
-    if first:
-        greeting = f"Hey {first}! I'm Prof Nui — good to see you."
-    else:
-        greeting = "Hey! I'm Prof Nui — welcome to AskProfNui."
-    details = []
-    if major.strip():
-        details.append(f"I see you're studying **{major.strip()}**")
-    if year.strip():
-        details.append(f"**{year.strip()}** year")
-    intro = " ".join(details)
-    if intro:
-        intro = intro + ". "
-    return (
-        f"{greeting} {intro}"
-        "Ask me anything about digital transformation, strategy, assignments, or the wow factor.\n\n"
-        "Use **Live Avatar** to talk with your voice, or **Text Chat** to type."
-    )
+from student_profile import (
+    elevenlabs_dynamic_variables,
+    first_name,
+    text_welcome,
+)
 
 
 def _init_session_state() -> None:
     defaults = {
         "thread_id": str(uuid.uuid4()),
-        "messages": [{"role": "assistant", "content": _welcome_message()}],
+        "messages": [{"role": "assistant", "content": text_welcome()}],
         "profile_saved": False,
         "liveavatar_token": "",
         "liveavatar_widget_id": "",
@@ -114,7 +87,7 @@ config = get_liveavatar_config()
 with st.sidebar:
     st.markdown("## Prof Nui")
     st.markdown(
-        "**IS 67-382**  \nDigital Transformation, Strategy & Management  \n**CMU-Q**"
+        "**Digital Transformation**  \nStrategy & Management  \n**CMU-Q**"
     )
     st.divider()
     st.markdown("### Your profile")
@@ -148,7 +121,7 @@ with st.sidebar:
         st.session_state.profile_saved = bool(st.session_state.student_name)
         st.session_state.messages = [{
             "role": "assistant",
-            "content": _welcome_message(
+            "content": text_welcome(
                 st.session_state.student_name,
                 st.session_state.student_major,
                 st.session_state.student_year,
@@ -161,14 +134,14 @@ with st.sidebar:
         ):
             st.session_state.liveavatar_token = ""
             st.session_state.liveavatar_widget_id = ""
-        first = _first_name(st.session_state.student_name)
+        first = first_name(st.session_state.student_name)
         if first:
             st.success(f"Saved! I'll call you {first}.")
         else:
             st.success("Profile saved.")
         st.rerun()
     elif st.session_state.profile_saved and st.session_state.student_name:
-        st.caption(f"Talking to **{_first_name(st.session_state.student_name)}**")
+        st.caption(f"Talking to **{first_name(st.session_state.student_name)}**")
     st.divider()
     st.markdown("### How to use")
     st.markdown(
@@ -242,7 +215,7 @@ def live_avatar_panel() -> None:
 
     if st.session_state.student_name:
         st.info(
-            f"Session for **{_first_name(st.session_state.student_name)}** "
+            f"Session for **{first_name(st.session_state.student_name)}** "
             f"({st.session_state.student_major or 'major not set'}, "
             f"{st.session_state.student_year or 'year not set'}). "
             "Update your profile in the sidebar if needed."
@@ -267,7 +240,7 @@ def live_avatar_panel() -> None:
                     str(config["agent_id"]),
                     str(config["secret_id"]),
                     voice_id=selected_voice_id,
-                    dynamic_variables=_student_dynamic_variables(
+                    dynamic_variables=elevenlabs_dynamic_variables(
                         st.session_state.student_name,
                         st.session_state.student_major,
                         st.session_state.student_year,
@@ -302,11 +275,11 @@ def text_chat_panel() -> None:
     st.subheader("Text chat with Prof Nui")
     if st.session_state.student_name:
         st.caption(
-            f"Chatting as {_first_name(st.session_state.student_name)} · "
-            "IS 67-382 course materials via Groq"
+            f"Chatting as {first_name(st.session_state.student_name)} · "
+            "digital transformation course materials via Groq"
         )
     else:
-        st.caption("IS 67-382 course materials via Groq · save your profile in the sidebar")
+        st.caption("Digital transformation course materials via Groq · save your profile in the sidebar")
 
     for msg in st.session_state.messages:
         with st.chat_message(msg["role"]):

@@ -1,0 +1,111 @@
+VIRTUAL INFLUENCERS — SCHOLARLY REFERENCE FOR ASSIGNMENT 2
+Course: IS 67-382 | Guest lecture: Xin Huang
+Use: Assignment 2 Step 3 — five adoption factors; final project case studies
+
+---
+WHAT ARE VIRTUAL INFLUENCERS?
+
+Non-human, digitally created characters that share social media content and engage in interactive communications with the aim of obtaining influential status among consumers.
+
+Also called: digital humans, CGI influencers, AI influencers, synthetic media personalities.
+
+---
+KEY SCHOLARLY DEFINITIONS (cite these)
+
+Mouritzen et al. (2024): "Non-human digitally created characters sharing social media content and engaging in interactive communications" with influential status among consumers.
+
+Byun & Ahn (2023): "Digitized entities with anthropomorphized appearances that have human bodies, social roles, and their own identity."
+
+Audrezet et al. (2025): "Digital personas created through computer-generated imagery and/or AI."
+
+---
+HISTORY AND EXAMPLES
+
+1996: Kyoko Date — first virtual idol (Japan, Horipro).
+2003: Lu do Magalu — Brazilian retail VI; world's biggest VI by 2022.
+2016: Lil Miquela — Brud (LA); AI/media focus.
+2018: Laila Blue — Middle East's first AI influencer.
+2023: Miss Lala — Dubai, LaLaVerse.
+2025: Danah — Kuwait's first AI influencer (Abdulaziz Al-Rashed).
+
+Regional relevance: GCC and Middle East adoption contexts for CMU-Q students.
+
+---
+WHY TAM ALONE MAY NOT BE ENOUGH
+
+TAM asks: perceived usefulness and ease of use. But is a virtual influencer a "technology" in the traditional sense?
+
+Students should justify framework choice. Often combine:
+- UTAUT (social influence, facilitating conditions)
+- HMSAM (hedonic motivation)
+- CASA (social responses to digital agents)
+- Parasocial relationship theory (entertainment/media studies)
+
+---
+CASA THEORY AND VIRTUAL INFLUENCERS (Nass et al., 1994)
+
+People treat computers and mediated agents as social actors — applying politeness, gender stereotypes, and social norms.
+
+Implication: Users form parasocial bonds with VIs; social influence constructs from UTAUT become central. Explains why authenticity, relatability, and visual human-likeness matter even when audience knows the influencer is not human.
+
+---
+RESEARCH FINDINGS (PEER-REVIEWED)
+
+Lee & Yuan (2023):
+- Female virtual influencers display more positive affect and disclose virtual nature more often.
+- Receive more sexualized comments; more negative comments when displaying sexual cues.
+
+Sabie & Iancu (2025):
+- Female VIs portrayed with emphasis on beauty/sexualization.
+- Male VIs linked to authority and emotional detachment.
+
+Miyake (2023):
+- Virtual influencers can reflect digital-orientalist commodification of race and gender.
+
+Use these to support critical analysis — not just descriptive adoption factors.
+
+---
+FIVE FACTORS FOR ASSIGNMENT 2 (examples to develop with YOUR framework)
+
+Students must identify exactly FIVE factors from their assigned IT adoption framework:
+
+1. Social influence — peers and community normalize following VIs; UTAUT subjective norm.
+2. Hedonic motivation — entertainment, escapism, parasocial enjoyment (HMSAM).
+3. Perceived usefulness — product recommendations, information value (TAM/UTAUT performance expectancy).
+4. Anthropomorphism / social presence — human-like cues trigger CASA social responses.
+5. Facilitating conditions — platform algorithms (TikTok, Instagram), device access, payment for virtual gifts.
+6. (Alternative) Trust/authenticity paradox — audience knows VI is fake yet engages socially.
+7. (Alternative) Cultural fit — GCC vs Western VI aesthetics and modesty norms.
+
+Pick five that map clearly to your framework's constructs — do not list generic factors without framework linkage.
+
+---
+RESEARCH QUESTIONS FOR ASSIGNMENT 2
+
+"What factors influence the adoption of virtual influencers?"
+"Why do people follow virtual influencers?"
+
+Answer with framework-grounded, evidence-based explanations citing scholarly sources.
+
+---
+SCHOLARLY SEARCH STRATEGIES
+
+Google Scholar / CMU library:
+- "virtual influencer" adoption
+- "virtual influencer" UTAUT OR TAM
+- "synthetic influencer" parasocial
+- "digital influencer" technology acceptance
+- "CGI influencer" consumer behavior
+
+Filter: peer-reviewed journals, last 10 years preferred.
+
+---
+ADD NEW JOURNAL SUMMARIES HERE
+
+Paste summaries of downloaded papers using:
+- Full citation (Harvard or APA)
+- Research question
+- Method (survey, experiment, case study)
+- Sample/context
+- Findings relevant to VI adoption
+- Which of the five factors it supports

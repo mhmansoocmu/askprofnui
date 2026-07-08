@@ -2,6 +2,8 @@ import json
 import os
 import re
 
+from vector_store import index_chunks
+
 DOCUMENTS_DIR = "documents"
 OUTPUT_FILE = "chunks.json"
 CHUNK_SIZE = 800
@@ -49,15 +51,20 @@ def chunk_text(text: str, source: str) -> list[dict]:
     return chunks
 
 
-def main() -> None:
+def load_all_chunks() -> list[dict]:
     all_chunks: list[dict] = []
-    txt_files = [f for f in os.listdir(DOCUMENTS_DIR) if f.endswith(".txt")]
+    if not os.path.isdir(DOCUMENTS_DIR):
+        print(f"Directory '{DOCUMENTS_DIR}/' not found.")
+        return all_chunks
 
+    txt_files = sorted(
+        f for f in os.listdir(DOCUMENTS_DIR) if f.endswith(".txt")
+    )
     if not txt_files:
         print(f"No .txt files found in '{DOCUMENTS_DIR}/'")
-        return
+        return all_chunks
 
-    for filename in sorted(txt_files):
+    for filename in txt_files:
         filepath = os.path.join(DOCUMENTS_DIR, filename)
         print(f"Reading: {filename}")
         with open(filepath, "r", encoding="utf-8") as f:
@@ -65,11 +72,22 @@ def main() -> None:
         chunks = chunk_text(text, filename)
         all_chunks.extend(chunks)
         print(f"  → {len(chunks)} chunks")
+    return all_chunks
+
+
+def main() -> None:
+    all_chunks = load_all_chunks()
+    if not all_chunks:
+        return
 
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump(all_chunks, f, indent=2, ensure_ascii=False)
+    print(f"\nSaved {len(all_chunks)} chunks to {OUTPUT_FILE}")
 
-    print(f"\nDone. {len(all_chunks)} total chunks saved to {OUTPUT_FILE}")
+    print("Building Chroma vector index…")
+    indexed = index_chunks(all_chunks)
+    print(f"Indexed {indexed} chunks into chroma_db/")
+    print("Done.")
 
 
 if __name__ == "__main__":

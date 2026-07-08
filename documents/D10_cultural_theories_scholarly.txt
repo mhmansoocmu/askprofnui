@@ -1,0 +1,112 @@
+SCHOLARLY CULTURAL THEORIES — ASSIGNMENT 1 REFERENCE
+Course: IS 67-382 Digital Transformation, Strategy and Management
+Use: Assignment 1 (Cultural Framework, 20%) — explain, apply to a country, compare frameworks
+Sources: Peer-reviewed journals, top IS conferences, Hofstede Insights, original theory papers
+
+---
+ASSIGNMENT 1 SCHOLARLY REQUIREMENTS
+
+Students must:
+1. Explain a cultural framework — origins, key concepts, dimensions, relevance to technology adoption.
+2. Apply it to ONE country (NOT Qatar) using at least THREE scholarly case studies on technology adoption.
+3. Compare the framework to others (written submission; presentation comparison optional if presenting first).
+
+High-quality sources: MIS Quarterly, ISR, JMIS, EJIS, JAIS, ICIS, PACIS, and discipline journals in management, sociology, psychology.
+
+---
+HOFSTEDE'S CULTURAL DIMENSIONS (Geert Hofstede)
+
+Definition: Culture as "the collective programming of the mind distinguishing members of one group from others."
+
+Six dimensions (original five + long-term orientation):
+1. Power Distance (PDI): Acceptance of unequal power distribution. High: Malaysia, Arab countries. Low: Denmark, Sweden.
+2. Uncertainty Avoidance (UAI): Discomfort with ambiguity; preference for rules. High: Greece, Japan. Low: Singapore, Denmark. Example: Chinese high UAI → anonymous social media thrived vs identified platforms (Renren failed).
+3. Individualism vs. Collectivism (IDV): Individual goals vs group goals. Individualistic: USA, UK. Collectivist: China, Qatar. Example: WeChat's integrated super-app design fits collectivist preference.
+4. Masculinity vs. Femininity (MAS): Assertiveness/competition vs cooperation/quality of life.
+5. Long-Term vs. Short-Term Orientation (LTO): Persistence and adaptation vs tradition and quick results. Example: Chinese LTO + UAI → preference for WeChat Pay over credit cards.
+6. Indulgence vs. Restraint (IVR): Added in later Hofstede work.
+
+Scholarly use: Compare country scores at hofstede-insights.com. Cite Hofstede (1980, 2001) and validation studies. Case studies should show HOW dimensions explain adoption, resistance, or failure — not just list scores.
+
+Key citations to search: Hofstede (1980) Culture's Consequences; Srite & Karahanna (2006) on national culture and IT acceptance.
+
+---
+SCHWARTZ'S THEORY OF BASIC HUMAN VALUES (Shalom H. Schwartz)
+
+Social psychologist; 10 universal values in a circular structure (conflicts and compatibilities):
+Self-Direction, Stimulation, Hedonism, Achievement, Power, Security, Conformity, Tradition, Benevolence, Universalism.
+
+Higher-order dimensions: Openness to Change vs. Conservation; Self-Enhancement vs. Self-Transcendence.
+
+Technology examples from course:
+- Self-Direction: Google 20% time, Facebook hackathons.
+- Hedonism: Facebook/Tinder success in US contexts.
+- Power: Google dominance; Facebook influencer culture.
+- Security: Facebook privacy concerns; Reddit anonymity.
+- Universalism: Facebook community groups; LinkedIn professional inclusiveness.
+
+Scholarly use: Schwartz (1992, 2012). Compare with Hofstede on power, individualism, uncertainty, and emotion (Schwartz involves emotional values; Hofstede less so).
+
+---
+HALL'S HIGH-CONTEXT VS. LOW-CONTEXT (Edward T. Hall)
+
+High-context: Implicit communication, non-verbal cues, shared background. Japan, China, Arab countries. IS implication: Western ERP/IS systems built on explicit data may misalign with implicit business practices.
+
+Low-context: Direct, explicit verbal communication. USA, Germany, Scandinavia. IS implication: Readier fit with explicit IS design.
+
+Scholarly use: Hall (1976) Beyond Culture. Search: "high context" ERP adoption, "low context" information systems.
+
+---
+TROMPENAARS' SEVEN DIMENSIONS (Fons Trompenaars)
+
+1. Universalism vs. Particularism (rules vs relationships)
+2. Individualism vs. Communitarianism
+3. Specific vs. Diffuse (separate vs overlapping work/private life)
+4. Neutral vs. Affective (rational vs emotional expression)
+5. Achievement vs. Ascription (earned vs assigned status)
+6. Sequential vs. Synchronic time
+7. Internal vs. External control
+
+Scholarly use: Trompenaars & Hampden-Turner (1998). Compare with Schwartz: both study values; Trompenaars emphasizes communication and cultural variability (7 dimensions vs Schwartz's 10 values).
+
+---
+GLOBE STUDY (House et al.)
+
+Expanded Hofstede; nine cultural dimensions for leadership and organizational behavior. Six dimensions relate to Hofstede; three are additions. Useful when comparing leadership and technology implementation across cultures.
+
+Scholarly citation: House, Hanges, Javidan, Dorfman & Gupta (2004) Culture, Leadership, and Organizations: The GLOBE Study of 62 Societies.
+
+---
+GUANXI AND ERP IN CHINA (Scholarly case example — Lena Li, 2019)
+
+Guanxi: personal relationships fundamental to Chinese business; rooted in Confucianism.
+
+Components: Renqing (favor exchange), Ganqing (emotional attachment/interdependence), Mianzi (face/social prestige).
+
+Finding: Ganqing and renqing interdependence positively affects ERP coordination post-implementation. Western critical success factors alone cannot explain Chinese ERP outcomes.
+
+Context: ~90% of ERP implementations in China late/over budget since 2000 (Zhu & Ma, 1999) — cultural misalignment with Western ERP design.
+
+Scholarly search terms: "Guanxi ERP adoption China", "cultural factors ERP implementation China manufacturing".
+
+---
+FRAMEWORK COMPARISON GUIDANCE (Assignment 1 Step 3)
+
+Hofstede vs. Schwartz: Both address individualism, power, uncertainty; Hofstede = acceptance of inequality; Schwartz = importance of hierarchy; Schwartz more emotional.
+
+Schwartz vs. Trompenaars: 10 universal values vs 7 variability dimensions; Trompenaars emphasizes communication differences.
+
+Schwartz vs. Hall: Values taxonomy vs communication context (high/low).
+
+Reminder: Qatar is NOT allowed as the country for Assignment 1. Good examples: China, Japan, India, Brazil, Germany, Nigeria, South Korea, Mexico.
+
+---
+ADD SCHOLARLY PDF SUMMARIES HERE
+
+When Prof Nui or students add journal articles, paste structured summaries below using this format per paper:
+- Authors (Year). Title. Journal.
+- Framework used:
+- Country/technology context:
+- Methodology:
+- Key findings for technology adoption:
+- How it supports Assignment 1:

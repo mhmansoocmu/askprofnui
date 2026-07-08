@@ -1,13 +1,13 @@
 {
   "documents": {
     "D01_course_overview.txt": {
-      "id": "awII1xbevTLco94xATop",
-      "sha256": "ab8011f9620d2f48137f8e10ccb1f170d3bcc67c58a25f7ca6b26c373424945e",
+      "id": "WCPzNP6zTfWbOSg4b3jy",
+      "sha256": "ad9549ebc4f04fe642d3e3538f1865925675be522f256447c2b5a514cee1864b",
       "name": "D01 course overview"
     },
     "D02_assignments.txt": {
-      "id": "X7sq4TuWsM3JhGGjSY6e",
-      "sha256": "c3668fe1b607b6ea95dff8adeed4d5ac2f141a1d0636f33185755ad84a5e7276",
+      "id": "9N88fFxjOjFPBrX6sVtb",
+      "sha256": "0d1784fac87a53dbda365d457205cf1617aced0c8bf37f9d6fc80cb9b55733dc",
       "name": "D02 assignments"
     },
     "D03_chapter1_strategy.txt": {
@@ -41,9 +41,24 @@
       "name": "D08 cultural IT topics"
     },
     "D09_prof_nui_persona.txt": {
-      "id": "ICus2hrvUBGTpO52GncY",
-      "sha256": "7101fdbef89cb29a23e845ab20fb32527efa4fb614c27e803109d26cdb108eb0",
+      "id": "Ffo0HY87d9FAu3ZrC5gj",
+      "sha256": "676e6f7e0b7ed12e91cc6d33533e55a81582a431fe7ffa0e3d96146589e78809",
       "name": "D09 prof nui persona"
+    },
+    "D10_cultural_theories_scholarly.txt": {
+      "id": "HuNQsr3TGBVqHtROeQu6",
+      "sha256": "c4e0315e6e9aef0940864033c1d8b79acce66fe686d6052304a7ee9233e8f98f",
+      "name": "D10 cultural theories scholarly"
+    },
+    "D11_it_adoption_theories_scholarly.txt": {
+      "id": "opKZDDmbtWTjYptO7yV4",
+      "sha256": "765b84ca2aaf16f219daae6fb9aec2a486d819706f9b02b9fc68c18c8f9df90a",
+      "name": "D11 it adoption theories scholarly"
+    },
+    "D12_virtual_influencer_scholarly.txt": {
+      "id": "nW1e6Zmo5wBExPU7FLCI",
+      "sha256": "0a2dd91a2120d256874a1024673adc312223d608ab8ac71d2af6f562bd1543d5",
+      "name": "D12 virtual influencer scholarly"
     }
   }
 }
