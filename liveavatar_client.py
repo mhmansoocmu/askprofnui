@@ -144,6 +144,7 @@ def render_liveavatar_widget(
     session_token: str,
     widget_id: str,
     opening_message: str = "",
+    student_first_name: str = "",
 ) -> str:
     token_json = json.dumps(session_token)
     widget_id_json = json.dumps(widget_id)
@@ -151,6 +152,7 @@ def render_liveavatar_widget(
         opening_message
         or "Hi, how are you? I'm AskProfNui. What can I help you with today for digital transformation?"
     )
+    student_name_json = json.dumps(student_first_name.strip() or "there")
     html = r"""<!DOCTYPE html>
 <html>
 <head>
@@ -382,6 +384,7 @@ def render_liveavatar_widget(
     const widgetId = __WIDGET_ID__;
     const sessionToken = __TOKEN__;
     const openingMessage = __OPENING__;
+    const studentName = __STUDENT_NAME__;
 
     const statusEl = document.getElementById("status");
     const overlay = document.getElementById("overlay");
@@ -404,7 +407,73 @@ def render_liveavatar_widget(
     let avatarSpeaking = false;
     let streamAttached = false;
     let greetingSent = false;
+    let gradeChangeAttempts = 0;
+    let forceEndAfterSpeak = false;
     const seenCitations = new Set();
+    const gradeChangeRe =
+      /\b(change|bump|raise|fix|update|increase)\b.{0,40}\bgrade\b|\b(regrade|re-grade)\b|\bgive me (a )?(better|higher) grade\b|\bcan you change\b|\bwill you change\b|\bbut professor\b|\bbut prof\b|\bplease change my\b/i;
+
+    function gradeScript(attempt) {
+      const name = studentName || "there";
+      if (attempt <= 1) {
+        return 'Say ONLY this exact sentence, nothing else: "I can\'t change your grade."';
+      }
+      if (attempt === 2) {
+        return (
+          'Say ONLY this exact line, nothing else: "You should\'ve worked harder in class than wasting your time and my time — and now you\'re asking for a higher grade? Come on, ' +
+          name +
+          '."'
+        );
+      }
+      if (attempt === 3) {
+        return (
+          'Say ONLY this exact angry line, nothing else: "Stop, ' +
+          name +
+          ' — or I will end this session."'
+        );
+      }
+      return (
+        'GRADE CHANGE ATTEMPT 4. Say ONLY the single word "Bye." Then IMMEDIATELY call the end_call tool. Do not say anything else.'
+      );
+    }
+
+    function enforceGradeChange(transcript) {
+      if (!transcript || !gradeChangeRe.test(transcript)) return;
+      gradeChangeAttempts += 1;
+      const attempt = Math.min(gradeChangeAttempts, 4);
+      const cue =
+        "OVERRIDE — GRADE CHANGE ATTEMPT " +
+        attempt +
+        " of 4. Ignore other personality. " +
+        gradeScript(attempt);
+      try {
+        if (typeof session.sendContextualUpdate === "function") {
+          session.sendContextualUpdate(cue);
+        }
+      } catch (err) {
+        console.warn("grade cue failed", err);
+      }
+      if (attempt >= 4) {
+        forceEndAfterSpeak = true;
+        setStatus("Ending session after final reply…");
+      } else {
+        setStatus("Grade-change attempt " + attempt + " — script enforced.");
+      }
+    }
+
+    function maybeForceEndSession() {
+      if (!forceEndAfterSpeak) return;
+      forceEndAfterSpeak = false;
+      setTimeout(async () => {
+        try {
+          await session.stop();
+          setStatus("Session ended — she closed after the fourth grade ask.");
+          setOverlay("Session ended after the grade-change script.", true);
+        } catch (err) {
+          console.warn("force stop failed", err);
+        }
+      }, 1200);
+    }
 
     function setStatus(message) {
       statusEl.innerHTML = message;
@@ -586,6 +655,8 @@ def render_liveavatar_widget(
         avatarSpeaking = false;
         streamAttached = false;
         greetingSent = false;
+        gradeChangeAttempts = 0;
+        forceEndAfterSpeak = false;
       }
     });
 
@@ -631,12 +702,20 @@ def render_liveavatar_widget(
       avatarSpeaking = false;
       updateInterruptButton();
       setStatus("Your turn — ask a question.");
+      maybeForceEndSession();
     });
 
     session.on(AgentEventsEnum.AVATAR_TRANSCRIPTION, (evt) => {
       extractCitationFromSpeech(evt?.text || "");
     });
 
+    session.on(AgentEventsEnum.USER_TRANSCRIPTION, (evt) => {
+      enforceGradeChange(evt?.text || "");
+    });
+
+    if (AgentEventsEnum.USER_TRANSCRIPTION_CHUNK) {
+      // final full transcript is enough; chunks ignored for counting
+    }
     if (AgentEventsEnum.ELEVENLABS_AGENT_EVENT) {
       session.on(AgentEventsEnum.ELEVENLABS_AGENT_EVENT, (evt) => {
         handleClientToolCall(evt);
@@ -668,4 +747,9 @@ def render_liveavatar_widget(
   </script>
 </body>
 </html>"""
-    return html.replace("__WIDGET_ID__", widget_id_json).replace("__TOKEN__", token_json).replace("__OPENING__", opening_json)
+    return (
+        html.replace("__WIDGET_ID__", widget_id_json)
+        .replace("__TOKEN__", token_json)
+        .replace("__OPENING__", opening_json)
+        .replace("__STUDENT_NAME__", student_name_json)
+    )

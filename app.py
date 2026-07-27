@@ -299,6 +299,7 @@ def live_avatar_panel() -> None:
                     st.session_state.student_major,
                     st.session_state.student_year,
                 ),
+                student_first_name=first_name(st.session_state.student_name),
             ),
             height=680,
             scrolling=False,

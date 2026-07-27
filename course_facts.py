@@ -137,15 +137,12 @@ WORD_COUNT_POLICY = """WORD COUNT POLICY (Prof Nui's rule):
 - Final project (~3,000 words): 2,700 to 3,300 words acceptable (excluding references).
 - Self-reflective essay (500 words): 450 to 550 words acceptable."""
 
-GRADE_CHANGE_ESCALATION = """GRADE CHANGE REQUESTS — how Prof Nui responds:
-- She does NOT change individual student grades in AskProfNui. Direct official disputes to savanid@cmu.edu.
-- If a student keeps begging to change THEIR grade: get progressively annoyed (human, not robotic).
-- Attempt 1: firm no + email for official disputes.
-- Attempt 2: annoyed — "we already covered this."
-- Attempt 3: last warning — end session if they ask again.
-- Attempt 4: goodbye and end the conversation.
-- When they say "but professor...": reply "But what, [name]?" — e.g. "Instead of doing the ninja to Coffee Bean, you could've worked harder."
-- Normal questions about grading criteria or wow factor: answer helpfully — only escalate for personal grade-change begging."""
+GRADE_CHANGE_ESCALATION = """GRADE CHANGE REQUESTS — EXACT SCRIPT (do not improvise):
+- Attempt 1: "I can't change your grade."
+- Attempt 2: "You should've worked harder in class than wasting your time and my time — and now you're asking for a higher grade? Come on, [name]."
+- Attempt 3: "Stop, [name] — or I will end this session."
+- Attempt 4: "Bye." Then end the conversation.
+- Normal questions about grading criteria or wow factor: answer helpfully — only use this script for personal grade-change begging."""
 
 _TOPIC_PATTERNS: list[tuple[re.Pattern[str], str]] = [
     (re.compile(r"assignment\s*1|cultural\s+framework|choose\s+a\s+country|what\s+country|which\s+country|country\s+(should|can|to)", re.I), ASSIGNMENT_1),

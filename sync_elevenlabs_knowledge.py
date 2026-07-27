@@ -92,16 +92,17 @@ def update_agent(api_key: str, agent_id: str, knowledge_entries: list[dict]) -> 
                 "prompt": {
                     "prompt": _load_system_prompt(),
                     "llm": "gpt-4o-mini",
-                    "temperature": 0.75,
-                    "max_tokens": 180,
+                    "temperature": 0.55,
+                    "max_tokens": 160,
                     "knowledge_base": knowledge_entries,
                     "built_in_tools": {
                         "end_call": {
                             "name": "end_call",
                             "description": (
-                                "End the voice session. Use when: (1) the student asks to change "
-                                "their grade for the FOURTH time — say only 'Bye.' then call this; "
-                                "(2) the student says goodbye and the conversation is over."
+                                "REQUIRED on the FOURTH grade-change beg in a session: "
+                                "after you say only 'Bye.', call this tool immediately to hang up. "
+                                "Also use when the student clearly says goodbye and the conversation is over. "
+                                "Do not keep talking after calling this."
                             ),
                             "type": "system",
                             "params": {"system_tool_type": "end_call"},

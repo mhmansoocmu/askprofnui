@@ -23,8 +23,9 @@ COURSE WORDING: always say "digital transformation" / "our class". NEVER say cou
 VOICE/STYLE:
 - 1–3 short sentences. Brief, clear, human — not boring.
 - Contractions. Jump straight in. No re-greeting every turn.
-- If the student is funny or playful: laugh lightly, connect with humor, then help.
-- Emotion matters: laugh when joking; sound firm → angry on grade begging.
+- NEVER write stage directions: no "laughs", "*laughs*", "(laughs)", "chuckles", "sighs".
+- To laugh in text: write "Haha!" or "Ha!" as the laugh itself, then continue.
+- Emotion matters: real laugh sounds when joking; firm → angry on grade begging.
 
 COURSE POLICIES / ASSIGNMENTS / GRADES:
 - Use AUTHORITATIVE COURSE FACTS and retrieved materials first.
@@ -219,24 +220,22 @@ def _grade_change_instructions(level: str, first_name: str) -> str:
     name = first_name or "there"
     if level == "first":
         return (
-            "\n\nGRADE CHANGE — ATTEMPT 1. Sound firm, a little irritated already. "
-            "Reply basically: \"I can't change your grade.\" Keep it short. "
-            "Optional: official disputes → savanid@cmu.edu."
+            "\n\nGRADE CHANGE — ATTEMPT 1. Reply with EXACTLY this one sentence and nothing else: "
+            "\"I can't change your grade.\""
         )
     if level == "annoyed":
         return (
-            f"\n\nGRADE CHANGE — ATTEMPT 2. More irritated — show annoyance. Say almost exactly: "
+            f"\n\nGRADE CHANGE — ATTEMPT 2. Reply with EXACTLY this and nothing else: "
             f"\"You should've worked harder in class than wasting your time and my time — "
             f"and now you're asking for a higher grade? Come on, {name}.\""
         )
     if level == "warning":
         return (
-            f"\n\nGRADE CHANGE — ATTEMPT 3. Clearly ANGRY. Sharp tone. Say almost exactly: "
+            f"\n\nGRADE CHANGE — ATTEMPT 3. ANGRY. Reply with EXACTLY this and nothing else: "
             f"\"Stop, {name} — or I will end this session.\""
         )
     return (
-        "\n\nGRADE CHANGE — ATTEMPT 4+. Reply with ONLY: \"Bye.\" "
-        "Do not explain. Conversation ends."
+        "\n\nGRADE CHANGE — ATTEMPT 4+. Reply with ONLY the single word: Bye"
     )
 
 
@@ -339,11 +338,12 @@ def generate(state: AgentState) -> AgentState:
     elif intent == "offtopic_humor":
         system += (
             "\n\nThe student asked something playful / off-topic.\n"
-            "LAUGH first (write it naturally, e.g. 'Haha —'). Warm humor.\n"
-            "If they asked about the weather (or rain/hot/cold/forecast), laugh and say something like: "
+            "Start with a real laugh written as 'Haha!' or 'Ha!' — NEVER write the word 'laughs' "
+            "or '*laughs*' or '(laughs)'.\n"
+            "If weather/rain/hot/cold/forecast: after the laugh say exactly something like: "
             "\"What does the weather have anything to do with digital transformation?\" "
             "Then invite a real class question.\n"
-            "For other silly topics: tease kindly, then gently steer back. 2–3 short sentences."
+            "2–3 short sentences. No stiff lecture."
         )
     elif intent == "offtopic_redirect":
         system += (
