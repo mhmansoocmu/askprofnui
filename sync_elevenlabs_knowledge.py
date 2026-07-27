@@ -18,7 +18,9 @@ COURSE_KB_FOLDER_NAME = "IS 67-382 Digital Transformation"
 
 
 def _load_first_message() -> str:
-    return "{{session_opening}}"
+    # Empty on purpose: LiveAvatar plays first_message before video/audio is ready,
+    # so the student misses it. The widget triggers the greeting after STREAM_READY.
+    return ""
 
 
 def _dynamic_variable_placeholders() -> dict[str, str]:
@@ -83,7 +85,7 @@ def update_agent(api_key: str, agent_id: str, knowledge_entries: list[dict]) -> 
             "agent": {
                 "first_message": _load_first_message(),
                 "language": "en",
-                "disable_first_message_interruptions": False,
+                "disable_first_message_interruptions": True,
                 "dynamic_variables": {
                     "dynamic_variable_placeholders": _dynamic_variable_placeholders(),
                 },
@@ -115,9 +117,14 @@ def update_agent(api_key: str, agent_id: str, knowledge_entries: list[dict]) -> 
                 },
             },
             "turn": {
-                "turn_timeout": 10,
-                "turn_eagerness": "eager",
+                "turn_timeout": 30,
+                "turn_eagerness": "patient",
                 "silence_end_call_timeout": 600,
+                "soft_timeout_config": {
+                    "timeout_seconds": -1,
+                    "message": " ",
+                    "use_llm_generated_message": False,
+                },
             },
             "conversation": {
                 "client_events": [

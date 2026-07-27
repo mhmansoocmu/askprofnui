@@ -140,9 +140,17 @@ def config_is_complete(config: dict[str, str | bool]) -> bool:
     return all(config.get(key) for key in required)
 
 
-def render_liveavatar_widget(session_token: str, widget_id: str) -> str:
+def render_liveavatar_widget(
+    session_token: str,
+    widget_id: str,
+    opening_message: str = "",
+) -> str:
     token_json = json.dumps(session_token)
     widget_id_json = json.dumps(widget_id)
+    opening_json = json.dumps(
+        opening_message
+        or "Hi, how are you? I'm AskProfNui. What can I help you with today for digital transformation?"
+    )
     return f"""<!DOCTYPE html>
 <html>
 <head>
@@ -281,19 +289,21 @@ def render_liveavatar_widget(session_token: str, widget_id: str) -> str:
       <button id="stop-btn" disabled>End session</button>
     </div>
     <div id="status">Loading session securely…</div>
-    <div class="hint">AskProfNui will greet you when the session is fully ready. Allow the microphone when prompted.</div>
+    <div class="hint">Wait for the green LIVE badge — AskProfNui greets you after audio/video are ready.</div>
   </div>
   <script type="module">
     import {{
+      ElevenLabsAgentSession,
       LiveAvatarSession,
       SessionEvent,
       SessionState,
       VoiceChatEvent,
       AgentEventsEnum,
-    }} from "https://esm.sh/@heygen/liveavatar-web-sdk";
+    }} from "https://esm.sh/@heygen/liveavatar-web-sdk@0.0.18";
 
     const widgetId = {widget_id_json};
     const sessionToken = {token_json};
+    const openingMessage = {opening_json};
 
     const statusEl = document.getElementById("status");
     const overlay = document.getElementById("overlay");
@@ -304,7 +314,8 @@ def render_liveavatar_widget(session_token: str, widget_id: str) -> str:
     const interruptBtn = document.getElementById("interrupt-btn");
     const videoEl = document.getElementById("avatar-video");
 
-    const session = new LiveAvatarSession(sessionToken, {{
+    const SessionClass = ElevenLabsAgentSession || LiveAvatarSession;
+    const session = new SessionClass(sessionToken, {{
       voiceChat: {{ defaultMuted: false }},
     }});
 
@@ -312,7 +323,7 @@ def render_liveavatar_widget(session_token: str, widget_id: str) -> str:
     let started = false;
     let avatarSpeaking = false;
     let streamAttached = false;
-    let readyToGreet = false;
+    let greetingSent = false;
 
     function setStatus(message) {{
       statusEl.innerHTML = message;
@@ -339,13 +350,44 @@ def render_liveavatar_widget(session_token: str, widget_id: str) -> str:
       }}
     }}
 
+    function triggerGreeting() {{
+      if (greetingSent) return;
+      greetingSent = true;
+      try {{
+        // Context alone does not speak — pair it with a short user nudge.
+        const cue =
+          "The student can see and hear you now. Respond with ONLY this opening greeting, warmly, then wait: " +
+          openingMessage +
+          " Never say 'are you still there'.";
+        if (typeof session.sendContextualUpdate === "function") {{
+          session.sendContextualUpdate(cue);
+        }}
+        setTimeout(() => {{
+          try {{
+            if (typeof session.sendUserMessage === "function") {{
+              session.sendUserMessage("Hi — I'm ready, please greet me.");
+            }} else if (typeof session.sendUserActivity === "function") {{
+              session.sendUserActivity();
+            }}
+          }} catch (err) {{
+            console.warn("Greeting nudge failed:", err);
+          }}
+        }}, 500);
+        setStatus("AskProfNui is introducing herself…");
+      }} catch (error) {{
+        console.warn("Greeting trigger failed:", error);
+        setStatus("Connected — say hi if AskProfNui is quiet.");
+      }}
+    }}
+
     async function startSession() {{
       if (started) return;
       try {{
         started = true;
+        greetingSent = false;
         startBtn.disabled = true;
         startBtn.textContent = "Starting…";
-        setOverlay("Almost ready — connecting audio & video…", true);
+        setOverlay("Connecting audio & video — please wait…", true);
         setStatus("Starting live session…");
         await session.start();
         try {{ await session.voiceChat.unmute(); }} catch (_) {{}}
@@ -360,7 +402,7 @@ def render_liveavatar_widget(session_token: str, widget_id: str) -> str:
 
     session.on(SessionEvent.SESSION_STATE_CHANGED, (state) => {{
       if (state === SessionState.CONNECTED) {{
-        setStatus("Connected <span class='badge live'>LIVE</span> — AskProfNui is with you.");
+        setStatus("Connected <span class='badge live'>LIVE</span> — finishing setup…");
         stopBtn.disabled = false;
         muteBtn.disabled = false;
         startBtn.disabled = true;
@@ -376,7 +418,7 @@ def render_liveavatar_widget(session_token: str, widget_id: str) -> str:
         started = false;
         avatarSpeaking = false;
         streamAttached = false;
-        readyToGreet = false;
+        greetingSent = false;
       }}
     }});
 
@@ -385,12 +427,13 @@ def render_liveavatar_widget(session_token: str, widget_id: str) -> str:
         session.attach(videoEl);
         streamAttached = true;
       }}
-      readyToGreet = true;
-      // Give the stream a beat to stabilize before showing video / greeting
+      setOverlay("Almost ready — starting your greeting…", true);
+      // Wait until stream is stable so the student HEARS the intro
       setTimeout(() => {{
         setOverlay("", false);
-        setStatus("Ready — AskProfNui is greeting you. Talk anytime after.");
-      }}, 1200);
+        setStatus("Ready <span class='badge live'>LIVE</span>");
+        triggerGreeting();
+      }}, 2000);
     }});
 
     session.voiceChat.on(VoiceChatEvent.MUTED, () => {{
@@ -415,13 +458,13 @@ def render_liveavatar_widget(session_token: str, widget_id: str) -> str:
     session.on(AgentEventsEnum.AVATAR_SPEAK_STARTED, () => {{
       avatarSpeaking = true;
       updateInterruptButton();
-      setStatus("AskProfNui is speaking… <em>(talk or Stop speaking to interrupt)</em>");
+      setStatus("AskProfNui is speaking…");
     }});
 
     session.on(AgentEventsEnum.AVATAR_SPEAK_ENDED, () => {{
       avatarSpeaking = false;
       updateInterruptButton();
-      setStatus("Your turn — ask another question.");
+      setStatus("Your turn — ask a question.");
     }});
 
     startBtn.addEventListener("click", () => startSession());
@@ -442,11 +485,11 @@ def render_liveavatar_widget(session_token: str, widget_id: str) -> str:
       }}
     }});
 
-    // Auto-start after a short settle so the first greeting feels loaded
+    // Start after SDK settles; greeting waits for STREAM_READY
     setTimeout(() => {{
-      setOverlay("Loading AskProfNui — getting everything ready…", true);
+      setOverlay("Loading AskProfNui…", true);
       startSession();
-    }}, 900);
+    }}, 700);
   </script>
 </body>
 </html>"""

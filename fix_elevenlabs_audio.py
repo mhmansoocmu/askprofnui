@@ -18,7 +18,7 @@ def main() -> int:
         print("Set ELEVENLABS_API_KEY and ELEVENLABS_AGENT_ID in .env first.")
         return 1
 
-    voice_id = os.getenv("ELEVENLABS_VOICE_ID", "sy48iDwTLLK3505gmkWW").strip()
+    voice_id = os.getenv("ELEVENLABS_VOICE_ID", "QxDGockuxLcTLNe2wEt7").strip()
     headers = {"xi-api-key": api_key, "Content-Type": "application/json"}
     payload = {
         "conversation_config": {

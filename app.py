@@ -18,6 +18,7 @@ from liveavatar_client import (
 from student_profile import (
     elevenlabs_dynamic_variables,
     first_name,
+    session_opening,
     text_welcome,
 )
 
@@ -293,6 +294,11 @@ def live_avatar_panel() -> None:
             render_liveavatar_widget(
                 st.session_state.liveavatar_token,
                 st.session_state.liveavatar_widget_id,
+                opening_message=session_opening(
+                    st.session_state.student_name,
+                    st.session_state.student_major,
+                    st.session_state.student_year,
+                ),
             ),
             height=560,
             scrolling=False,
