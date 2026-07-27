@@ -9,36 +9,37 @@ def first_name(full_name: str) -> str:
 
 
 def session_opening(name: str, major: str, year: str) -> str:
-    """Short natural live-session opener for Prof Nui (voice)."""
+    """Warm live-session opener — AskProfNui voice intro."""
     first = first_name(name)
     major = major.strip()
     year = year.strip()
 
     if first and year and major:
         return (
-            f"Hey {first}! I'm Prof Nui. You're a {year} in {major}, right? "
-            f"Good to see you. What's on your mind for digital transformation today?"
+            f"Hi {first}, how are you? I'm AskProfNui. "
+            f"I see you're a {year} studying {major} — nice to meet you. "
+            f"What can I help you with today for digital transformation?"
         )
     if first and major:
         return (
-            f"Hey {first}! I'm Prof Nui — {major}, nice. "
-            f"What do you want to dig into — assignment, framework, something else?"
+            f"Hi {first}, how are you? I'm AskProfNui. "
+            f"You're in {major}, right? What can I help you with today?"
         )
     if first:
         return (
-            f"Hey {first}! I'm Prof Nui. Good to see you. "
-            f"What's up — assignment, frameworks, or anything on digital transformation?"
+            f"Hi {first}, how are you? I'm AskProfNui. "
+            f"What can I help you with today — anything on digital transformation?"
         )
     return (
-        "Hey! I'm Prof Nui. Good to see you. "
-        "What's on your mind for digital transformation?"
+        "Hi, how are you? I'm AskProfNui. "
+        "What can I help you with today for digital transformation?"
     )
 
 
 def text_welcome(name: str = "", major: str = "", year: str = "") -> str:
     """Welcome message for the text chat tab."""
     return session_opening(name, major, year) + (
-        "\n\nUse **Live Avatar** to talk, or type here."
+        "\n\nUse **Live Avatar** to talk with voice, or type here."
     )
 
 

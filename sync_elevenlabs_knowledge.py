@@ -97,10 +97,9 @@ def update_agent(api_key: str, agent_id: str, knowledge_entries: list[dict]) -> 
                         "end_call": {
                             "name": "end_call",
                             "description": (
-                                "End the voice session. Use when: (1) the student asks to change, "
-                                "regrade, or bump THEIR grade for the FOURTH time after your last "
-                                "warning — say 'Alright, we're done. Have a nice day.' then call this; "
-                                "(2) the student says goodbye and the conversation is naturally over."
+                                "End the voice session. Use when: (1) the student asks to change "
+                                "their grade for the FOURTH time — say only 'Bye.' then call this; "
+                                "(2) the student says goodbye and the conversation is over."
                             ),
                             "type": "system",
                             "params": {"system_tool_type": "end_call"},

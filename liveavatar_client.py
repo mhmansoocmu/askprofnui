@@ -147,57 +147,141 @@ def render_liveavatar_widget(session_token: str, widget_id: str) -> str:
 <html>
 <head>
   <meta charset="utf-8" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
+    :root {{
+      --bg: #0c1222;
+      --panel: #141c2e;
+      --line: #243049;
+      --text: #eef2ff;
+      --muted: #94a3b8;
+      --accent: #0d9488;
+      --accent-2: #f59e0b;
+      --danger: #e11d48;
+    }}
+    * {{ box-sizing: border-box; }}
     body {{
-      font-family: system-ui, -apple-system, sans-serif;
+      font-family: "DM Sans", system-ui, sans-serif;
       margin: 0;
       padding: 0;
-      background: #0f1117;
-      color: #f5f5f5;
+      background: radial-gradient(1200px 500px at 20% -10%, #1e3a5f 0%, transparent 55%),
+                  radial-gradient(900px 400px at 100% 0%, #134e4a 0%, transparent 50%),
+                  var(--bg);
+      color: var(--text);
     }}
-    #wrap {{ max-width: 720px; margin: 0 auto; }}
+    #wrap {{
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 8px;
+    }}
+    .stage {{
+      position: relative;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      overflow: hidden;
+      background: #000;
+      box-shadow: 0 20px 50px rgba(0,0,0,.35);
+    }}
     video {{
       width: 100%;
-      border-radius: 12px;
+      display: block;
+      min-height: 320px;
       background: #000;
-      min-height: 300px;
     }}
-    .controls {{ display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }}
+    #overlay {{
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      background: rgba(12, 18, 34, .82);
+      backdrop-filter: blur(6px);
+      transition: opacity .4s ease;
+      z-index: 5;
+    }}
+    #overlay.hidden {{ opacity: 0; pointer-events: none; }}
+    .spinner {{
+      width: 42px; height: 42px;
+      border: 3px solid rgba(255,255,255,.15);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }}
+    @keyframes spin {{ to {{ transform: rotate(360deg); }} }}
+    #overlay-text {{
+      font-size: 15px;
+      color: var(--muted);
+      text-align: center;
+      padding: 0 20px;
+      line-height: 1.45;
+    }}
+    .controls {{
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }}
     button {{
-      border: 0; border-radius: 8px; padding: 10px 16px;
-      cursor: pointer; font-weight: 600; font-size: 14px;
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 16px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      font-family: inherit;
+      transition: transform .12s ease, opacity .12s ease;
     }}
-    #start-btn {{ background: #7c3aed; color: white; }}
-    #stop-btn {{ background: #374151; color: white; }}
-    #interrupt-btn {{ background: #dc2626; color: white; }}
-    #interrupt-btn:disabled {{ background: #4b5563; opacity: 0.6; cursor: not-allowed; }}
-    #mute-btn {{ background: #1f2937; color: white; }}
+    button:active {{ transform: scale(.98); }}
+    button:disabled {{ opacity: .45; cursor: not-allowed; }}
+    #start-btn {{ background: var(--accent); color: white; }}
+    #stop-btn {{ background: #334155; color: white; }}
+    #interrupt-btn {{ background: var(--danger); color: white; }}
+    #mute-btn {{ background: var(--panel); color: white; border: 1px solid var(--line); }}
     #status {{
-      margin-top: 12px; font-size: 14px; color: #d1d5db;
-      min-height: 22px; line-height: 1.4;
+      margin-top: 12px;
+      font-size: 14px;
+      color: var(--muted);
+      min-height: 22px;
+      line-height: 1.45;
     }}
     .hint {{
-      margin-top: 8px; font-size: 13px; color: #9ca3af;
+      margin-top: 6px;
+      font-size: 13px;
+      color: #64748b;
     }}
     .badge {{
-      display: inline-block; padding: 2px 8px; border-radius: 999px;
-      font-size: 12px; font-weight: 600; margin-left: 6px;
-      background: #374151; color: #e5e7eb;
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-left: 6px;
+      background: #1e293b;
+      color: #cbd5e1;
     }}
-    .badge.live {{ background: #065f46; color: #d1fae5; }}
+    .badge.live {{ background: #064e3b; color: #a7f3d0; }}
   </style>
 </head>
 <body>
   <div id="wrap">
-    <video id="avatar-video" autoplay playsinline></video>
+    <div class="stage">
+      <video id="avatar-video" autoplay playsinline></video>
+      <div id="overlay">
+        <div class="spinner"></div>
+        <div id="overlay-text">Preparing AskProfNui… please wait a moment.</div>
+      </div>
+    </div>
     <div class="controls">
-      <button id="start-btn">Start session</button>
+      <button id="start-btn" disabled>Connecting…</button>
       <button id="interrupt-btn" disabled>Stop speaking</button>
       <button id="mute-btn" disabled>Mute mic</button>
       <button id="stop-btn" disabled>End session</button>
     </div>
-    <div id="status">Click <strong>Start session</strong>, allow microphone access, then talk.</div>
-    <div class="hint">You can interrupt anytime — just start talking, or click <strong>Stop speaking</strong>.</div>
+    <div id="status">Loading session securely…</div>
+    <div class="hint">AskProfNui will greet you when the session is fully ready. Allow the microphone when prompted.</div>
   </div>
   <script type="module">
     import {{
@@ -212,6 +296,8 @@ def render_liveavatar_widget(session_token: str, widget_id: str) -> str:
     const sessionToken = {token_json};
 
     const statusEl = document.getElementById("status");
+    const overlay = document.getElementById("overlay");
+    const overlayText = document.getElementById("overlay-text");
     const startBtn = document.getElementById("start-btn");
     const stopBtn = document.getElementById("stop-btn");
     const muteBtn = document.getElementById("mute-btn");
@@ -226,9 +312,15 @@ def render_liveavatar_widget(session_token: str, widget_id: str) -> str:
     let started = false;
     let avatarSpeaking = false;
     let streamAttached = false;
+    let readyToGreet = false;
 
     function setStatus(message) {{
       statusEl.innerHTML = message;
+    }}
+
+    function setOverlay(message, show = true) {{
+      overlayText.textContent = message;
+      overlay.classList.toggle("hidden", !show);
     }}
 
     function updateInterruptButton() {{
@@ -247,21 +339,44 @@ def render_liveavatar_widget(session_token: str, widget_id: str) -> str:
       }}
     }}
 
+    async function startSession() {{
+      if (started) return;
+      try {{
+        started = true;
+        startBtn.disabled = true;
+        startBtn.textContent = "Starting…";
+        setOverlay("Almost ready — connecting audio & video…", true);
+        setStatus("Starting live session…");
+        await session.start();
+        try {{ await session.voiceChat.unmute(); }} catch (_) {{}}
+      }} catch (error) {{
+        started = false;
+        startBtn.disabled = false;
+        startBtn.textContent = "Start session";
+        setOverlay("Could not start. Click Start session to try again.", true);
+        setStatus("Failed to start: " + (error?.message || error));
+      }}
+    }}
+
     session.on(SessionEvent.SESSION_STATE_CHANGED, (state) => {{
       if (state === SessionState.CONNECTED) {{
-        setStatus("Connected <span class='badge live'>LIVE</span> — talk anytime, even if I'm mid-sentence.");
+        setStatus("Connected <span class='badge live'>LIVE</span> — AskProfNui is with you.");
         stopBtn.disabled = false;
         muteBtn.disabled = false;
         startBtn.disabled = true;
+        startBtn.textContent = "Live";
       }} else if (state === SessionState.INACTIVE) {{
         setStatus("Session ended. Click <strong>Start session</strong> to talk again.");
+        setOverlay("Session ended. Click Start session when you're ready.", true);
         stopBtn.disabled = true;
         muteBtn.disabled = true;
         interruptBtn.disabled = true;
         startBtn.disabled = false;
+        startBtn.textContent = "Start session";
         started = false;
         avatarSpeaking = false;
         streamAttached = false;
+        readyToGreet = false;
       }}
     }});
 
@@ -270,7 +385,12 @@ def render_liveavatar_widget(session_token: str, widget_id: str) -> str:
         session.attach(videoEl);
         streamAttached = true;
       }}
-      setStatus("Video ready — your mic is on. Talk anytime.");
+      readyToGreet = true;
+      // Give the stream a beat to stabilize before showing video / greeting
+      setTimeout(() => {{
+        setOverlay("", false);
+        setStatus("Ready — AskProfNui is greeting you. Talk anytime after.");
+      }}, 1200);
     }});
 
     session.voiceChat.on(VoiceChatEvent.MUTED, () => {{
@@ -284,10 +404,8 @@ def render_liveavatar_widget(session_token: str, widget_id: str) -> str:
     }});
 
     session.on(AgentEventsEnum.USER_SPEAK_STARTED, () => {{
-      if (avatarSpeaking) {{
-        interruptAvatar();
-      }}
-      setStatus("Listening to you… <span class='badge live'>MIC ON</span>");
+      if (avatarSpeaking) interruptAvatar();
+      setStatus("Listening… <span class='badge live'>MIC ON</span>");
     }});
 
     session.on(AgentEventsEnum.USER_SPEAK_ENDED, () => {{
@@ -297,7 +415,7 @@ def render_liveavatar_widget(session_token: str, widget_id: str) -> str:
     session.on(AgentEventsEnum.AVATAR_SPEAK_STARTED, () => {{
       avatarSpeaking = true;
       updateInterruptButton();
-      setStatus("Prof Nui is answering… <em>(talk or click Stop speaking to interrupt)</em>");
+      setStatus("AskProfNui is speaking… <em>(talk or Stop speaking to interrupt)</em>");
     }});
 
     session.on(AgentEventsEnum.AVATAR_SPEAK_ENDED, () => {{
@@ -306,30 +424,14 @@ def render_liveavatar_widget(session_token: str, widget_id: str) -> str:
       setStatus("Your turn — ask another question.");
     }});
 
-    startBtn.addEventListener("click", async () => {{
-      if (started) return;
-      try {{
-        started = true;
-        setStatus("Starting session…");
-        await session.start();
-        try {{ await session.voiceChat.unmute(); }} catch (_) {{}}
-      }} catch (error) {{
-        started = false;
-        setStatus("Failed to start: " + (error?.message || error));
-      }}
-    }});
+    startBtn.addEventListener("click", () => startSession());
 
     stopBtn.addEventListener("click", async () => {{
-      try {{
-        await session.stop();
-      }} catch (error) {{
-        setStatus("Failed to stop: " + (error?.message || error));
-      }}
+      try {{ await session.stop(); }}
+      catch (error) {{ setStatus("Failed to stop: " + (error?.message || error)); }}
     }});
 
-    interruptBtn.addEventListener("click", () => {{
-      interruptAvatar();
-    }});
+    interruptBtn.addEventListener("click", () => interruptAvatar());
 
     muteBtn.addEventListener("click", async () => {{
       try {{
@@ -339,6 +441,12 @@ def render_liveavatar_widget(session_token: str, widget_id: str) -> str:
         setStatus("Mic error: " + (error?.message || error));
       }}
     }});
+
+    // Auto-start after a short settle so the first greeting feels loaded
+    setTimeout(() => {{
+      setOverlay("Loading AskProfNui — getting everything ready…", true);
+      startSession();
+    }}, 900);
   </script>
 </body>
 </html>"""

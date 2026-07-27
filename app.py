@@ -15,6 +15,11 @@ from liveavatar_client import (
     list_elevenlabs_voices,
     render_liveavatar_widget,
 )
+from student_profile import (
+    elevenlabs_dynamic_variables,
+    first_name,
+    text_welcome,
+)
 
 st.set_page_config(
     page_title="AskProfNui",
@@ -26,8 +31,58 @@ st.set_page_config(
 st.markdown(
     """
     <style>
-    .block-container { padding-top: 1.5rem; max-width: 960px; }
-    .stTabs [data-baseweb="tab-list"] { gap: 8px; }
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap');
+
+    html, body, [class*="css"] {
+      font-family: "DM Sans", system-ui, sans-serif;
+    }
+    .block-container {
+      padding-top: 1.4rem;
+      padding-bottom: 2.5rem;
+      max-width: 980px;
+    }
+    .apn-hero {
+      background:
+        radial-gradient(900px 320px at 0% 0%, rgba(13,148,136,.22), transparent 55%),
+        radial-gradient(700px 280px at 100% 0%, rgba(245,158,11,.12), transparent 50%),
+        linear-gradient(180deg, #141c2e 0%, #0c1222 100%);
+      border: 1px solid #243049;
+      border-radius: 20px;
+      padding: 1.4rem 1.6rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    .apn-hero h1 {
+      font-family: "Fraunces", Georgia, serif;
+      font-size: 2.1rem;
+      line-height: 1.15;
+      margin: 0 0 .35rem 0;
+      color: #eef2ff;
+      letter-spacing: -0.02em;
+    }
+    .apn-hero p {
+      margin: 0;
+      color: #94a3b8;
+      font-size: 1.02rem;
+    }
+    .stTabs [data-baseweb="tab-list"] {
+      gap: 8px;
+      background: transparent;
+    }
+    .stTabs [data-baseweb="tab"] {
+      border-radius: 10px;
+      padding: 10px 16px;
+    }
+    div[data-testid="stSidebar"] {
+      background: #101827;
+    }
+    .stButton > button[kind="primary"] {
+      background: #0d9488;
+      border: none;
+    }
+    .stButton > button[kind="primary"]:hover {
+      background: #0f766e;
+      border: none;
+    }
     </style>
     """,
     unsafe_allow_html=True,
@@ -43,24 +98,17 @@ DEFAULT_VOICE_NAME = "Thai Professor Nui"
 
 
 def _default_voice_index(voices: list[dict[str, str]], preferred_id: str) -> int:
-    for i, voice in enumerate(voices):
-        if voice["name"] == DEFAULT_VOICE_NAME:
-            return i
     if preferred_id:
         for i, voice in enumerate(voices):
             if voice["id"] == preferred_id:
                 return i
     for i, voice in enumerate(voices):
-        if "professor nui" in voice["name"].lower():
+        if voice["name"] == DEFAULT_VOICE_NAME:
+            return i
+    for i, voice in enumerate(voices):
+        if "professor nui" in voice["name"].lower() or "askprofnui" in voice["name"].lower():
             return i
     return 0
-
-
-from student_profile import (
-    elevenlabs_dynamic_variables,
-    first_name,
-    text_welcome,
-)
 
 
 def _init_session_state() -> None:
@@ -83,12 +131,9 @@ def _init_session_state() -> None:
 _init_session_state()
 config = get_liveavatar_config()
 
-# ── Sidebar ───────────────────────────────────────────────────────────────────
 with st.sidebar:
-    st.markdown("## Prof Nui")
-    st.markdown(
-        "**Digital Transformation**  \nStrategy & Management  \n**CMU-Q**"
-    )
+    st.markdown("## AskProfNui")
+    st.markdown("**Digital Transformation**  \nStrategy & Management  \n**CMU-Q**")
     st.divider()
     st.markdown("### Your profile")
     profile_name = st.text_input(
@@ -135,21 +180,19 @@ with st.sidebar:
             st.session_state.liveavatar_token = ""
             st.session_state.liveavatar_widget_id = ""
         first = first_name(st.session_state.student_name)
-        if first:
-            st.success(f"Saved! I'll call you {first}.")
-        else:
-            st.success("Profile saved.")
+        st.success(f"Saved! I'll call you {first}." if first else "Profile saved.")
         st.rerun()
     elif st.session_state.profile_saved and st.session_state.student_name:
         st.caption(f"Talking to **{first_name(st.session_state.student_name)}**")
+
     st.divider()
     st.markdown("### How to use")
     st.markdown(
         """
-1. Save your profile above (optional)
-2. Open **Live Avatar** → **Start live session**
-3. Allow microphone access
-4. Speak anytime — interrupt by talking or **Stop speaking**
+1. Save your name (so the greeting is personal)
+2. **Live Avatar** → **Start live session**
+3. Wait for the loading overlay — AskProfNui greets you
+4. Speak anytime
         """
     )
     st.divider()
@@ -158,40 +201,30 @@ with st.sidebar:
         st.error("Missing server keys")
         for key in missing:
             st.code(key, language=None)
-        st.caption(
-            "Render → askprofnui → Environment → add `SECRETS_TOML` "
-            "with your full secrets.toml contents, then Save & redeploy."
-        )
     else:
-        st.success("Server keys loaded")
-    st.divider()
-    st.caption(
-        "Grading or deadline questions → [savanid@cmu.edu](mailto:savanid@cmu.edu)"
-    )
+        st.success("Ready")
+    st.caption("Official grading questions → savanid@cmu.edu")
 
-# ── Header ────────────────────────────────────────────────────────────────────
-st.title("AskProfNui")
-st.caption("AI teaching assistant for Digital Transformation — CMU-Q")
+st.markdown(
+    """
+    <div class="apn-hero">
+      <h1>AskProfNui</h1>
+      <p>Your digital transformation teaching assistant — CMU-Q</p>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
 tab_live, tab_text = st.tabs(["Live Avatar", "Text Chat"])
 
 
 @st.fragment
 def live_avatar_panel() -> None:
-    st.subheader("Talk to Prof Nui")
-    st.markdown(
-        "Voice conversation powered by your course materials on **digital transformation**, "
-        "strategy, culture, and assignments."
-    )
+    st.subheader("Talk live")
+    st.caption("Voice office hours grounded in digital transformation course materials.")
 
     if not config_is_complete(config):
         st.warning("Live avatar is not configured on this server.")
-        st.info(
-            "Add these in **Render → askprofnui → Environment**: "
-            "`LIVEAVATAR_API_KEY`, `LIVEAVATAR_AVATAR_ID`, "
-            "`ELEVENLABS_AGENT_ID`, `ELEVENLABS_SECRET_ID`, `ELEVENLABS_API_KEY`. "
-            "Then click **Save Changes** and redeploy."
-        )
         return
 
     elevenlabs_key = os.getenv("ELEVENLABS_API_KEY", "").strip()
@@ -206,7 +239,7 @@ def live_avatar_panel() -> None:
         return
 
     if not voices:
-        st.error("No ElevenLabs voices found. Check your API key permissions.")
+        st.error("No ElevenLabs voices found.")
         return
 
     voice_labels = {v["name"]: v["id"] for v in voices}
@@ -214,14 +247,13 @@ def live_avatar_panel() -> None:
     default_index = _default_voice_index(voices, str(config.get("voice_id") or "").strip())
 
     if st.session_state.student_name:
-        st.info(
-            f"Session for **{first_name(st.session_state.student_name)}** "
-            f"({st.session_state.student_major or 'major not set'}, "
-            f"{st.session_state.student_year or 'year not set'}). "
-            "Update your profile in the sidebar if needed."
+        st.success(
+            f"Ready for **{first_name(st.session_state.student_name)}** · "
+            f"{st.session_state.student_major or 'major TBD'} · "
+            f"{st.session_state.student_year or 'year TBD'}"
         )
     else:
-        st.info("Add your name in the **sidebar** so Prof Nui can greet you by name.")
+        st.info("Add your name in the sidebar so AskProfNui can greet you personally.")
 
     voice_name = st.selectbox(
         "Voice",
@@ -232,7 +264,7 @@ def live_avatar_panel() -> None:
     selected_voice_id = voice_labels[voice_name]
 
     if st.button("Start live session", type="primary", key="start_live_session_btn"):
-        with st.spinner("Connecting to Prof Nui…"):
+        with st.spinner("Preparing AskProfNui — waiting for a clean connection…"):
             try:
                 token_data = create_elevenlabs_session_token(
                     str(config["api_key"]),
@@ -253,39 +285,35 @@ def live_avatar_panel() -> None:
             except LiveAvatarError as exc:
                 st.error(str(exc))
                 return
-        st.success("Session ready — click **Start session** in the player below.")
         st.rerun()
 
     if st.session_state.liveavatar_token:
-        st.caption(f"Voice: **{voice_name}**")
+        st.caption(f"Voice: **{voice_name}** · session auto-starts when ready")
         components.html(
             render_liveavatar_widget(
                 st.session_state.liveavatar_token,
                 st.session_state.liveavatar_widget_id,
             ),
-            height=520,
+            height=560,
             scrolling=False,
         )
     else:
-        st.info("Click **Start live session** above to connect.")
+        st.info("Click **Start live session** — AskProfNui will load, then greet you.")
 
 
 @st.fragment
 def text_chat_panel() -> None:
-    st.subheader("Text chat with Prof Nui")
+    st.subheader("Text chat")
     if st.session_state.student_name:
-        st.caption(
-            f"Chatting as {first_name(st.session_state.student_name)} · "
-            "digital transformation course materials via Groq"
-        )
+        st.caption(f"Chatting as {first_name(st.session_state.student_name)}")
     else:
-        st.caption("Digital transformation course materials via Groq · save your profile in the sidebar")
+        st.caption("Save your profile in the sidebar for a personal greeting")
 
     for msg in st.session_state.messages:
         with st.chat_message(msg["role"]):
             st.markdown(msg["content"])
 
-    if prompt := st.chat_input("Ask about digital transformation, assignments, frameworks…"):
+    if prompt := st.chat_input("Ask about digital transformation…"):
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
             st.markdown(prompt)
@@ -309,13 +337,6 @@ def text_chat_panel() -> None:
                     st.markdown(reply)
                 except Exception as exc:
                     st.error(f"Text chat error: {exc}")
-                    if not os.getenv("GROQ_API_KEY", "").strip():
-                        st.info(
-                            "Add `GROQ_API_KEY` in **Render → askprofnui → Environment**, "
-                            "save, then redeploy."
-                        )
-                    else:
-                        st.info("Check that GROQ_API_KEY is set in your environment.")
 
 
 with tab_live:

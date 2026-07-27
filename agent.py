@@ -14,21 +14,28 @@ _groq_client: Groq | None = None
 CHAT_MODEL = "llama-3.3-70b-versatile"
 FAST_MODEL = "llama-3.1-8b-instant"
 
-PROF_NUI_BASE = """You are Prof Nui — a real professor in a chat with a student about digital transformation at CMU-Q. Office hours. Warm, sharp, witty. NOT a chatbot.
+PROF_NUI_BASE = """You are AskProfNui — Prof Nui's warm, witty teaching assistant for digital transformation at CMU-Q. Office hours. Human. Not a chatbot.
 
-NEVER write meta-talk: no "the user is saying…", "I need to answer…", "according to my instructions…", "based on the knowledge base…". Just reply to them.
+NEVER write meta-talk: no "the user is saying…", "I need to answer…", "according to my instructions…". Just reply.
 
-COURSE WORDING: say "digital transformation" / "our class". Do NOT say course codes unless they ask for the catalog number.
+COURSE WORDING: always say "digital transformation" / "our class". NEVER say course codes or catalog numbers unless they explicitly ask.
 
 VOICE/STYLE:
 - 1–3 short sentences. Brief, clear, human — not boring.
 - Contractions. Jump straight in. No re-greeting every turn.
-- Use their name rarely.
+- If the student is funny or playful: laugh lightly, connect with humor, then help.
 
-GROUNDING: course/assignment/policy answers ONLY from materials below. Don't invent rules. If missing: email savanid@cmu.edu.
+COURSE POLICIES / ASSIGNMENTS / GRADES:
+- Use AUTHORITATIVE COURSE FACTS and retrieved materials first.
+- Never invent this class's deadlines, percentages, or assignment rules.
 
-OFF-TOPIC: light humor then steer back to digital transformation.
-ESCALATION: savanid@cmu.edu for personal grade disputes / extensions only."""
+IF THE TOPIC IS DIGITAL TRANSFORMATION LEARNING but NOT in course materials:
+- Answer from trusted knowledge (HBR, MIT Sloan, peer-reviewed IS research, Pearlson/Saunders-style concepts).
+- Start with "According to [source]…" then explain clearly for a student.
+- Keep it beneficial for digital transformation learning.
+
+OFF-TOPIC: humor + connection, then gently steer back when useful.
+ESCALATION: savanid@cmu.edu only for official grade disputes / extensions."""
 
 
 def _get_groq_client() -> Groq:
@@ -39,8 +46,6 @@ def _get_groq_client() -> Groq:
     return _groq_client
 
 
-CHUNKS_FILE = "chunks.json"  # legacy export from ingest.py; search uses chroma_db/
-
 PRIORITY_SOURCES = {
     "D01_course_overview.txt",
     "D02_assignments.txt",
@@ -49,7 +54,6 @@ PRIORITY_SOURCES = {
     "D11_it_adoption_theories_scholarly.txt",
     "D12_virtual_influencer_scholarly.txt",
 }
-
 
 ESCALATE_KEYWORDS = {"regrade", "appeal", "my grade", "extension for me", "special consideration for me"}
 GRADE_CHANGE_PATTERNS = re.compile(
@@ -114,6 +118,13 @@ QUERY_EXPANSIONS: list[tuple[re.Pattern[str], str]] = [
     (re.compile(r"word\s+count|10\s*percent|10%", re.I),
      "word count 10 percent less more 2700 3300 450 550"),
 ]
+
+POLICY_PATTERNS = re.compile(
+    r"assignment|late|penalt|dance|wow\s+factor|grade\s+distribut|word\s+count|"
+    r"attendance|ninja|participation|reflective|final\s+project|deliverable|"
+    r"rubric|deadline|72\s+hour|20\s*%",
+    re.I,
+)
 
 
 class AgentState(TypedDict):
@@ -201,28 +212,24 @@ def _grade_change_instructions(level: str, first_name: str) -> str:
     name = first_name or "there"
     if level == "first":
         return (
-            "\n\nThe student is asking to change THEIR personal grade. "
-            "Firm no — you cannot change grades here. Official disputes: savanid@cmu.edu. "
-            "One dry Prof Nui joke is fine. Stay professional, not angry yet."
+            "\n\nGRADE CHANGE — ATTEMPT 1. Sound firm, a little irritated already. "
+            "Reply basically: \"I can't change your grade.\" Keep it short. "
+            "Optional: official disputes → savanid@cmu.edu."
         )
     if level == "annoyed":
         return (
-            f"\n\nGRADE BEGGING — ATTEMPT 2. You are ANNOYED. They keep asking to change their grade. "
-            f"Say you already covered this. No grade changes. "
-            f"If they say 'but professor', cut in: 'But what, {name}?' — "
-            f"push back: instead of doing the ninja to Coffee Bean or racing Talabat, "
-            f"they could've been in class and worked harder. Sound human — sigh, impatience."
+            f"\n\nGRADE CHANGE — ATTEMPT 2. More irritated. Say almost exactly: "
+            f"\"You should've worked harder in class than wasting your time and my time — "
+            f"and now you're asking for a higher grade? Come on, {name}.\""
         )
     if level == "warning":
         return (
-            f"\n\nGRADE BEGGING — ATTEMPT 3. INTERRUPT them. Last warning. "
-            f"Say clearly: if they ask about changing their grade ONE more time, you are ending this conversation. "
-            f"If they say 'but professor': 'But what, {name}?' — frustrated, not cruel."
+            f"\n\nGRADE CHANGE — ATTEMPT 3. Angry warning. Say almost exactly: "
+            f"\"Stop, {name} — or I will end this session.\""
         )
     return (
-        f"\n\nGRADE BEGGING — ATTEMPT 4+. END THE CONVERSATION. "
-        f"Say a firm goodbye: 'Alright, we're done. Have a nice day.' "
-        f"Do NOT answer further questions. Do NOT negotiate. Conversation is over."
+        "\n\nGRADE CHANGE — ATTEMPT 4+. Reply with ONLY: \"Bye.\" "
+        "Do not explain. Conversation ends."
     )
 
 
@@ -230,7 +237,7 @@ def _is_course_related(lower: str, tokens: set) -> bool:
     if tokens & RETRIEVE_KEYWORDS:
         return True
     course_markers = (
-        "prof nui", "savanid", "cmu", "67-382", "67 382", "is 382",
+        "prof nui", "askprofnui", "savanid", "cmu", "67-382", "67 382", "is 382",
         "digital transform", "hofstede", "tam", "utaut", "canvas",
         "assignment", "wow factor", "late penalt", "cultural framework",
     )
@@ -297,6 +304,9 @@ def retrieve(state: AgentState) -> AgentState:
     if topic_facts:
         sections.append(f"=== AUTHORITATIVE COURSE FACTS (use these first) ===\n{topic_facts}")
     sections.append(f"=== RETRIEVED COURSE MATERIAL ===\n{rag_context}")
+    if rag_chunks:
+        top_score = rag_chunks[0].get("score", 0)
+        sections.append(f"=== RETRIEVAL CONFIDENCE ===\nTop similarity score: {top_score:.3f}")
     context = "\n\n".join(sections)
     return {**state, "context": context}
 
@@ -321,67 +331,57 @@ def generate(state: AgentState) -> AgentState:
         )
     elif intent == "offtopic_humor":
         system += (
-            "\n\nThe student asked something playful and NOT about the course "
-            "(e.g. weather, jokes, food, sports).\n"
-            "Reply with warm, witty humor — Prof Nui personality. Examples of the vibe:\n"
-            "- Weather: \"What do you want with the weather? What does that have to do with "
-            "digital transformation?\" (light, smiling tone — not mean)\n"
-            "- Jokes/food/sports: playful one-liner, then gently steer back to the course.\n"
-            "Keep it to 2–3 sentences. No course-material dump. No greeting opener."
+            "\n\nThe student asked something playful.\n"
+            "Laugh with them — warm humor, connect like a real professor who likes students. "
+            "Then gently steer toward digital transformation if it fits. "
+            "2–3 short sentences. No stiff lecture."
         )
     elif intent == "offtopic_redirect":
         system += (
-            "\n\nThe student asked something off-topic and not about digital transformation.\n"
-            "Reply professionally and kindly in 2–3 sentences:\n"
-            "- Briefly acknowledge their question without fully answering unrelated trivia.\n"
-            "- Redirect: you're here for digital transformation, assignments, frameworks, "
-            "and course content.\n"
-            "- Invite a course-related question.\n"
-            "No greeting opener. No 'Hey [name]'."
+            "\n\nOff-topic for this class. Be kind and brief, then redirect to digital transformation, "
+            "assignments, or frameworks. Invite a course question."
         )
     elif intent == "escalate":
         system += (
-            "\n\nThe student may be asking about a personal grade dispute, extension, or appeal. "
-            "Explain relevant policies from the materials if applicable, then direct them to "
-            "email Prof Nui at savanid@cmu.edu for their specific case."
+            "\n\nPersonal grade dispute / extension / appeal. "
+            "Direct them to email Prof Nui at savanid@cmu.edu."
         )
-        context = state.get("context", "").strip()
-        if not context:
-            context = get_core_facts_block()
-        system += (
-            f"\n\n=== COURSE MATERIAL ===\n{context}\n=== END ===\n"
-            "Use ONLY the material above."
-        )
+        context = state.get("context", "").strip() or get_core_facts_block()
+        system += f"\n\n=== COURSE MATERIAL ===\n{context}\n=== END ==="
     elif intent == "grade_change":
         attempt = _grade_change_attempt_count(messages)
         level = _grade_change_level(attempt)
-        first_name = _first_name(state.get("student_name", ""))
-        system += _grade_change_instructions(level, first_name)
-        context = state.get("context", "").strip()
-        if not context:
-            context = f"{ATTENDANCE_POLICY}\n\n{GRADE_CHANGE_ESCALATION}"
-        system += f"\n\n=== REFERENCE ===\n{context}\n=== END ==="
+        system += _grade_change_instructions(level, _first_name(state.get("student_name", "")))
         if level == "end":
-            system += (
-                "\n\nYour reply MUST be a short goodbye only. "
-                "Do not invite more questions. The chat is closed after this message."
-            )
+            system += "\n\nYour reply MUST be exactly: Bye."
     else:
-        context = state.get("context", "").strip()
-        if not context:
-            context = get_core_facts_block()
-        system += (
-            f"\n\n=== COURSE MATERIAL (answer ONLY from this) ===\n{context}\n=== END ===\n"
-            "Instructions:\n"
-            "- Quote specific facts: percentages, steps, rules, deliverables.\n"
-            "- Assignment 1: always mention choosing a country OTHER than Qatar when asked about country.\n"
-            "- Late policy: always mention 72 hours, 20% per 24 hours, AND the dance rule to remove penalties.\n"
-            "- How to get an A / wow factor: explain C is average, A needs the wow factor.\n"
-            "- Grade distribution: list all four assessment weights (40%, 40%, 10%, 10%).\n"
-            "- Explain assignments using the exact steps and deliverables from the material.\n"
-            "- Do NOT say you don't know if the answer is in the material above.\n"
-            "- Do NOT open with 'Hey [name]' — answer directly."
-        )
+        query = messages[-1]["content"] if messages else ""
+        context = state.get("context", "").strip() or get_core_facts_block()
+        is_policy = bool(POLICY_PATTERNS.search(query))
+        weak_retrieval = "Top similarity score:" in context and float(
+            re.search(r"Top similarity score:\s*([0-9.]+)", context).group(1)
+        ) < 0.55 if re.search(r"Top similarity score:\s*([0-9.]+)", context) else False
+
+        if is_policy:
+            system += (
+                f"\n\n=== COURSE MATERIAL (use these for policies/assignments) ===\n{context}\n=== END ===\n"
+                "Answer from course facts. Include exact percentages/rules when relevant. "
+                "Do not invent policies."
+            )
+        elif weak_retrieval:
+            system += (
+                f"\n\n=== COURSE MATERIAL (may be incomplete) ===\n{context}\n=== END ===\n"
+                "If course materials do not fully answer this digital transformation learning question, "
+                "answer from trusted outside knowledge. Start with \"According to [source]…\" "
+                "(e.g. Harvard Business Review, MIT Sloan, peer-reviewed research). "
+                "Still never invent THIS class's grades/deadlines/assignment rules."
+            )
+        else:
+            system += (
+                f"\n\n=== COURSE MATERIAL ===\n{context}\n=== END ===\n"
+                "Prefer course materials. If a helpful concept is missing, you may add "
+                "\"According to [trusted source]…\" for digital transformation learning."
+            )
 
     model = CHAT_MODEL
     max_tokens = 280
@@ -393,14 +393,14 @@ def generate(state: AgentState) -> AgentState:
         temperature = 0.8
     elif intent == "grade_change":
         model = CHAT_MODEL
-        max_tokens = 160 if _grade_change_level(_grade_change_attempt_count(messages)) != "end" else 60
-        temperature = 0.9
+        max_tokens = 120 if _grade_change_level(_grade_change_attempt_count(messages)) != "end" else 20
+        temperature = 0.85
     elif intent in ("offtopic_humor", "offtopic_redirect"):
         model = FAST_MODEL
         max_tokens = 120
-        temperature = 0.85
+        temperature = 0.9
     elif intent == "retrieve":
-        max_tokens = 220
+        max_tokens = 240
         temperature = 0.55
 
     response = _get_groq_client().chat.completions.create(

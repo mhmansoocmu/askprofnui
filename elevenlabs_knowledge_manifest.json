@@ -1,62 +1,62 @@
 {
   "documents": {
     "D01_course_overview.txt": {
-      "id": "WCPzNP6zTfWbOSg4b3jy",
+      "id": "d3dLMuU4Jb3cHzdhVIkk",
       "sha256": "ad9549ebc4f04fe642d3e3538f1865925675be522f256447c2b5a514cee1864b",
       "name": "D01 course overview"
     },
     "D02_assignments.txt": {
-      "id": "9N88fFxjOjFPBrX6sVtb",
+      "id": "9K2DbLxxWWeawtPwa719",
       "sha256": "0d1784fac87a53dbda365d457205cf1617aced0c8bf37f9d6fc80cb9b55733dc",
       "name": "D02 assignments"
     },
     "D03_chapter1_strategy.txt": {
-      "id": "FAGlvXtHxnkIk5iCwfV1",
+      "id": "hz1lDHNVL0dpN05pm1fp",
       "sha256": "b496ea1a98d63158ee108a190abcf47e75378741fb9a153a44ecbe264546af3b",
       "name": "D03 chapter1 strategy"
     },
     "D04_chapter2_information_resources.txt": {
-      "id": "kY0TbjnxUryAQxRgKWzR",
+      "id": "lhsY8TKWBpmPIBaemo4C",
       "sha256": "da31f8f5cef573daaa0f6c781c1b3b0ddb06ffec853329e559ad1e0b8816eabc",
       "name": "D04 chapter2 information resources"
     },
     "D05_chapter3_organizational_strategy.txt": {
-      "id": "McK74BcqnLg9KwvOV1XK",
+      "id": "m11RjmoaY5HFtiDrxqpo",
       "sha256": "bc26478de53f5e10bf1265049f37777a8fcd36148c1e0316339f15d32d3fe275",
       "name": "D05 chapter3 organizational strategy"
     },
     "D06_chapter4_work_design.txt": {
-      "id": "aCuTrtd1V7p6xiiRaZgF",
+      "id": "Ex27SOwWKlUEiLd7JUgk",
       "sha256": "81fdafb7de3180b826efa1c25d5bcf0a131b9c6cab6d8f1f030c2bc1d4b0798d",
       "name": "D06 chapter4 work design"
     },
     "D07_chapter7_IT_costs.txt": {
-      "id": "q7q9vX10S9SCDWSI0kgQ",
+      "id": "pT2luHSRsVSZyO8iHX86",
       "sha256": "c9caff95ff88ca520ca6ffe842b59fc135d8847edf742de7b5f53b02f6ce2eaa",
       "name": "D07 chapter7 IT costs"
     },
     "D08_cultural_IT_topics.txt": {
-      "id": "w9ldFaVJ3vip2TRykGGB",
+      "id": "ed97GoMCibc6RO6LdynU",
       "sha256": "d66f11c822cc1773fada96431c376696711f4d9ced4e96048d5dce4a6bbdcfa1",
       "name": "D08 cultural IT topics"
     },
     "D09_prof_nui_persona.txt": {
-      "id": "Ffo0HY87d9FAu3ZrC5gj",
+      "id": "sAo4WpS6ku1q2dQijrv3",
       "sha256": "676e6f7e0b7ed12e91cc6d33533e55a81582a431fe7ffa0e3d96146589e78809",
       "name": "D09 prof nui persona"
     },
     "D10_cultural_theories_scholarly.txt": {
-      "id": "HuNQsr3TGBVqHtROeQu6",
+      "id": "hK7K6KGX8FiRC4nXYkTa",
       "sha256": "c4e0315e6e9aef0940864033c1d8b79acce66fe686d6052304a7ee9233e8f98f",
       "name": "D10 cultural theories scholarly"
     },
     "D11_it_adoption_theories_scholarly.txt": {
-      "id": "opKZDDmbtWTjYptO7yV4",
+      "id": "lnFCYdf8b1fnE2hN86eR",
       "sha256": "765b84ca2aaf16f219daae6fb9aec2a486d819706f9b02b9fc68c18c8f9df90a",
       "name": "D11 it adoption theories scholarly"
     },
     "D12_virtual_influencer_scholarly.txt": {
-      "id": "nW1e6Zmo5wBExPU7FLCI",
+      "id": "lRpyS77koEGG6grMfn0g",
       "sha256": "0a2dd91a2120d256874a1024673adc312223d608ab8ac71d2af6f562bd1543d5",
       "name": "D12 virtual influencer scholarly"
     }
