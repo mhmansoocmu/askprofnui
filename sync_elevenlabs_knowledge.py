@@ -92,8 +92,8 @@ def update_agent(api_key: str, agent_id: str, knowledge_entries: list[dict]) -> 
                 "prompt": {
                     "prompt": _load_system_prompt(),
                     "llm": "gpt-4o-mini",
-                    "temperature": 0.7,
-                    "max_tokens": 120,
+                    "temperature": 0.75,
+                    "max_tokens": 180,
                     "knowledge_base": knowledge_entries,
                     "built_in_tools": {
                         "end_call": {
@@ -107,6 +107,38 @@ def update_agent(api_key: str, agent_id: str, knowledge_entries: list[dict]) -> 
                             "params": {"system_tool_type": "end_call"},
                         }
                     },
+                    "tools": [
+                        {
+                            "type": "client",
+                            "name": "show_citation",
+                            "description": (
+                                "Show a source name and short quote on the student's screen. "
+                                "Call this whenever you cite an outside source (HBR, MIT Sloan, "
+                                "scholarly research) or a specific course-material line. "
+                                "Do not speak the quote aloud — the UI displays it."
+                            ),
+                            "expects_response": False,
+                            "parameters": {
+                                "type": "object",
+                                "required": ["source", "quote"],
+                                "properties": {
+                                    "source": {
+                                        "type": "string",
+                                        "description": (
+                                            "Source name, e.g. Harvard Business Review or "
+                                            "Course materials — Late policy"
+                                        ),
+                                    },
+                                    "quote": {
+                                        "type": "string",
+                                        "description": (
+                                            "One short specific quote or key line (1–2 sentences)."
+                                        ),
+                                    },
+                                },
+                            },
+                        }
+                    ],
                     "rag": {
                         "enabled": True,
                         "embedding_model": "e5_mistral_7b_instruct",
@@ -135,6 +167,7 @@ def update_agent(api_key: str, agent_id: str, knowledge_entries: list[dict]) -> 
                     "agent_response_correction",
                     "vad_score",
                     "agent_chat_response_part",
+                    "client_tool_call",
                 ],
             },
         },

@@ -151,14 +151,14 @@ def render_liveavatar_widget(
         opening_message
         or "Hi, how are you? I'm AskProfNui. What can I help you with today for digital transformation?"
     )
-    return f"""<!DOCTYPE html>
+    html = r"""<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600&display=swap" rel="stylesheet">
   <style>
-    :root {{
+    :root {
       --bg: #0c1222;
       --panel: #141c2e;
       --line: #243049;
@@ -167,9 +167,9 @@ def render_liveavatar_widget(
       --accent: #0d9488;
       --accent-2: #f59e0b;
       --danger: #e11d48;
-    }}
-    * {{ box-sizing: border-box; }}
-    body {{
+    }
+    * { box-sizing: border-box; }
+    body {
       font-family: "DM Sans", system-ui, sans-serif;
       margin: 0;
       padding: 0;
@@ -177,27 +177,34 @@ def render_liveavatar_widget(
                   radial-gradient(900px 400px at 100% 0%, #134e4a 0%, transparent 50%),
                   var(--bg);
       color: var(--text);
-    }}
-    #wrap {{
-      max-width: 760px;
-      margin: 0 auto;
-      padding: 8px;
-    }}
-    .stage {{
+    }
+    #wrap { max-width: 980px; margin: 0 auto; padding: 8px; }
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(240px, 0.9fr);
+      gap: 12px;
+      align-items: stretch;
+    }
+    @media (max-width: 720px) {
+      .layout { grid-template-columns: 1fr; }
+    }
+    .stage {
       position: relative;
       border: 1px solid var(--line);
       border-radius: 18px;
       overflow: hidden;
       background: #000;
       box-shadow: 0 20px 50px rgba(0,0,0,.35);
-    }}
-    video {{
+      min-height: 340px;
+    }
+    video {
       width: 100%;
       display: block;
-      min-height: 320px;
+      min-height: 340px;
       background: #000;
-    }}
-    #overlay {{
+      object-fit: cover;
+    }
+    #overlay {
       position: absolute;
       inset: 0;
       display: flex;
@@ -209,30 +216,92 @@ def render_liveavatar_widget(
       backdrop-filter: blur(6px);
       transition: opacity .4s ease;
       z-index: 5;
-    }}
-    #overlay.hidden {{ opacity: 0; pointer-events: none; }}
-    .spinner {{
+    }
+    #overlay.hidden { opacity: 0; pointer-events: none; }
+    .spinner {
       width: 42px; height: 42px;
       border: 3px solid rgba(255,255,255,.15);
       border-top-color: var(--accent);
       border-radius: 50%;
       animation: spin .8s linear infinite;
-    }}
-    @keyframes spin {{ to {{ transform: rotate(360deg); }} }}
-    #overlay-text {{
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #overlay-text {
       font-size: 15px;
       color: var(--muted);
       text-align: center;
       padding: 0 20px;
       line-height: 1.45;
-    }}
-    .controls {{
+    }
+    .sources {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: linear-gradient(180deg, #172033 0%, #121a2b 100%);
+      padding: 14px 14px 12px;
+      display: flex;
+      flex-direction: column;
+      min-height: 340px;
+      max-height: 420px;
+    }
+    .sources h2 {
+      font-family: "Fraunces", Georgia, serif;
+      font-size: 1.05rem;
+      margin: 0 0 4px;
+      color: #eef2ff;
+      letter-spacing: -0.01em;
+    }
+    .sources .sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+    #citations {
+      overflow-y: auto;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-right: 4px;
+    }
+    .cite {
+      border-left: 3px solid var(--accent);
+      background: rgba(13, 148, 136, .08);
+      border-radius: 0 10px 10px 0;
+      padding: 10px 12px;
+      animation: fadeIn .35s ease;
+    }
+    .cite .src {
+      font-size: 12px;
+      font-weight: 700;
+      color: #5eead4;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      margin-bottom: 6px;
+    }
+    .cite .quote {
+      font-size: 13.5px;
+      line-height: 1.45;
+      color: #e2e8f0;
+      font-style: italic;
+    }
+    .cite-empty {
+      color: #64748b;
+      font-size: 13px;
+      line-height: 1.5;
+      padding: 8px 2px;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: none; }
+    }
+    .controls {
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
       margin-top: 14px;
-    }}
-    button {{
+    }
+    button {
       border: 0;
       border-radius: 10px;
       padding: 11px 16px;
@@ -241,26 +310,26 @@ def render_liveavatar_widget(
       font-size: 14px;
       font-family: inherit;
       transition: transform .12s ease, opacity .12s ease;
-    }}
-    button:active {{ transform: scale(.98); }}
-    button:disabled {{ opacity: .45; cursor: not-allowed; }}
-    #start-btn {{ background: var(--accent); color: white; }}
-    #stop-btn {{ background: #334155; color: white; }}
-    #interrupt-btn {{ background: var(--danger); color: white; }}
-    #mute-btn {{ background: var(--panel); color: white; border: 1px solid var(--line); }}
-    #status {{
+    }
+    button:active { transform: scale(.98); }
+    button:disabled { opacity: .45; cursor: not-allowed; }
+    #start-btn { background: var(--accent); color: white; }
+    #stop-btn { background: #334155; color: white; }
+    #interrupt-btn { background: var(--danger); color: white; }
+    #mute-btn { background: var(--panel); color: white; border: 1px solid var(--line); }
+    #status {
       margin-top: 12px;
       font-size: 14px;
       color: var(--muted);
       min-height: 22px;
       line-height: 1.45;
-    }}
-    .hint {{
+    }
+    .hint {
       margin-top: 6px;
       font-size: 13px;
       color: #64748b;
-    }}
-    .badge {{
+    }
+    .badge {
       display: inline-block;
       padding: 2px 8px;
       border-radius: 999px;
@@ -269,18 +338,27 @@ def render_liveavatar_widget(
       margin-left: 6px;
       background: #1e293b;
       color: #cbd5e1;
-    }}
-    .badge.live {{ background: #064e3b; color: #a7f3d0; }}
+    }
+    .badge.live { background: #064e3b; color: #a7f3d0; }
   </style>
 </head>
 <body>
   <div id="wrap">
-    <div class="stage">
-      <video id="avatar-video" autoplay playsinline></video>
-      <div id="overlay">
-        <div class="spinner"></div>
-        <div id="overlay-text">Preparing AskProfNui… please wait a moment.</div>
+    <div class="layout">
+      <div class="stage">
+        <video id="avatar-video" autoplay playsinline></video>
+        <div id="overlay">
+          <div class="spinner"></div>
+          <div id="overlay-text">Preparing AskProfNui… please wait a moment.</div>
+        </div>
       </div>
+      <aside class="sources" aria-live="polite">
+        <h2>Sources &amp; quotes</h2>
+        <div class="sub">When AskProfNui cites research or course lines, they appear here.</div>
+        <div id="citations">
+          <div class="cite-empty" id="cite-empty">No citations yet — ask about a concept, framework, or assignment.</div>
+        </div>
+      </aside>
     </div>
     <div class="controls">
       <button id="start-btn" disabled>Connecting…</button>
@@ -289,21 +367,21 @@ def render_liveavatar_widget(
       <button id="stop-btn" disabled>End session</button>
     </div>
     <div id="status">Loading session securely…</div>
-    <div class="hint">Wait for the green LIVE badge — AskProfNui greets you after audio/video are ready.</div>
+    <div class="hint">Wait for LIVE — she greets you after audio/video are ready. Sources show on the right.</div>
   </div>
   <script type="module">
-    import {{
+    import {
       ElevenLabsAgentSession,
       LiveAvatarSession,
       SessionEvent,
       SessionState,
       VoiceChatEvent,
       AgentEventsEnum,
-    }} from "https://esm.sh/@heygen/liveavatar-web-sdk@0.0.18";
+    } from "https://esm.sh/@heygen/liveavatar-web-sdk@0.0.18";
 
-    const widgetId = {widget_id_json};
-    const sessionToken = {token_json};
-    const openingMessage = {opening_json};
+    const widgetId = __WIDGET_ID__;
+    const sessionToken = __TOKEN__;
+    const openingMessage = __OPENING__;
 
     const statusEl = document.getElementById("status");
     const overlay = document.getElementById("overlay");
@@ -313,76 +391,165 @@ def render_liveavatar_widget(
     const muteBtn = document.getElementById("mute-btn");
     const interruptBtn = document.getElementById("interrupt-btn");
     const videoEl = document.getElementById("avatar-video");
+    const citationsEl = document.getElementById("citations");
+    const citeEmpty = document.getElementById("cite-empty");
 
     const SessionClass = ElevenLabsAgentSession || LiveAvatarSession;
-    const session = new SessionClass(sessionToken, {{
-      voiceChat: {{ defaultMuted: false }},
-    }});
+    const session = new SessionClass(sessionToken, {
+      voiceChat: { defaultMuted: false },
+    });
 
     let isMuted = false;
     let started = false;
     let avatarSpeaking = false;
     let streamAttached = false;
     let greetingSent = false;
+    const seenCitations = new Set();
 
-    function setStatus(message) {{
+    function setStatus(message) {
       statusEl.innerHTML = message;
-    }}
+    }
 
-    function setOverlay(message, show = true) {{
+    function setOverlay(message, show = true) {
       overlayText.textContent = message;
       overlay.classList.toggle("hidden", !show);
-    }}
+    }
 
-    function updateInterruptButton() {{
+    function updateInterruptButton() {
       interruptBtn.disabled = !started || !avatarSpeaking;
-    }}
+    }
 
-    function interruptAvatar() {{
+    function escapeHtml(text) {
+      return String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function addCitation(source, quote) {
+      const src = (source || "").trim();
+      const q = (quote || "").trim();
+      if (!src || !q) return;
+      const key = (src + "|" + q).toLowerCase();
+      if (seenCitations.has(key)) return;
+      seenCitations.add(key);
+      if (citeEmpty) citeEmpty.remove();
+      const card = document.createElement("div");
+      card.className = "cite";
+      card.innerHTML =
+        '<div class="src">' + escapeHtml(src) + "</div>" +
+        '<div class="quote">“' + escapeHtml(q) + '”</div>';
+      citationsEl.prepend(card);
+    }
+
+    function extractCitationFromSpeech(text) {
+      if (!text) return;
+      const according = text.match(
+        /According to\s+([^:.!?]+?)(?:[:\-—,]|\s+—\s+)\s*[“"']?([^”"']+?)[”"']?(?:[.!?]|$)/i
+      );
+      if (according) {
+        addCitation(according[1].trim(), according[2].trim());
+        return;
+      }
+      const course = text.match(
+        /(?:From|In)\s+(our\s+)?course materials[^\-:]*[:\-—]\s*[“"']?([^”"']+?)[”"']?(?:[.!?]|$)/i
+      );
+      if (course) {
+        addCitation("Course materials", course[2].trim());
+      }
+    }
+
+    function handleClientToolCall(raw) {
+      const data = raw?.data || raw || {};
+      const eventType =
+        raw?.elevenlabs_event_type ||
+        data?.type ||
+        data?.elevenlabs_event_type ||
+        "";
+      const isTool =
+        String(eventType).includes("client_tool_call") ||
+        data.tool_name ||
+        data.toolName;
+      if (!isTool && !data.tool_call_id && !data.toolCallId) return;
+
+      const name = data.tool_name || data.toolName || data.name || "";
+      const params = data.parameters || data.tool_params || data.arguments || {};
+      const toolCallId = data.tool_call_id || data.toolCallId || "";
+
+      let parsed = params;
+      if (typeof params === "string") {
+        try { parsed = JSON.parse(params); } catch (_) { parsed = {}; }
+      }
+
+      if (String(name).toLowerCase() === "show_citation") {
+        addCitation(parsed.source || parsed.Source, parsed.quote || parsed.Quote);
+        if (toolCallId && typeof session.sendClientToolResult === "function") {
+          try {
+            session.sendClientToolResult({
+              toolCallId,
+              result: "Citation shown on screen",
+              sourceEventId: raw?.event_id,
+            });
+          } catch (err) {
+            console.warn("sendClientToolResult failed", err);
+          }
+        }
+      } else if (toolCallId && typeof session.sendClientToolResult === "function") {
+        try {
+          session.sendClientToolResult({
+            toolCallId,
+            result: "ok",
+            sourceEventId: raw?.event_id,
+          });
+        } catch (_) {}
+      }
+    }
+
+    function interruptAvatar() {
       if (!started || !avatarSpeaking) return;
-      try {{
+      try {
         session.interrupt();
         avatarSpeaking = false;
         updateInterruptButton();
         setStatus("Interrupted — go ahead, I'm listening.");
-      }} catch (error) {{
+      } catch (error) {
         setStatus("Interrupt failed: " + (error?.message || error));
-      }}
-    }}
+      }
+    }
 
-    function triggerGreeting() {{
+    function triggerGreeting() {
       if (greetingSent) return;
       greetingSent = true;
-      try {{
-        // Context alone does not speak — pair it with a short user nudge.
+      try {
         const cue =
           "The student can see and hear you now. Respond with ONLY this opening greeting, warmly, then wait: " +
           openingMessage +
           " Never say 'are you still there'.";
-        if (typeof session.sendContextualUpdate === "function") {{
+        if (typeof session.sendContextualUpdate === "function") {
           session.sendContextualUpdate(cue);
-        }}
-        setTimeout(() => {{
-          try {{
-            if (typeof session.sendUserMessage === "function") {{
+        }
+        setTimeout(() => {
+          try {
+            if (typeof session.sendUserMessage === "function") {
               session.sendUserMessage("Hi — I'm ready, please greet me.");
-            }} else if (typeof session.sendUserActivity === "function") {{
+            } else if (typeof session.sendUserActivity === "function") {
               session.sendUserActivity();
-            }}
-          }} catch (err) {{
+            }
+          } catch (err) {
             console.warn("Greeting nudge failed:", err);
-          }}
-        }}, 500);
+          }
+        }, 500);
         setStatus("AskProfNui is introducing herself…");
-      }} catch (error) {{
+      } catch (error) {
         console.warn("Greeting trigger failed:", error);
         setStatus("Connected — say hi if AskProfNui is quiet.");
-      }}
-    }}
+      }
+    }
 
-    async function startSession() {{
+    async function startSession() {
       if (started) return;
-      try {{
+      try {
         started = true;
         greetingSent = false;
         startBtn.disabled = true;
@@ -390,24 +557,24 @@ def render_liveavatar_widget(
         setOverlay("Connecting audio & video — please wait…", true);
         setStatus("Starting live session…");
         await session.start();
-        try {{ await session.voiceChat.unmute(); }} catch (_) {{}}
-      }} catch (error) {{
+        try { await session.voiceChat.unmute(); } catch (_) {}
+      } catch (error) {
         started = false;
         startBtn.disabled = false;
         startBtn.textContent = "Start session";
         setOverlay("Could not start. Click Start session to try again.", true);
         setStatus("Failed to start: " + (error?.message || error));
-      }}
-    }}
+      }
+    }
 
-    session.on(SessionEvent.SESSION_STATE_CHANGED, (state) => {{
-      if (state === SessionState.CONNECTED) {{
+    session.on(SessionEvent.SESSION_STATE_CHANGED, (state) => {
+      if (state === SessionState.CONNECTED) {
         setStatus("Connected <span class='badge live'>LIVE</span> — finishing setup…");
         stopBtn.disabled = false;
         muteBtn.disabled = false;
         startBtn.disabled = true;
         startBtn.textContent = "Live";
-      }} else if (state === SessionState.INACTIVE) {{
+      } else if (state === SessionState.INACTIVE) {
         setStatus("Session ended. Click <strong>Start session</strong> to talk again.");
         setOverlay("Session ended. Click Start session when you're ready.", true);
         stopBtn.disabled = true;
@@ -419,77 +586,86 @@ def render_liveavatar_widget(
         avatarSpeaking = false;
         streamAttached = false;
         greetingSent = false;
-      }}
-    }});
+      }
+    });
 
-    session.on(SessionEvent.SESSION_STREAM_READY, () => {{
-      if (!streamAttached) {{
+    session.on(SessionEvent.SESSION_STREAM_READY, () => {
+      if (!streamAttached) {
         session.attach(videoEl);
         streamAttached = true;
-      }}
+      }
       setOverlay("Almost ready — starting your greeting…", true);
-      // Wait until stream is stable so the student HEARS the intro
-      setTimeout(() => {{
+      setTimeout(() => {
         setOverlay("", false);
         setStatus("Ready <span class='badge live'>LIVE</span>");
         triggerGreeting();
-      }}, 2000);
-    }});
+      }, 2000);
+    });
 
-    session.voiceChat.on(VoiceChatEvent.MUTED, () => {{
+    session.voiceChat.on(VoiceChatEvent.MUTED, () => {
       isMuted = true;
       muteBtn.textContent = "Unmute mic";
-    }});
+    });
 
-    session.voiceChat.on(VoiceChatEvent.UNMUTED, () => {{
+    session.voiceChat.on(VoiceChatEvent.UNMUTED, () => {
       isMuted = false;
       muteBtn.textContent = "Mute mic";
-    }});
+    });
 
-    session.on(AgentEventsEnum.USER_SPEAK_STARTED, () => {{
+    session.on(AgentEventsEnum.USER_SPEAK_STARTED, () => {
       if (avatarSpeaking) interruptAvatar();
       setStatus("Listening… <span class='badge live'>MIC ON</span>");
-    }});
+    });
 
-    session.on(AgentEventsEnum.USER_SPEAK_ENDED, () => {{
+    session.on(AgentEventsEnum.USER_SPEAK_ENDED, () => {
       setStatus("Thinking…");
-    }});
+    });
 
-    session.on(AgentEventsEnum.AVATAR_SPEAK_STARTED, () => {{
+    session.on(AgentEventsEnum.AVATAR_SPEAK_STARTED, () => {
       avatarSpeaking = true;
       updateInterruptButton();
       setStatus("AskProfNui is speaking…");
-    }});
+    });
 
-    session.on(AgentEventsEnum.AVATAR_SPEAK_ENDED, () => {{
+    session.on(AgentEventsEnum.AVATAR_SPEAK_ENDED, () => {
       avatarSpeaking = false;
       updateInterruptButton();
       setStatus("Your turn — ask a question.");
-    }});
+    });
+
+    session.on(AgentEventsEnum.AVATAR_TRANSCRIPTION, (evt) => {
+      extractCitationFromSpeech(evt?.text || "");
+    });
+
+    if (AgentEventsEnum.ELEVENLABS_AGENT_EVENT) {
+      session.on(AgentEventsEnum.ELEVENLABS_AGENT_EVENT, (evt) => {
+        handleClientToolCall(evt);
+      });
+    }
 
     startBtn.addEventListener("click", () => startSession());
 
-    stopBtn.addEventListener("click", async () => {{
-      try {{ await session.stop(); }}
-      catch (error) {{ setStatus("Failed to stop: " + (error?.message || error)); }}
-    }});
+    stopBtn.addEventListener("click", async () => {
+      try { await session.stop(); }
+      catch (error) { setStatus("Failed to stop: " + (error?.message || error)); }
+    });
 
     interruptBtn.addEventListener("click", () => interruptAvatar());
 
-    muteBtn.addEventListener("click", async () => {{
-      try {{
+    muteBtn.addEventListener("click", async () => {
+      try {
         if (isMuted) await session.voiceChat.unmute();
         else await session.voiceChat.mute();
-      }} catch (error) {{
+      } catch (error) {
         setStatus("Mic error: " + (error?.message || error));
-      }}
-    }});
+      }
+    });
 
-    // Start after SDK settles; greeting waits for STREAM_READY
-    setTimeout(() => {{
+    setTimeout(() => {
       setOverlay("Loading AskProfNui…", true);
       startSession();
-    }}, 700);
+    }, 700);
   </script>
 </body>
 </html>"""
+    return html.replace("__WIDGET_ID__", widget_id_json).replace("__TOKEN__", token_json).replace("__OPENING__", opening_json)

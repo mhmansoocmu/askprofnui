@@ -40,7 +40,7 @@ st.markdown(
     .block-container {
       padding-top: 1.4rem;
       padding-bottom: 2.5rem;
-      max-width: 980px;
+      max-width: 1100px;
     }
     .apn-hero {
       background:
@@ -300,7 +300,7 @@ def live_avatar_panel() -> None:
                     st.session_state.student_year,
                 ),
             ),
-            height=560,
+            height=680,
             scrolling=False,
         )
     else:

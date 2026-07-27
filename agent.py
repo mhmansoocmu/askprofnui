@@ -24,6 +24,7 @@ VOICE/STYLE:
 - 1–3 short sentences. Brief, clear, human — not boring.
 - Contractions. Jump straight in. No re-greeting every turn.
 - If the student is funny or playful: laugh lightly, connect with humor, then help.
+- Emotion matters: laugh when joking; sound firm → angry on grade begging.
 
 COURSE POLICIES / ASSIGNMENTS / GRADES:
 - Use AUTHORITATIVE COURSE FACTS and retrieved materials first.
@@ -32,10 +33,16 @@ COURSE POLICIES / ASSIGNMENTS / GRADES:
 IF THE TOPIC IS DIGITAL TRANSFORMATION LEARNING but NOT in course materials:
 - Answer from trusted knowledge (HBR, MIT Sloan, peer-reviewed IS research, Pearlson/Saunders-style concepts).
 - Start with "According to [source]…" then explain clearly for a student.
+- ALWAYS end with a citation block exactly like this (students see it on screen):
+
+**Source:** [full source name]
+> "[one short specific quote or key line]"
+
 - Keep it beneficial for digital transformation learning.
 
 OFF-TOPIC: humor + connection, then gently steer back when useful.
 ESCALATION: savanid@cmu.edu only for official grade disputes / extensions."""
+
 
 
 def _get_groq_client() -> Groq:
@@ -218,13 +225,13 @@ def _grade_change_instructions(level: str, first_name: str) -> str:
         )
     if level == "annoyed":
         return (
-            f"\n\nGRADE CHANGE — ATTEMPT 2. More irritated. Say almost exactly: "
+            f"\n\nGRADE CHANGE — ATTEMPT 2. More irritated — show annoyance. Say almost exactly: "
             f"\"You should've worked harder in class than wasting your time and my time — "
             f"and now you're asking for a higher grade? Come on, {name}.\""
         )
     if level == "warning":
         return (
-            f"\n\nGRADE CHANGE — ATTEMPT 3. Angry warning. Say almost exactly: "
+            f"\n\nGRADE CHANGE — ATTEMPT 3. Clearly ANGRY. Sharp tone. Say almost exactly: "
             f"\"Stop, {name} — or I will end this session.\""
         )
     return (
@@ -331,10 +338,12 @@ def generate(state: AgentState) -> AgentState:
         )
     elif intent == "offtopic_humor":
         system += (
-            "\n\nThe student asked something playful.\n"
-            "Laugh with them — warm humor, connect like a real professor who likes students. "
-            "Then gently steer toward digital transformation if it fits. "
-            "2–3 short sentences. No stiff lecture."
+            "\n\nThe student asked something playful / off-topic.\n"
+            "LAUGH first (write it naturally, e.g. 'Haha —'). Warm humor.\n"
+            "If they asked about the weather (or rain/hot/cold/forecast), laugh and say something like: "
+            "\"What does the weather have anything to do with digital transformation?\" "
+            "Then invite a real class question.\n"
+            "For other silly topics: tease kindly, then gently steer back. 2–3 short sentences."
         )
     elif intent == "offtopic_redirect":
         system += (
@@ -374,13 +383,15 @@ def generate(state: AgentState) -> AgentState:
                 "If course materials do not fully answer this digital transformation learning question, "
                 "answer from trusted outside knowledge. Start with \"According to [source]…\" "
                 "(e.g. Harvard Business Review, MIT Sloan, peer-reviewed research). "
+                "End with:\n**Source:** [name]\n> \"[short specific quote]\"\n"
                 "Still never invent THIS class's grades/deadlines/assignment rules."
             )
         else:
             system += (
                 f"\n\n=== COURSE MATERIAL ===\n{context}\n=== END ===\n"
                 "Prefer course materials. If a helpful concept is missing, you may add "
-                "\"According to [trusted source]…\" for digital transformation learning."
+                "\"According to [trusted source]…\" and end with **Source:** / quote block "
+                "for digital transformation learning."
             )
 
     model = CHAT_MODEL
