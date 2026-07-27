@@ -409,9 +409,14 @@ def render_liveavatar_widget(
     let greetingSent = false;
     let gradeChangeAttempts = 0;
     let forceEndAfterSpeak = false;
+    let endingSession = false;
+    let endBackupTimer = null;
+    let lastGradeCueAt = 0;
     const seenCitations = new Set();
     const gradeChangeRe =
-      /\b(change|bump|raise|fix|update|increase)\b.{0,40}\bgrade\b|\b(regrade|re-grade)\b|\bgive me (a )?(better|higher) grade\b|\bcan you change\b|\bwill you change\b|\bbut professor\b|\bbut prof\b|\bplease change my\b/i;
+      /\b(change|bump|raise|fix|update|increase)\b.{0,40}\bgrade\b|\b(regrade|re-grade)\b|\bgive me (a )?(better|higher) grade\b|\bcan you change\b|\bwill you change\b|\bbut professor\b|\bbut prof\b|\bplease change my\b|\bmy grade\b.{0,20}\b(please|change|bump|higher|better)\b/i;
+    const goodbyeHeardRe =
+      /\bwe'?re done\b|\bi'?m ending this session\b|\bbye\b.{0,80}\bdigital transformation\b|\bgo put that energy\b/i;
 
     function gradeScript(attempt) {
       const name = studentName || "there";
@@ -433,12 +438,20 @@ def render_liveavatar_widget(
         );
       }
       return (
-        'GRADE CHANGE ATTEMPT 4. Say ONLY the single word "Bye." Then IMMEDIATELY call the end_call tool. Do not say anything else.'
+        'GRADE CHANGE ATTEMPT 4 — FINAL. Say this longer goodbye EXACTLY, then IMMEDIATELY call end_call: ' +
+        '"We\'re done, ' + name +
+        '. I\'m ending this session right now. Bye — go put that energy into digital transformation instead of asking me to change your grade." ' +
+        'Do not say anything after that.'
       );
     }
 
     function enforceGradeChange(transcript) {
-      if (!transcript || !gradeChangeRe.test(transcript)) return;
+      if (!transcript || endingSession) return;
+      if (!gradeChangeRe.test(transcript)) return;
+      const now = Date.now();
+      // Avoid double-counting the same utterance from repeated transcripts
+      if (now - lastGradeCueAt < 4500) return;
+      lastGradeCueAt = now;
       gradeChangeAttempts += 1;
       const attempt = Math.min(gradeChangeAttempts, 4);
       const cue =
@@ -455,24 +468,55 @@ def render_liveavatar_widget(
       }
       if (attempt >= 4) {
         forceEndAfterSpeak = true;
-        setStatus("Ending session after final reply…");
+        setStatus("Final goodbye — session will end when she finishes…");
+        // Hard backup: end even if speak-ended events never fire
+        if (endBackupTimer) clearTimeout(endBackupTimer);
+        endBackupTimer = setTimeout(() => forceEndSession("backup timer"), 14000);
       } else {
         setStatus("Grade-change attempt " + attempt + " — script enforced.");
       }
     }
 
-    function maybeForceEndSession() {
-      if (!forceEndAfterSpeak) return;
+    async function forceEndSession(reason) {
+      if (endingSession) return;
+      endingSession = true;
       forceEndAfterSpeak = false;
-      setTimeout(async () => {
-        try {
-          await session.stop();
-          setStatus("Session ended — she closed after the fourth grade ask.");
-          setOverlay("Session ended after the grade-change script.", true);
-        } catch (err) {
-          console.warn("force stop failed", err);
-        }
-      }, 1200);
+      if (endBackupTimer) {
+        clearTimeout(endBackupTimer);
+        endBackupTimer = null;
+      }
+      setStatus("Ending session…");
+      try {
+        try { session.interrupt(); } catch (_) {}
+        await session.stop();
+      } catch (err) {
+        console.warn("force stop failed (" + reason + ")", err);
+      }
+      setStatus("Session ended after her goodbye.");
+      setOverlay("Session ended. AskProfNui closed the office hours.", true);
+      stopBtn.disabled = true;
+      muteBtn.disabled = true;
+      interruptBtn.disabled = true;
+      startBtn.disabled = false;
+      startBtn.textContent = "Start session";
+      started = false;
+      avatarSpeaking = false;
+    }
+
+    function maybeForceEndSession() {
+      if (!forceEndAfterSpeak || endingSession) return;
+      // Let the longer goodbye finish speaking before hanging up
+      setTimeout(() => forceEndSession("speak ended"), 2800);
+    }
+
+    function maybeEndFromGoodbyeSpeech(text) {
+      if (!text || endingSession) return;
+      if (gradeChangeAttempts < 4 && !forceEndAfterSpeak) return;
+      if (!goodbyeHeardRe.test(text)) return;
+      forceEndAfterSpeak = true;
+      setStatus("Goodbye heard — ending session when she finishes…");
+      if (endBackupTimer) clearTimeout(endBackupTimer);
+      endBackupTimer = setTimeout(() => forceEndSession("goodbye heard"), 6000);
     }
 
     function setStatus(message) {
@@ -643,7 +687,7 @@ def render_liveavatar_widget(
         muteBtn.disabled = false;
         startBtn.disabled = true;
         startBtn.textContent = "Live";
-      } else if (state === SessionState.INACTIVE) {
+      } else if (state === SessionState.INACTIVE || state === SessionState.DISCONNECTED) {
         setStatus("Session ended. Click <strong>Start session</strong> to talk again.");
         setOverlay("Session ended. Click Start session when you're ready.", true);
         stopBtn.disabled = true;
@@ -657,6 +701,11 @@ def render_liveavatar_widget(
         greetingSent = false;
         gradeChangeAttempts = 0;
         forceEndAfterSpeak = false;
+        endingSession = false;
+        if (endBackupTimer) {
+          clearTimeout(endBackupTimer);
+          endBackupTimer = null;
+        }
       }
     });
 
@@ -706,7 +755,9 @@ def render_liveavatar_widget(
     });
 
     session.on(AgentEventsEnum.AVATAR_TRANSCRIPTION, (evt) => {
-      extractCitationFromSpeech(evt?.text || "");
+      const text = evt?.text || "";
+      extractCitationFromSpeech(text);
+      maybeEndFromGoodbyeSpeech(text);
     });
 
     session.on(AgentEventsEnum.USER_TRANSCRIPTION, (evt) => {
@@ -714,7 +765,9 @@ def render_liveavatar_widget(
     });
 
     if (AgentEventsEnum.USER_TRANSCRIPTION_CHUNK) {
-      // final full transcript is enough; chunks ignored for counting
+      session.on(AgentEventsEnum.USER_TRANSCRIPTION_CHUNK, (evt) => {
+        enforceGradeChange(evt?.text || "");
+      });
     }
     if (AgentEventsEnum.ELEVENLABS_AGENT_EVENT) {
       session.on(AgentEventsEnum.ELEVENLABS_AGENT_EVENT, (evt) => {

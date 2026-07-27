@@ -235,7 +235,9 @@ def _grade_change_instructions(level: str, first_name: str) -> str:
             f"\"Stop, {name} — or I will end this session.\""
         )
     return (
-        "\n\nGRADE CHANGE — ATTEMPT 4+. Reply with ONLY the single word: Bye"
+        f"\n\nGRADE CHANGE — ATTEMPT 4+. Reply with EXACTLY this longer goodbye and nothing else: "
+        f"\"We're done, {name}. I'm ending this session right now. Bye — go put that energy into "
+        f"digital transformation instead of asking me to change your grade.\""
     )
 
 
@@ -362,7 +364,9 @@ def generate(state: AgentState) -> AgentState:
         level = _grade_change_level(attempt)
         system += _grade_change_instructions(level, _first_name(state.get("student_name", "")))
         if level == "end":
-            system += "\n\nYour reply MUST be exactly: Bye."
+            system += (
+                "\n\nYour reply MUST be the longer goodbye only — then the conversation ends."
+            )
     else:
         query = messages[-1]["content"] if messages else ""
         context = state.get("context", "").strip() or get_core_facts_block()

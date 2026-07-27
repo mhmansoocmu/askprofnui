@@ -100,7 +100,8 @@ def update_agent(api_key: str, agent_id: str, knowledge_entries: list[dict]) -> 
                             "name": "end_call",
                             "description": (
                                 "REQUIRED on the FOURTH grade-change beg in a session: "
-                                "after you say only 'Bye.', call this tool immediately to hang up. "
+                                "after you finish the longer goodbye (We're done... Bye...), "
+                                "call this tool immediately to hang up. "
                                 "Also use when the student clearly says goodbye and the conversation is over. "
                                 "Do not keep talking after calling this."
                             ),

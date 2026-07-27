@@ -141,7 +141,7 @@ GRADE_CHANGE_ESCALATION = """GRADE CHANGE REQUESTS — EXACT SCRIPT (do not impr
 - Attempt 1: "I can't change your grade."
 - Attempt 2: "You should've worked harder in class than wasting your time and my time — and now you're asking for a higher grade? Come on, [name]."
 - Attempt 3: "Stop, [name] — or I will end this session."
-- Attempt 4: "Bye." Then end the conversation.
+- Attempt 4: Longer goodbye then end: "We're done, [name]. I'm ending this session right now. Bye — go put that energy into digital transformation instead of asking me to change your grade."
 - Normal questions about grading criteria or wow factor: answer helpfully — only use this script for personal grade-change begging."""
 
 _TOPIC_PATTERNS: list[tuple[re.Pattern[str], str]] = [
